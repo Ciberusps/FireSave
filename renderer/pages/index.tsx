@@ -1,17 +1,40 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import Link from "next/link";
+import styled from "styled-components";
+
+import Layout from "../components/Layout";
+
+import Config from "../utils/config";
 
 const IndexPage = () => {
+  const onFolderSelect = () => {
+    const res = ipcRenderer.send("chooseFolder");
+    console.log("RES", res);
+  };
+
   return (
-    <Layout title="Home | Next.js + TypeScript + Electron Example">
-      <h1>Hello Next.js 👋</h1>
+    <Layout title="Saves List">
+      <div>
+        <div>Choose folder</div>
+        <SavePath>{Config.savesPath}</SavePath>
+      </div>
+
+      <button onClick={onFolderSelect}>
+        <div>Choose exe file</div>
+        <SavePath>{Config.savesPath}</SavePath>
+      </button>
+
       <p>
         <Link href="/about">
           <a>About</a>
         </Link>
       </p>
     </Layout>
-  )
-}
+  );
+};
 
-export default IndexPage
+const SavePath = styled.div`
+  font-size: 16px;
+  color: red;
+`;
+
+export default IndexPage;
