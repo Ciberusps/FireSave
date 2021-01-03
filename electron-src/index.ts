@@ -7,7 +7,13 @@ import { format } from "url";
 
 import Saves from "./utils/saves";
 import Store from "./utils/store";
-import { getFileName, getFileNameWithExtension, getFilePath, isGameExist } from "./utils";
+import {
+  getFileName,
+  getFileNameWithExtension,
+  getFilePath,
+  getGameId,
+  isGameExist,
+} from "./utils";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
@@ -20,10 +26,12 @@ app.on("ready", async () => {
     //   console.log("running a task every minute");
     // });
 
+    // console.log("GAME ID", getGameId(Store.store.games[0].exePath));
+
     setInterval(() => {
       console.log("TRY AUTO SAVE");
       Saves.tryAutoSave();
-    }, 15000);
+    }, Store.store.autoSaveMinutes * 60 * 1000);
   }
 
   const mainWindow = new BrowserWindow({
@@ -114,15 +122,13 @@ ipcMain.handle("createGame", async (event, { exePath, saves }) => {
   // console.log(args);
   // if (!exePath) return null;
   if (!isGameExist(exePath)) {
+    const id = getGameId(exePath);
     const gameName = getFileName(exePath);
-    Store.set("games", [
-      ...Store.store.games,
-      {
-        name: gameName,
-        exePath,
-        saves,
-      },
-    ]);
+    Store.set(`games.${id}`, {
+      name: gameName,
+      exePath,
+      saves,
+    });
     return true;
   } else {
     console.error("GAME ALREADY EXISTS");
@@ -152,7 +158,7 @@ ipcMain.handle("removeGame", async (event, exePath) => {
   const gameIdx = newGames.findIndex((g) => g.exePath === exePath);
   if (gameIdx === -1) return false;
   newGames.splice(gameIdx, 1);
-  Store.set("games", newGames);
+  Store.delete(`games.${}`, newGames);
   return true;
 });
 

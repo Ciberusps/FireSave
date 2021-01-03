@@ -57,7 +57,7 @@ const GamePage = () => {
   };
 
   const onRemove = () => {
-    ipcRenderer.invoke("removeGame", exePath);
+    ipcRenderer.invoke("removeGame", game.id);
     Router.push(`/`);
   };
 

@@ -1,4 +1,5 @@
 import path from "path";
+import { createHash } from "crypto";
 
 import Store from "./store";
 
@@ -15,3 +16,6 @@ export const isGameExist = (exePath: string): boolean => {
   console.log("isGameExist", !!isGameExist);
   return isGameExist;
 };
+
+export const getGameId = (exePath: string) =>
+  createHash("sha1").update(exePath).digest("base64");

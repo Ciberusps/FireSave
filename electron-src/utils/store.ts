@@ -11,8 +11,9 @@ const Store = new ElectronStore<TStore>({
     // },
     // minimize: true
     isAutoSaveOn: true,
+    autoSaveMinutes: 1,
     storePath: "C:/GamesSaves",
-    games: [
+    games: {
       // {
       //   steamAppId: "",
       //   exePath:
@@ -21,7 +22,7 @@ const Store = new ElectronStore<TStore>({
       //   savesFiles: ["DS2SOFS0000.sl2"],
       //   // savesPattern:
       // },
-    ],
+    },
   },
 });
 

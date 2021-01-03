@@ -4,13 +4,12 @@ import findProcess from "find-process";
 import { format } from "date-fns";
 
 import Store from "./store";
-import { getFileName } from ".";
+import { getFileName, getFileNameWithExtension } from ".";
 
 const isProcessRunning = async (processName: string) => {
   try {
     const list = await findProcess("name", processName);
     if (list?.length) {
-      console.log("Process found", list?.length);
       return true;
     } else {
       return false;
@@ -32,33 +31,39 @@ const getSaveStoreFileName = (file: string): string => {
   }
 };
 
+const save = (game: TGame) => {
+  try {
+    const gameStorePath = path.join(Store.store.storePath, game.name);
+
+    game.saves.files.forEach((file) => {
+      const savePath = path.join(game.saves.path, file);
+      const saveStorePath = path.join(gameStorePath, getSaveStoreFileName(file));
+
+      // console.log("SavePath", savePath, saveStorePath);
+      if (!savePath) return;
+
+      if (!fs.existsSync(gameStorePath)) {
+        fs.mkdirSync(gameStorePath, { recursive: true });
+      }
+
+      fs.copyFileSync(savePath, saveStorePath);
+    });
+  } catch (err) {
+    // TODO: send logs
+    console.error(err);
+  }
+};
+
 const tryAutoSave = async () => {
   Store.store.games.forEach(async (game) => {
-    const processName = getFileName(game.exePath);
-    const gameName = processName.replace(".exe", "");
+    const processName = getFileNameWithExtension(game.exePath);
+    console.log("processName", processName);
 
     const isGameRunning = await isProcessRunning(processName);
-    if (isGameRunning) {
-      console.log("Process running, game", processName, game.exePath);
+    if (!isGameRunning) return;
 
-      const gameStorePath = path.join(Store.store.storePath, gameName);
-
-      game.saves.files.forEach((file) => {
-        const savePath = path.join(game.saves.path, file);
-
-        const saveStorePath = path.join(gameStorePath, getSaveStoreFileName(file));
-
-        console.log("SavePath", savePath, saveStorePath);
-        if (!savePath) return;
-
-        if (!fs.existsSync(gameStorePath)) {
-          fs.mkdirSync(gameStorePath);
-        }
-
-        const res = fs.copyFileSync(savePath, saveStorePath);
-        console.log("RES SAVED?", res);
-      });
-    }
+    save(game);
+    console.log("Process running, game", processName, game.exePath);
   });
 };
 
