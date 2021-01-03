@@ -9,43 +9,57 @@ type Props = {
 };
 
 const Layout = ({ children, title = "This is the default title" }: Props) => (
-  <div>
+  <Container>
     <Head>
       <title>{title}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
 
-    <header>
-      <Navigation>
-        <Link href="/">
-          <Tab>Saves</Tab>
-        </Link>
-        <Link href="/settings">
-          <Tab>Settings</Tab>
-        </Link>
-      </Navigation>
-    </header>
+    <Navigation>
+      <Link href="/">
+        <Tab>Saves</Tab>
+      </Link>
+      <Link href="/settings">
+        <Tab>Settings</Tab>
+      </Link>
+    </Navigation>
 
-    {children}
-
-    <footer>
-      <hr />
-      <span>I'm here to stay (Footer)</span>
-    </footer>
-  </div>
+    <Content>{children}</Content>
+  </Container>
 );
+
+const sidebarWidth = 70;
+
+const Container = styled.div`
+  flex: 1;
+  display: flex;
+`;
 
 const Navigation = styled.nav`
   display: flex;
   flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  background: grey;
 `;
 
 const Tab = styled.a`
-  width: 50px;
-  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${sidebarWidth}px;
+  height: 90px;
   background: grey;
   border: 1px solid white;
+`;
+
+const Content = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: ${sidebarWidth}px;
+  padding: 10px;
 `;
 
 export default Layout;
