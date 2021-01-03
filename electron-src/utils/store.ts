@@ -12,22 +12,17 @@ const Store = new ElectronStore<TStore>({
     // minimize: true
     isAutoSaveOn: true,
     storePath: "C:/GamesSaves",
-    games: [],
+    games: [
+      // {
+      //   steamAppId: "",
+      //   exePath:
+      //     "G:/SteamLibrary/steamapps/common/Dark Souls II Scholar of the First Sin/Game/DarkSoulsII.exe",
+      //   savesPath: "C:/Users/Ciber/AppData/Roaming/DarkSoulsII/011000010969832b",
+      //   savesFiles: ["DS2SOFS0000.sl2"],
+      //   // savesPattern:
+      // },
+    ],
   },
 });
-
-// let state: TState = {
-
-//   games: [
-//     // {
-//     //   steamAppId: "",
-//     //   exePath:
-//     //     "G:/SteamLibrary/steamapps/common/Dark Souls II Scholar of the First Sin/Game/DarkSoulsII.exe",
-//     //   savesPath: "C:/Users/Ciber/AppData/Roaming/DarkSoulsII/011000010969832b",
-//     //   savesFiles: ["DS2SOFS0000.sl2"],
-//     //   // savesPattern:
-//     // },
-//   ],
-// };
 
 export default Store;

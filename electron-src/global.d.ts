@@ -1,5 +1,6 @@
 type TStore = {
   isAutoSaveOn: boolean;
+  autoSaveMinutes: number;
   storePath: string;
   games: TGame[];
 };

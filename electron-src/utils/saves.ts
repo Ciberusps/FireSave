@@ -24,7 +24,7 @@ const isProcessRunning = async (processName: string) => {
 const getSaveStoreFileName = (file: string): string => {
   if (file.includes(".")) {
     const res = file.split(".");
-    res[0] = res[0] + "_" + format(new Date(), "____HH-mm|ss__dd_MM_yyyy");
+    res[0] = res[0] + "_" + format(new Date(), "____HH-mm-ss__dd_MM_yyyy");
     return res.join(".");
   } else {
     console.log("ERROR ");

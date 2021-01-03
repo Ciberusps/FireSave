@@ -15,8 +15,9 @@ const GamePage = () => {
   const game = state?.games?.find((g) => g.exePath === id);
 
   const [exePath, setExePath] = useState<string | undefined>(game?.exePath);
-  const [savePath, setSavesPath] = useState<string | undefined>(game?.saves?.path);
-  const [saveFiles, setSaveFiles] = useState<string[] | undefined>(game?.saves?.files);
+  const [saves, setSaves] = useState<{ path: string; files: string[] } | undefined>(
+    game?.saves
+  );
 
   const onChooseExe = async () => {
     const newExePath = await ipcRenderer.invoke("chooseGameExe");
@@ -29,27 +30,35 @@ const GamePage = () => {
   };
 
   const onChooseSavesPath = async () => {
-    const { path, files } = await ipcRenderer.invoke("chooseSavesPath");
+    const newSaves = await ipcRenderer.invoke("chooseSavesPath");
     // TODO: handle error
-    if (path && files) {
-      console.log("SavePath added", path, files);
-      setSavesPath(path);
-      setSaveFiles(files);
+    if (newSaves) {
+      console.log("SavePath added", newSaves);
+      setSaves(newSaves);
     }
   };
 
   const onSave = () => {
-    if (!exePath || !savePath || !saveFiles?.length) return;
-    const isGameCreated = ipcRenderer.invoke("createGame", {
-      exePath,
-      savePath,
-      saveFiles,
-    });
-    console.log("isGameCreated", isGameCreated);
+    if (!exePath || !saves) return;
+    if (isEditing) {
+      const isEdited = ipcRenderer.invoke("editGame", {
+        exePath,
+        saves,
+      });
+      console.log("game edited", isEdited);
+    } else {
+      const isCreated = ipcRenderer.invoke("createGame", {
+        exePath,
+        saves,
+      });
+      console.log("game created", isCreated);
+    }
     Router.push(`/`);
-    // remote.getCurrentWindow().minimize();
-    // const gameName = ipcRenderer.send("chooseGameExe");
-    // console.log("GameAdded", gameName);
+  };
+
+  const onRemove = () => {
+    ipcRenderer.invoke("removeGame", exePath);
+    Router.push(`/`);
   };
 
   return (
@@ -60,19 +69,20 @@ const GamePage = () => {
 
       <FileInput
         label="Save file(s) path"
-        path={savePath}
+        path={saves?.path}
         isDisabled={!exePath}
         onClick={onChooseSavesPath}
       />
 
       <div>
         Files:
-        {saveFiles?.map((file) => (
+        {saves?.files?.map((file) => (
           <div>- {file}</div>
         ))}
       </div>
 
       <Button onClick={onSave}>Save</Button>
+      <Button onClick={onRemove}>Remove game</Button>
     </Layout>
   );
 };

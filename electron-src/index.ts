@@ -110,7 +110,7 @@ ipcMain.handle("chooseSavesPath", async () => {
   return { path: savesPath, files };
 });
 
-ipcMain.handle("createGame", async (event, { exePath, savePath, saveFiles }) => {
+ipcMain.handle("createGame", async (event, { exePath, saves }) => {
   // console.log(args);
   // if (!exePath) return null;
   if (!isGameExist(exePath)) {
@@ -120,17 +120,40 @@ ipcMain.handle("createGame", async (event, { exePath, savePath, saveFiles }) => 
       {
         name: gameName,
         exePath,
-        saves: {
-          path: savePath,
-          files: saveFiles,
-        },
+        saves,
       },
     ]);
-    return gameName;
+    return true;
   } else {
     console.error("GAME ALREADY EXISTS");
-    return null;
+    return false;
   }
+});
+
+ipcMain.handle("editGame", async (event, { exePath, saves }) => {
+  if (isGameExist(exePath)) {
+    const gameName = getFileName(exePath);
+    const newGames = Store.store.games;
+    const gameIdx = newGames.findIndex((g) => g.exePath === exePath);
+    if (gameIdx === -1) return false;
+    newGames[gameIdx].name = gameName;
+    newGames[gameIdx].exePath = exePath;
+    newGames[gameIdx].saves = saves;
+    Store.set("games", newGames);
+    return true;
+  } else {
+    console.error("GAME ALREADY EXISTS");
+    return false;
+  }
+});
+
+ipcMain.handle("removeGame", async (event, exePath) => {
+  const newGames = Store.store.games;
+  const gameIdx = newGames.findIndex((g) => g.exePath === exePath);
+  if (gameIdx === -1) return false;
+  newGames.splice(gameIdx, 1);
+  Store.set("games", newGames);
+  return true;
 });
 
 ipcMain.on("toggleAutoSave", async () => {
