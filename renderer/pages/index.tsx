@@ -12,16 +12,18 @@ const IndexPage = () => {
     <Layout title="Saves List">
       <Header>
         <h1>Games</h1>
-        <Link href="/games/[id]" as={"games/new"}>
+        <Link href="/games/[id]" as="/games/new">
           <a>Add new game</a>
         </Link>
       </Header>
 
-      <Game>
+      <Games>
         {state?.games.map((game) => (
-          <div>{game.name}</div>
+          <Link href="/games/[id]" as={`/games/${escape(game.exePath)}`}>
+            <Game>{game.name}</Game>
+          </Link>
         ))}
-      </Game>
+      </Games>
     </Layout>
   );
 };
@@ -31,6 +33,8 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
+const Games = styled.div``;
 
 const Game = styled.div`
   width: 150px;

@@ -3,25 +3,31 @@ import styled from "styled-components";
 type TProps = {
   label: string;
   path?: string;
+  isDisabled?: boolean;
   onClick: () => void;
 };
 
 const IndexPage = (props: TProps) => {
-  const { label, path, onClick } = props;
+  const { label, path, isDisabled, onClick } = props;
 
   return (
-    <Container>
+    <Container isDisabled={isDisabled}>
       <Label>{label}</Label>
-      <Path>{path}</Path>
+      <Path>{path ? path : "..."}</Path>
       <ChooseButton onClick={onClick}>Choose</ChooseButton>
     </Container>
   );
 };
 
-const Container = styled.div`
+type TContainer = {
+  isDisabled?: boolean;
+};
+
+const Container = styled.div<TContainer>`
   display: flex;
   align-items: center;
   padding: 6px 0px;
+  background: ${({ isDisabled }) => (isDisabled ? "red" : "transparent")};
 `;
 
 const Label = styled.div`

@@ -7,7 +7,7 @@ import { format } from "url";
 
 import Saves from "./utils/saves";
 import Store from "./utils/store";
-import { getFileName } from "./utils";
+import { getFileName, getFileNameWithExtension, getFilePath, isGameExist } from "./utils";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
@@ -21,8 +21,9 @@ app.on("ready", async () => {
     // });
 
     setInterval(() => {
+      console.log("TRY AUTO SAVE");
       Saves.tryAutoSave();
-    }, 10000);
+    }, 15000);
   }
 
   const mainWindow = new BrowserWindow({
@@ -86,23 +87,49 @@ ipcMain.on("chooseStorePath", async (event: IpcMainEvent, message: any) => {
   }
 });
 
-ipcMain.on("chooseGameExe", async (event: IpcMainEvent, message: any) => {
+ipcMain.handle("chooseGameExe", () => {
   const exePath = dialog.showOpenDialogSync({ properties: ["openFile"] })?.[0];
-  if (!exePath) return;
-  const isGameExist = Store.store.games.findIndex((g) => g.exePath === exePath) !== -1;
-  console.log("isGameExist", !!isGameExist);
-  if (!isGameExist) {
+  if (!exePath) return null;
+  if (!isGameExist(exePath)) {
+    const gameName = getFileName(exePath);
+    console.log("SEND BACK");
+    return exePath;
+  } else {
+    console.error("GAME ALREADY EXISTS");
+    return null;
+  }
+});
+
+ipcMain.handle("chooseSavesPath", async () => {
+  const saveFiles = dialog.showOpenDialogSync({
+    properties: ["openFile", "multiSelections"],
+  });
+  if (!saveFiles) return null;
+  const savesPath = getFilePath(saveFiles[0]);
+  const files = saveFiles.map((f) => getFileNameWithExtension(f));
+  return { path: savesPath, files };
+});
+
+ipcMain.handle("createGame", async (event, { exePath, savePath, saveFiles }) => {
+  // console.log(args);
+  // if (!exePath) return null;
+  if (!isGameExist(exePath)) {
     const gameName = getFileName(exePath);
     Store.set("games", [
       ...Store.store.games,
       {
         name: gameName,
         exePath,
+        saves: {
+          path: savePath,
+          files: saveFiles,
+        },
       },
     ]);
     return gameName;
   } else {
     console.error("GAME ALREADY EXISTS");
+    return null;
   }
 });
 
