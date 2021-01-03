@@ -6,11 +6,24 @@ import { join } from "path";
 import { format } from "url";
 
 import Saves from "./utils/saves";
-import State from "./utils/state";
+import Store from "./utils/store";
+import { getFileName } from "./utils";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
   await prepareNext("./renderer");
+
+  if (Store.store.isAutoSaveOn) {
+    Saves.tryAutoSave();
+
+    // cron.schedule("* * * * *", () => {
+    //   console.log("running a task every minute");
+    // });
+
+    setInterval(() => {
+      Saves.tryAutoSave();
+    }, 10000);
+  }
 
   const mainWindow = new BrowserWindow({
     width: 1080,
@@ -34,22 +47,20 @@ app.on("ready", async () => {
         slashes: true,
       });
 
+  mainWindow.webContents.once("did-finish-load", () => {
+    mainWindow.webContents.send("stateUpdate", Store.store);
+  });
+
+  Store.onDidAnyChange((newVal) => {
+    console.log("State changed");
+    mainWindow.webContents.send("stateUpdate", newVal);
+  });
+
   mainWindow.loadURL(url);
 });
 
 // Quit the app once all windows are closed
 app.on("window-all-closed", app.quit);
-
-// cron.schedule("* * * * *", () => {
-//   console.log("running a task every minute");
-// });
-
-if (State.saves.isAutoSaveOn) {
-  Saves.tryAutoSave();
-  setInterval(() => {
-    Saves.tryAutoSave();
-  }, 10000);
-}
 
 // listen the channel `message` and resend the received message to the renderer process
 ipcMain.on("message", (event: IpcMainEvent, message: any) => {
@@ -67,8 +78,34 @@ ipcMain.on("stateChanged", async (event: IpcMainEvent, message: any) => {
   // event.sender.send("message", message);
 });
 
-ipcMain.on("chooseFolder", async (event: IpcMainEvent, message: any) => {
+ipcMain.on("chooseStorePath", async (event: IpcMainEvent, message: any) => {
   const folders = dialog.showOpenDialogSync({ properties: ["openDirectory"] });
   console.log("folders", folders);
-  return folders;
+  if (folders?.[0]) {
+    Store.set("storePath", folders[0]);
+  }
+});
+
+ipcMain.on("chooseGameExe", async (event: IpcMainEvent, message: any) => {
+  const exePath = dialog.showOpenDialogSync({ properties: ["openFile"] })?.[0];
+  if (!exePath) return;
+  const isGameExist = Store.store.games.findIndex((g) => g.exePath === exePath) !== -1;
+  console.log("isGameExist", !!isGameExist);
+  if (!isGameExist) {
+    const gameName = getFileName(exePath);
+    Store.set("games", [
+      ...Store.store.games,
+      {
+        name: gameName,
+        exePath,
+      },
+    ]);
+    return gameName;
+  } else {
+    console.error("GAME ALREADY EXISTS");
+  }
+});
+
+ipcMain.on("toggleAutoSave", async () => {
+  Store.set("isAutoSaveOn", !Store.store.isAutoSaveOn);
 });

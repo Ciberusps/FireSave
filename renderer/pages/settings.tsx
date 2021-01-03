@@ -1,16 +1,34 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import { useContext } from "react";
 
-const AboutPage = () => (
-  <Layout title="About | Next.js + TypeScript + Electron Example">
-    <h1>About</h1>
-    <p>This is the about page</p>
-    <p>
-      <Link href="/">
-        <a>Go home</a>
-      </Link>
-    </p>
-  </Layout>
-)
+import Layout from "../components/Layout";
+import FileInput from "../components/FileInput";
+import GlobalContext from "../components/GlobalContext";
 
-export default AboutPage
+const SettingsPage = () => {
+  const { state } = useContext(GlobalContext);
+
+  const onAutoSaveToggle = () => {
+    ipcRenderer.send("toggleAutoSave");
+  };
+
+  const onChangeStorePath = () => {
+    ipcRenderer.send("chooseStorePath");
+  };
+
+  return (
+    <Layout title="About | Next.js + TypeScript + Electron Example">
+      <h1>Settings</h1>
+
+      <div>
+        <div>AutoSave:</div>
+        <button onClick={() => onAutoSaveToggle()}>
+          {state?.isAutoSaveOn ? "true" : "false"}
+        </button>
+      </div>
+
+      <FileInput label="Store:" path={state?.storePath} onClick={onChangeStorePath} />
+    </Layout>
+  );
+};
+
+export default SettingsPage;

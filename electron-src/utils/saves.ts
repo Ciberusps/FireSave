@@ -1,9 +1,10 @@
-import fs, { Stats } from "fs";
+import fs from "fs";
 import path from "path";
+import findProcess from "find-process";
 import { format } from "date-fns";
 
-import findProcess from "find-process";
-import State from "./state";
+import Store from "./store";
+import { getFileName } from ".";
 
 const isProcessRunning = async (processName: string) => {
   try {
@@ -32,18 +33,18 @@ const getSaveStoreFileName = (file: string): string => {
 };
 
 const tryAutoSave = async () => {
-  State.games.forEach(async (game) => {
-    const processName = path.basename(game.exePath);
+  Store.store.games.forEach(async (game) => {
+    const processName = getFileName(game.exePath);
     const gameName = processName.replace(".exe", "");
 
     const isGameRunning = await isProcessRunning(processName);
     if (isGameRunning) {
       console.log("Process running, game", processName, game.exePath);
 
-      const gameStorePath = path.join(State.saves.storePath, gameName);
+      const gameStorePath = path.join(Store.store.storePath, gameName);
 
-      game.savesFiles.forEach((file) => {
-        const savePath = path.join(game.savesPath, file);
+      game.saves.files.forEach((file) => {
+        const savePath = path.join(game.saves.path, file);
 
         const saveStorePath = path.join(gameStorePath, getSaveStoreFileName(file));
 

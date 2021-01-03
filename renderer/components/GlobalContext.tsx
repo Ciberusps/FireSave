@@ -1,14 +1,11 @@
-import React, { useState, useContext, useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { useState, useEffect } from "react";
 
 type TProps = {
-  //   value: User.TUser | null;
   children: any;
 };
 
 type TState = {
-  state: any | null;
-  // logout?: (...args: any) => Promise<any>;
+  state: TStore | null;
 };
 
 const GlobalContext = React.createContext<TState>({
@@ -17,26 +14,14 @@ const GlobalContext = React.createContext<TState>({
 
 const GlobalProvider = (props: TProps) => {
   const { children } = props;
-  // const Router = useRouter();
-  // const api = useContext(ApiContext);
   const [state, setState] = useState<any | null>(null);
 
   useEffect(() => {
-    ipcRenderer.on("stateUpdate", (event, arg) => {
-      console.log("State updated");
+    ipcRenderer.on("stateUpdate", (_, arg) => {
+      console.log("State updated", arg);
       setState(arg);
     });
   }, []);
-
-  // if (user !== props.value) {
-  //   setUser(props.value);
-  // }
-
-  // const { send } = useApiRequest(postLogout(api), {
-  //   onCompleted: async () => {
-  //     await Router.push("/");
-  //   },
-  // });
 
   return (
     <GlobalContext.Provider
