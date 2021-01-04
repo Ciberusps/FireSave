@@ -6,7 +6,8 @@ import screenshot from "screenshot-desktop";
 import { format } from "date-fns";
 
 import Store from "./store";
-import { getId, getFileNameWithExtension, removeFile, mkDir } from ".";
+import FileSystem from "./fileSystem";
+import { getId, getFileNameWithExtension } from ".";
 
 const isGameRunning = async (game: TGame) => {
   try {
@@ -47,7 +48,7 @@ const save = async (game: TGame) => {
       // console.log("SavePath", savePath, saveStorePath);
       if (!savePath) return;
 
-      mkDir(gameStorePath);
+      FileSystem.createDir(gameStorePath);
 
       fs.copyFileSync(savePath, saveStorePath);
 
@@ -60,7 +61,7 @@ const save = async (game: TGame) => {
       });
 
       const screenshotsPath = path.join(gameStorePath, "screenshots");
-      mkDir(screenshotsPath);
+      FileSystem.createDir(screenshotsPath);
       const screenshotFilePath = path.join(
         screenshotsPath,
         saveStoreFileName.split(".")[0] + ".jpg"
@@ -104,8 +105,8 @@ const remove = async (gameId: string, savePointId: string) => {
     const game = Store.store.games[gameId];
     const savePoint = game.savePoints?.[savePointId];
     if (!savePoint) throw new Error("SavePoint not found");
-    if (savePoint?.screenshot) removeFile(savePoint.screenshot);
-    removeFile(savePoint.path);
+    if (savePoint?.screenshot) FileSystem.removeFile(savePoint.screenshot);
+    FileSystem.removeFile(savePoint.path);
     // @ts-ignore
     Store.delete(`games.${gameId}.savePoints.${savePoint.id}`);
   } catch (err) {

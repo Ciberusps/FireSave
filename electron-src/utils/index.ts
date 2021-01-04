@@ -1,6 +1,4 @@
 import path from "path";
-import fs from "fs";
-import axios from "axios";
 import base64url from "base64url";
 import { createHash } from "crypto";
 
@@ -23,15 +21,3 @@ export const isGameExist = (exePath: string): boolean => {
 
 export const getId = (path: string) =>
   base64url.fromBase64(createHash("sha1").update(path).digest("base64"));
-
-export const removeFile = (path: string) => {
-  if (fs.existsSync(path)) {
-    fs.unlinkSync(path);
-  }
-};
-
-export const mkDir = (path: string) => {
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path, { recursive: true });
-  }
-};
