@@ -2,7 +2,7 @@ import cron from "node-cron";
 import path from "path";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
-import { BrowserWindow, app, ipcMain, protocol, dialog } from "electron";
+import { BrowserWindow, app, ipcMain, protocol, dialog, shell } from "electron";
 import { join } from "path";
 import { format } from "url";
 
@@ -201,4 +201,8 @@ ipcMain.handle("loadSavePoint", async (_, gameId: string, savePointId: string) =
 
 ipcMain.handle("removeSavePoint", async (_, gameId: string, savePointId: string) => {
   Saves.remove(gameId, savePointId);
+});
+
+ipcMain.handle("revealInFileExplorer", async (_, path: string) => {
+  shell.showItemInFolder(path);
 });

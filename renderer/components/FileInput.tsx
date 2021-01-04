@@ -10,10 +10,15 @@ type TProps = {
 const IndexPage = (props: TProps) => {
   const { label, path, isDisabled, onClick } = props;
 
+  const onShowInExplorer = () => {
+    ipcRenderer.invoke("revealInFileExplorer", path);
+  };
+
   return (
     <Container isDisabled={isDisabled}>
       <Label>{label}</Label>
       <Path>{path ? path : "..."}</Path>
+      <ChooseButton onClick={onShowInExplorer}>...</ChooseButton>
       <ChooseButton onClick={onClick}>Choose</ChooseButton>
     </Container>
   );
