@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import path from "path";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
+import { autoUpdater } from "electron-updater";
 import { BrowserWindow, app, ipcMain, protocol, dialog, shell } from "electron";
 import { join } from "path";
 import { format } from "url";
@@ -23,6 +23,8 @@ import { fillSteamGameInfo } from "./utils/steam";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
+  autoUpdater.checkForUpdatesAndNotify();
+
   protocol.registerFileProtocol("file", (request, callback) => {
     const pathname = request.url.replace("file:///", "");
     callback(pathname);

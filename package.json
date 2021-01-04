@@ -11,7 +11,8 @@
     "build-electron": "tsc -p electron-src",
     "build": "npm run build-renderer && npm run build-electron",
     "pack-app": "npm run build && electron-builder --dir",
-    "dist": "npm run build && electron-builder --win --x64",
+    "dist": "npm run build && electron-builder",
+    "publish": "npm run dist",
     "type-check": "tsc"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "electron-is-dev": "^1.1.0",
     "electron-next": "^3.1.5",
     "electron-store": "^6.0.1",
+    "electron-updater": "^4.3.5",
     "find-process": "^1.4.4",
     "glob": "^7.1.6",
     "node-cron": "^2.0.3",
@@ -54,6 +56,9 @@
     ],
     "extraResources": [
       "./assets/**"
-    ]
+    ],
+    "win": {
+      "publish": ["github"]
+    }
   }
 }
