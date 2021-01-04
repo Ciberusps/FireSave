@@ -6,10 +6,11 @@ import screenshot from "screenshot-desktop";
 import { format } from "date-fns";
 
 import Store from "./store";
-import { getId, getFileNameWithExtension } from ".";
+import { getId, getFileNameWithExtension, removeFile, mkDir } from ".";
 
-const isProcessRunning = async (processName: string) => {
+const isGameRunning = async (game: TGame) => {
   try {
+    const processName = getFileNameWithExtension(game.exePath);
     const list = await findProcess("name", processName);
     if (list?.length) {
       return true;
@@ -46,9 +47,7 @@ const save = async (game: TGame) => {
       // console.log("SavePath", savePath, saveStorePath);
       if (!savePath) return;
 
-      if (!fs.existsSync(gameStorePath)) {
-        fs.mkdirSync(gameStorePath, { recursive: true });
-      }
+      mkDir(gameStorePath);
 
       fs.copyFileSync(savePath, saveStorePath);
 
@@ -61,9 +60,7 @@ const save = async (game: TGame) => {
       });
 
       const screenshotsPath = path.join(gameStorePath, "screenshots");
-      if (!fs.existsSync(screenshotsPath)) {
-        fs.mkdirSync(screenshotsPath, { recursive: true });
-      }
+      mkDir(screenshotsPath);
       const screenshotFilePath = path.join(
         screenshotsPath,
         saveStoreFileName.split(".")[0] + ".jpg"
@@ -80,19 +77,57 @@ const save = async (game: TGame) => {
   }
 };
 
+const load = async (gameId: string, savePointId: string) => {
+  try {
+    const game = Store.store.games[gameId];
+    const savePoint = game.savePoints?.[savePointId];
+    if (!savePoint) throw new Error("SavePoint not found");
+
+    await save(game);
+
+    if (game.saves.files.length === 1) {
+      const file = game.saves.files[0];
+      const savePath = path.join(game.saves.path, file);
+
+      fs.copyFileSync(savePoint.path, savePath);
+      console.log("LOADED");
+    } else {
+      throw new Error("Need support for many files");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const remove = async (gameId: string, savePointId: string) => {
+  try {
+    const game = Store.store.games[gameId];
+    const savePoint = game.savePoints?.[savePointId];
+    if (!savePoint) throw new Error("SavePoint not found");
+    if (savePoint?.screenshot) removeFile(savePoint.screenshot);
+    removeFile(savePoint.path);
+    // @ts-ignore
+    Store.delete(`games.${gameId}.savePoints.${savePoint.id}`);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 const tryAutoSave = async () => {
   Object.values(Store.store.games).forEach(async (game) => {
-    const processName = getFileNameWithExtension(game.exePath);
-    const isGameRunning = await isProcessRunning(processName);
-    if (!isGameRunning) return;
+    const isRunning = await isGameRunning(game);
+    if (!isRunning) return;
 
     save(game);
-    console.log("Process running, game", processName, game.exePath);
+    console.log("Process running, game", game.exePath);
   });
 };
 
 const Saves = {
   tryAutoSave,
+  save,
+  load,
+  remove,
 };
 
 export default Saves;

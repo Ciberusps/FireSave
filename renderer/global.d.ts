@@ -16,7 +16,7 @@ declare global {
     name: string;
     exePath: string; // id
     saves: TSaves;
-    savePoints?: { [key: string]: TSavePoints };
+    savePoints?: { [key: string]: TSavePoint };
     steamInfo?: TSteamInfo;
     steamManifest?: string;
   };
@@ -26,7 +26,7 @@ declare global {
     files: string[];
   };
 
-  type TSavePoints = {
+  type TSavePoint = {
     id: string;
     date: string;
     path: string;

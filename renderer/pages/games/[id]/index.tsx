@@ -13,14 +13,30 @@ const GamePage = () => {
   const game = state?.games?.[id];
   if (!game) return;
 
-  const onChooseExe = async () => {
-    const newExePath = await ipcRenderer.invoke("chooseGameExe");
+  const savePoints = game.savePoints && Object.values(game.savePoints);
+
+  const onSave = async () => {
+    const newExePath = await ipcRenderer.invoke("saveGame", game.id);
     // TODO: handle error
     if (newExePath) {
-      console.log("ExePath added", newExePath);
+      console.log("Game Saved", newExePath);
       //   setExePath(newExePath);
     } else {
     }
+  };
+
+  const onLoadSave = async (savePoint: TSavePoint) => {
+    const newExePath = await ipcRenderer.invoke("loadSavePoint", game.id, savePoint.id);
+    // TODO: handle error
+    if (newExePath) {
+      console.log("Game Saved", newExePath);
+      //   setExePath(newExePath);
+    } else {
+    }
+  };
+
+  const onRemoveSave = async (savePoint: TSavePoint) => {
+    await ipcRenderer.invoke("removeSavePoint", game.id, savePoint.id);
   };
 
   return (
@@ -28,23 +44,32 @@ const GamePage = () => {
       <Header>
         <h1>{game.name}</h1>
 
-        <Link href="/games/[id]/settings" as={`/games/${game.id}/settings`}>
-          <a>Settings</a>
-        </Link>
+        <div>
+          <Button onClick={onSave}>Save</Button>
+          <Link href="/games/[id]/settings" as={`/games/${game.id}/settings`}>
+            <a>Settings</a>
+          </Link>
+        </div>
       </Header>
 
       <div>
-        {game.savePoints &&
-          Object.values(game.savePoints).map((point) => (
-            <Save>
-              {point.screenshot && <Screenshot src={"file://" + point.screenshot} />}
-              <Info>
+        {savePoints?.reverse()?.map((point) => (
+          <Save>
+            {point.screenshot && <Screenshot src={"file://" + point.screenshot} />}
+            <Info>
+              <Description>
                 <div>id: {point.id}</div>
                 <div>date: {point.date}</div>
-                <div>path: {point.path}</div>
-              </Info>
-            </Save>
-          ))}
+                <div style={{ overflowWrap: "anywhere" }}>{"path: " + point.path}</div>
+              </Description>
+
+              <CTAButtons>
+                <Button onClick={() => onLoadSave(point)}>Load</Button>
+                <Button onClick={() => onRemoveSave(point)}>Remove</Button>
+              </CTAButtons>
+            </Info>
+          </Save>
+        ))}
       </div>
     </Layout>
   );
@@ -58,6 +83,7 @@ const Header = styled.div`
 
 const Save = styled.div`
   display: flex;
+  align-items: center;
   background: #333;
   border-radius: 10px;
   margin-bottom: 16px;
@@ -69,8 +95,24 @@ const Screenshot = styled.img`
 `;
 
 const Info = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-left: 20px;
   padding: 10px 20px;
+`;
+
+const Description = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const CTAButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: -10px;
+  margin-left: 20px;
 `;
 
 const Button = styled.button`
@@ -80,7 +122,8 @@ const Button = styled.button`
   border: 0px;
   border-radius: 6px;
   background: #20af13;
-  margin-top: 16px;
+  margin: 10px;
+  cursor: pointer;
 `;
 
 export default GamePage;

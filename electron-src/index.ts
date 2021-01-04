@@ -100,7 +100,10 @@ ipcMain.handle("chooseGameExe", () => {
 
 ipcMain.handle("chooseSavesPath", async () => {
   const saveFiles = dialog.showOpenDialogSync({
-    properties: ["openFile", "multiSelections"],
+    properties: [
+      "openFile",
+      // , "multiSelections" // TODO: add multiple files saves support
+    ],
   });
   if (!saveFiles) return null;
   const savesPath = getFilePath(saveFiles[0]);
@@ -158,6 +161,19 @@ ipcMain.handle("removeGame", async (event, id) => {
   return true;
 });
 
-ipcMain.on("toggleAutoSave", async () => {
+ipcMain.handle("toggleAutoSave", async () => {
   Store.set("isAutoSaveOn", !Store.store.isAutoSaveOn);
+});
+
+ipcMain.handle("saveGame", async (_, gameId) => {
+  // TODO: dont create screenshot if game not runned
+  Saves.save(Store.store.games[gameId]);
+});
+
+ipcMain.handle("loadSavePoint", async (_, gameId: string, savePointId: string) => {
+  Saves.load(gameId, savePointId);
+});
+
+ipcMain.handle("removeSavePoint", async (_, gameId: string, savePointId: string) => {
+  Saves.remove(gameId, savePointId);
 });

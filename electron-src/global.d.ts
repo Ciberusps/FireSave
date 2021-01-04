@@ -10,7 +10,7 @@ type TGame = {
   name: string;
   exePath: string; // id
   saves: TSaves;
-  savePoints?: { [key: string]: TSavePoints };
+  savePoints?: { [key: string]: TSavePoint };
   steamInfo?: TSteamInfo;
   steamManifest?: TAppManifest;
 };
@@ -20,7 +20,7 @@ type TSaves = {
   files: string[];
 };
 
-type TSavePoints = {
+type TSavePoint = {
   id: string;
   date: string;
   path: string;
