@@ -23,6 +23,7 @@
     "node-cron": "^2.0.3",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
+    "screenshot-desktop": "^1.12.3",
     "styled-components": "^5.2.1"
   },
   "devDependencies": {

@@ -2,17 +2,17 @@ import { useContext, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
-import Layout from "../../components/Layout";
-import FileInput from "../../components/FileInput";
-import GlobalContext from "../../components/GlobalContext";
+import Layout from "../../../components/Layout";
+import FileInput from "../../../components/FileInput";
+import GlobalContext from "../../../components/GlobalContext";
 
 const GamePage = () => {
   const { state } = useContext(GlobalContext);
   const Router = useRouter();
 
-  const id = unescape(Router.query?.id as string);
+  const id = Router.query?.id as string;
   const isEditing = id !== "new";
-  const game = state?.games?.find((g) => g.exePath === id);
+  const game = state?.games?.[id];
 
   const [exePath, setExePath] = useState<string | undefined>(game?.exePath);
   const [saves, setSaves] = useState<{ path: string; files: string[] } | undefined>(
@@ -42,6 +42,7 @@ const GamePage = () => {
     if (!exePath || !saves) return;
     if (isEditing) {
       const isEdited = ipcRenderer.invoke("editGame", {
+        game,
         exePath,
         saves,
       });
@@ -57,7 +58,7 @@ const GamePage = () => {
   };
 
   const onRemove = () => {
-    ipcRenderer.invoke("removeGame", game.id);
+    ipcRenderer.invoke("removeGame", game?.id);
     Router.push(`/`);
   };
 

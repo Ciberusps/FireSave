@@ -17,9 +17,19 @@ declare global {
     name: string;
     steamAppId: string;
     exePath: string; // id
-    saves: {
-      path: string;
-      files: string[];
-    };
+    saves: TSaves;
+    savePoints: { [key: string]: TSavePoints };
+  };
+
+  type TSaves = {
+    path: string;
+    files: string[];
+  };
+
+  type TSavePoints = {
+    id: string;
+    date: string;
+    path: string;
+    screenshot?: string;
   };
 }

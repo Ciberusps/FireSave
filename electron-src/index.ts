@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
-import { BrowserWindow, app, ipcMain, IpcMainEvent, dialog } from "electron";
+import { BrowserWindow, app, ipcMain, protocol, dialog } from "electron";
 import { join } from "path";
 import { format } from "url";
 
@@ -11,12 +11,17 @@ import {
   getFileName,
   getFileNameWithExtension,
   getFilePath,
-  getGameId,
+  getId,
   isGameExist,
 } from "./utils";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
+  protocol.registerFileProtocol("file", (request, callback) => {
+    const pathname = request.url.replace("file:///", "");
+    callback(pathname);
+  });
+
   await prepareNext("./renderer");
 
   if (Store.store.isAutoSaveOn) {
@@ -41,6 +46,8 @@ app.on("ready", async () => {
       nodeIntegration: false,
       // nodeIntegration: true,
       // enableRemoteModule: true,
+      // webSecurity: !isDev,
+      webSecurity: false,
       preload: join(__dirname, "preload.js"),
       devTools: isDev,
     },
@@ -71,23 +78,7 @@ app.on("ready", async () => {
 // Quit the app once all windows are closed
 app.on("window-all-closed", app.quit);
 
-// listen the channel `message` and resend the received message to the renderer process
-ipcMain.on("message", (event: IpcMainEvent, message: any) => {
-  console.log("new message");
-  // event.sender.send("message", message);
-});
-
-ipcMain.on("check", async (event: IpcMainEvent, message: any) => {
-  console.log("Check epta");
-  // event.sender.send("message", message);
-});
-
-ipcMain.on("stateChanged", async (event: IpcMainEvent, message: any) => {
-  console.log("Check epta");
-  // event.sender.send("message", message);
-});
-
-ipcMain.on("chooseStorePath", async (event: IpcMainEvent, message: any) => {
+ipcMain.handle("chooseStorePath", async () => {
   const folders = dialog.showOpenDialogSync({ properties: ["openDirectory"] });
   console.log("folders", folders);
   if (folders?.[0]) {
@@ -99,8 +90,6 @@ ipcMain.handle("chooseGameExe", () => {
   const exePath = dialog.showOpenDialogSync({ properties: ["openFile"] })?.[0];
   if (!exePath) return null;
   if (!isGameExist(exePath)) {
-    const gameName = getFileName(exePath);
-    console.log("SEND BACK");
     return exePath;
   } else {
     console.error("GAME ALREADY EXISTS");
@@ -119,12 +108,11 @@ ipcMain.handle("chooseSavesPath", async () => {
 });
 
 ipcMain.handle("createGame", async (event, { exePath, saves }) => {
-  // console.log(args);
-  // if (!exePath) return null;
   if (!isGameExist(exePath)) {
-    const id = getGameId(exePath);
+    const id = getId(exePath);
     const gameName = getFileName(exePath);
     Store.set(`games.${id}`, {
+      id,
       name: gameName,
       exePath,
       saves,
@@ -136,29 +124,31 @@ ipcMain.handle("createGame", async (event, { exePath, saves }) => {
   }
 });
 
-ipcMain.handle("editGame", async (event, { exePath, saves }) => {
-  if (isGameExist(exePath)) {
-    const gameName = getFileName(exePath);
-    const newGames = Store.store.games;
-    const gameIdx = newGames.findIndex((g) => g.exePath === exePath);
-    if (gameIdx === -1) return false;
-    newGames[gameIdx].name = gameName;
-    newGames[gameIdx].exePath = exePath;
-    newGames[gameIdx].saves = saves;
-    Store.set("games", newGames);
-    return true;
-  } else {
-    console.error("GAME ALREADY EXISTS");
-    return false;
+type TEditGamePayload = {
+  game: TGame;
+  exePath: string;
+  saves: TSaves;
+};
+
+ipcMain.handle("editGame", async (event, { game, exePath, saves }: TEditGamePayload) => {
+  const oldId = game.id;
+  const newId = getId(exePath);
+  const newGameName = getFileName(exePath);
+  game.id = newId;
+  game.name = newGameName;
+  game.exePath = exePath;
+  game.saves = saves;
+  if (oldId !== newId) {
+    // @ts-ignore
+    Store.delete(`games.${oldId}`);
   }
+  Store.set(`games.${newId}`, game);
+  return true;
 });
 
-ipcMain.handle("removeGame", async (event, exePath) => {
-  const newGames = Store.store.games;
-  const gameIdx = newGames.findIndex((g) => g.exePath === exePath);
-  if (gameIdx === -1) return false;
-  newGames.splice(gameIdx, 1);
-  Store.delete(`games.${}`, newGames);
+ipcMain.handle("removeGame", async (event, id) => {
+  // @ts-ignore
+  Store.delete(`games.${id}`);
   return true;
 });
 

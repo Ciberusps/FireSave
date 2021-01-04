@@ -18,11 +18,12 @@ const IndexPage = () => {
       </Header>
 
       <Games>
-        {state?.games.map((game) => (
-          <Link href="/games/[id]" as={`/games/${escape(game.exePath)}`}>
-            <Game>{game.name}</Game>
-          </Link>
-        ))}
+        {state?.games &&
+          Object.values(state?.games).map((game) => (
+            <Link href="/games/[id]" as={`/games/${game.id}`}>
+              <Game>{game.name}</Game>
+            </Link>
+          ))}
       </Games>
     </Layout>
   );
