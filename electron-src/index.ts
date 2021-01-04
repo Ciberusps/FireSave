@@ -14,6 +14,7 @@ import {
   getId,
   isGameExist,
 } from "./utils";
+import { fillSteamGameInfo } from "./utils/steam";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
@@ -107,16 +108,21 @@ ipcMain.handle("chooseSavesPath", async () => {
   return { path: savesPath, files };
 });
 
-ipcMain.handle("createGame", async (event, { exePath, saves }) => {
+type TCreateGamePayload = {
+  exePath: string;
+  saves: TSaves;
+};
+
+ipcMain.handle("createGame", async (event, { exePath, saves }: TCreateGamePayload) => {
   if (!isGameExist(exePath)) {
     const id = getId(exePath);
-    const gameName = getFileName(exePath);
-    Store.set(`games.${id}`, {
-      id,
-      name: gameName,
-      exePath,
-      saves,
-    });
+    const name = getFileName(exePath);
+    const newGame: TGame = { id, name, exePath, saves };
+    Store.set(`games.${id}`, newGame);
+
+    const isSteamGame = exePath.includes("steamapps");
+    if (isSteamGame) fillSteamGameInfo(newGame);
+
     return true;
   } else {
     console.error("GAME ALREADY EXISTS");

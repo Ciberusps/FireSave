@@ -1,4 +1,6 @@
 import path from "path";
+import axios from "axios";
+import base64url from "base64url";
 import { createHash } from "crypto";
 
 import Store from "./store";
@@ -18,4 +20,5 @@ export const isGameExist = (exePath: string): boolean => {
   return isGameExist;
 };
 
-export const getId = (path: string) => createHash("sha1").update(path).digest("base64");
+export const getId = (path: string) =>
+  base64url.fromBase64(createHash("sha1").update(path).digest("base64"));

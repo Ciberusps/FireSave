@@ -2,28 +2,28 @@ import { useContext } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 
+import Game from "../components/Game";
 import Layout from "../components/Layout";
 import GlobalContext from "../components/GlobalContext";
 
 const IndexPage = () => {
   const { state } = useContext(GlobalContext);
 
+  const games = state?.games && Object.values(state?.games);
+
   return (
     <Layout title="Saves List">
       <Header>
         <h1>Games</h1>
-        <Link href="/games/[id]" as="/games/new">
+        <Link href="/games/[id]/settings" as="/games/new/settings">
           <a>Add new game</a>
         </Link>
       </Header>
 
       <Games>
-        {state?.games &&
-          Object.values(state?.games).map((game) => (
-            <Link href="/games/[id]" as={`/games/${game.id}`}>
-              <Game>{game.name}</Game>
-            </Link>
-          ))}
+        {games?.map((game) => (
+          <Game key={game.id} game={game} />
+        ))}
       </Games>
     </Layout>
   );
@@ -35,12 +35,10 @@ const Header = styled.div`
   justify-content: space-between;
 `;
 
-const Games = styled.div``;
-
-const Game = styled.div`
-  width: 150px;
-  height: 200px;
-  border: 1px solid red;
+const Games = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin: -10px;
 `;
 
 export default IndexPage;
