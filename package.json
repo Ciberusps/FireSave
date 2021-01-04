@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "main": "main/index.js",
-  "productName": "ElectronTypescriptNext",
+  "productName": "GSM",
   "scripts": {
     "clean": "rimraf dist main renderer/out renderer/.next",
     "dev": "npm run build-electron && electron .",
@@ -51,6 +51,9 @@
     "files": [
       "main",
       "renderer/out"
+    ],
+    "extraResources": [
+      "./assets/**"
     ]
   }
 }

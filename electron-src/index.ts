@@ -1,4 +1,5 @@
 import cron from "node-cron";
+import path from "path";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
 import { BrowserWindow, app, ipcMain, protocol, dialog } from "electron";
@@ -7,6 +8,7 @@ import { format } from "url";
 
 import Saves from "./utils/saves";
 import Store from "./utils/store";
+import AppTray from "./utils/tray";
 import {
   getFileName,
   getFileNameWithExtension,
@@ -15,6 +17,9 @@ import {
   isGameExist,
 } from "./utils";
 import { fillSteamGameInfo } from "./utils/steam";
+
+// let tray: Tray | null = null;
+// let isQuiting = false;
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
@@ -43,6 +48,7 @@ app.on("ready", async () => {
   const mainWindow = new BrowserWindow({
     width: 1080,
     height: 1266,
+    minimizable: true,
     webPreferences: {
       nodeIntegration: false,
       // nodeIntegration: true,
@@ -64,8 +70,27 @@ app.on("ready", async () => {
         slashes: true,
       });
 
+  AppTray.init(mainWindow);
+
   mainWindow.webContents.once("did-finish-load", () => {
     mainWindow.webContents.send("stateUpdate", Store.store);
+  });
+
+  mainWindow.on("minimize", () => {
+    mainWindow.hide();
+  });
+
+  mainWindow.on("restore", () => {
+    mainWindow.show();
+  });
+
+  mainWindow.on("close", (event) => {
+    console.log("isQuiting", AppTray.getIsQuiting());
+    if (!AppTray.getIsQuiting()) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+    return false;
   });
 
   Store.onDidAnyChange((newVal) => {

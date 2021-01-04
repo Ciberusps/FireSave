@@ -3,6 +3,7 @@ import base64url from "base64url";
 import { createHash } from "crypto";
 
 import Store from "./store";
+import { RESOURCES_PATH } from "./config";
 
 export const getFileNameWithExtension = (filePath: string): string =>
   path.basename(filePath);
@@ -21,3 +22,6 @@ export const isGameExist = (exePath: string): boolean => {
 
 export const getId = (path: string) =>
   base64url.fromBase64(createHash("sha1").update(path).digest("base64"));
+
+export const getAssetPath = (...paths: string[]): string =>
+  path.join(RESOURCES_PATH, ...paths);

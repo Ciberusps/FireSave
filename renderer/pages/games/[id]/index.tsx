@@ -11,7 +11,7 @@ const GamePage = () => {
   const Router = useRouter();
   const id = Router.query?.id as string;
   const game = state?.games?.[id];
-  if (!game) return;
+  if (!game) return <div>error</div>;
 
   const savePoints = game.savePoints && Object.values(game.savePoints);
 
