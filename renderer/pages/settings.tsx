@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import styled from "styled-components";
 
 import Layout from "../components/Layout";
 import FileInput from "../components/FileInput";
@@ -27,8 +28,17 @@ const SettingsPage = () => {
       </div>
 
       <FileInput label="Store:" path={state?.storePath} onClick={onChangeStorePath} />
+
+      <Version>v{state?.version}</Version>
     </Layout>
   );
 };
+
+const Version = styled.div`
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 18px;
+`;
 
 export default SettingsPage;

@@ -100,6 +100,8 @@ app.on("ready", async () => {
     mainWindow.webContents.send("stateUpdate", newVal);
   });
 
+  Store.set("version", app.getVersion());
+
   mainWindow.loadURL(url);
 });
 
