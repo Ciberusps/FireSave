@@ -8,6 +8,7 @@ declare global {
     isAutoSaveOn: boolean;
     autoSaveMinutes: number;
     storePath: string;
+    version: string;
     games: { [key: string]: TGame };
   };
 

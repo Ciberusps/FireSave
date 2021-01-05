@@ -12,7 +12,8 @@ const Store = new ElectronStore<TStore>({
     // minimize: true
     isAutoSaveOn: true,
     autoSaveMinutes: 1,
-    storePath: "C:/GamesSaves",
+    storePath: "C:\\GamesSaves",
+    version: "unknown",
     games: {
       // {
       //   steamAppId: "",

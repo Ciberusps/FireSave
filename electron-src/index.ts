@@ -51,6 +51,7 @@ app.on("ready", async () => {
     width: 1080,
     height: 1266,
     minimizable: true,
+    maximizable: true,
     webPreferences: {
       nodeIntegration: false,
       // nodeIntegration: true,
@@ -74,9 +75,10 @@ app.on("ready", async () => {
 
   AppTray.init(mainWindow);
 
-  mainWindow.webContents.once("did-finish-load", () => {
-    mainWindow.webContents.send("stateUpdate", Store.store);
-  });
+  // mainWindow.webContents.once("did-finish-load", () => {
+  //   // console.log("FINISHED LOADING", Store.store);
+  //   // mainWindow.webContents.send("stateUpdate", Store.store);
+  // });
 
   mainWindow.on("minimize", () => {
     mainWindow.hide();
@@ -100,7 +102,10 @@ app.on("ready", async () => {
     mainWindow.webContents.send("stateUpdate", newVal);
   });
 
+  Store.set("version", app.getVersion());
+
   mainWindow.loadURL(url);
+  mainWindow.maximize();
 });
 
 // Quit the app once all windows are closed
@@ -206,5 +211,10 @@ ipcMain.handle("removeSavePoint", async (_, gameId: string, savePointId: string)
 });
 
 ipcMain.handle("revealInFileExplorer", async (_, path: string) => {
+  console.log("test", path);
   shell.showItemInFolder(path);
+});
+
+ipcMain.handle("getState", async (_, path: string) => {
+  return Store.store;
 });

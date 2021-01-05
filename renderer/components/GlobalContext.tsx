@@ -16,7 +16,14 @@ const GlobalProvider = (props: TProps) => {
   const { children } = props;
   const [state, setState] = useState<any | null>(null);
 
+  const getState = async () => {
+    const newState = await ipcRenderer.invoke("getState");
+    setState(newState);
+  };
+
   useEffect(() => {
+    getState();
+
     ipcRenderer.on("stateUpdate", (_, arg) => {
       console.log("State updated", arg);
       setState(arg);
