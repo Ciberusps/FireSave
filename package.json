@@ -1,6 +1,8 @@
 {
-  "name": "with-electron-typescript",
-  "version": "0.0.7",
+  "name": "GSM",
+  "description": "Saves manager",
+  "version": "0.0.8",
+  "author": "Ciberusps",
   "license": "MIT",
   "main": "main/index.js",
   "productName": "GSM",
@@ -49,6 +51,7 @@
     "typescript": "^4.0.5"
   },
   "build": {
+    "appid":"gg.ciberus.gsm",
     "asar": true,
     "files": [
       "main",
