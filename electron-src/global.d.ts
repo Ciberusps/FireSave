@@ -3,6 +3,7 @@ type TStore = {
   autoSaveMinutes: number;
   storePath: string;
   version: string;
+  saveShortcut: string;
   games: { [key: string]: TGame };
 };
 

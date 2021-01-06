@@ -9,6 +9,7 @@ import { format } from "url";
 import Saves from "./utils/saves";
 import Store from "./utils/store";
 import AppTray from "./utils/tray";
+import Shortcuts from "./utils/shortcuts";
 import {
   getFileName,
   getFileNameWithExtension,
@@ -105,7 +106,14 @@ app.on("ready", async () => {
   Store.set("version", app.getVersion());
 
   mainWindow.loadURL(url);
+
   mainWindow.maximize();
+
+  Shortcuts.registerSaveKey(Store.store.saveShortcut);
+});
+
+app.on("will-quit", () => {
+  Shortcuts.unregisterAll();
 });
 
 // Quit the app once all windows are closed
@@ -215,6 +223,6 @@ ipcMain.handle("revealInFileExplorer", async (_, path: string) => {
   shell.showItemInFolder(path);
 });
 
-ipcMain.handle("getState", async (_, path: string) => {
+ipcMain.handle("getState", async () => {
   return Store.store;
 });

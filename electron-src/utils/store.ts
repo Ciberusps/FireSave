@@ -12,6 +12,7 @@ const Store = new ElectronStore<TStore>({
     // minimize: true
     isAutoSaveOn: true,
     autoSaveMinutes: 1,
+    saveShortcut: "F5",
     storePath: "C:\\GamesSaves",
     version: "unknown",
     games: {

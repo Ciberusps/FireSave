@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import findProcess from "find-process";
+// screenshot-desktop dont work without asarUnpack
 // @ts-ignore
 import screenshot from "screenshot-desktop";
 import { format } from "date-fns";
@@ -124,11 +125,20 @@ const tryAutoSave = async () => {
   });
 };
 
+const saveRunningGames = () => {
+  Object.entries(Store.store.games).map(([key, game]) => {
+    if (isGameRunning(game)) {
+      save(game);
+    }
+  });
+};
+
 const Saves = {
   tryAutoSave,
   save,
   load,
   remove,
+  saveRunningGames,
 };
 
 export default Saves;
