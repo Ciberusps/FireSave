@@ -6,10 +6,10 @@ declare module "styled-components" {
   export interface DefaultTheme {
     background: string;
     borderRadius: string;
-
-    colors: {
-      main: string;
-      secondary: string;
-    };
+    dark: string;
+    darkOpacity: string;
+    purple: string;
+    purpleHovered: string;
+    white: string;
   }
 }

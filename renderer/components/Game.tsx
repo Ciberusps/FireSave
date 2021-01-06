@@ -13,29 +13,38 @@ const Game = (props: TProps) => {
     <Link href="/games/[id]" as={`/games/${game.id}`}>
       <Container className={className}>
         <Image src={game?.steamInfo?.header_image} />
-        <h1>{game?.steamInfo?.name || game.name}</h1>
+        <Description>
+          <GameName>{game?.steamInfo?.name || game.name}</GameName>
+        </Description>
       </Container>
     </Link>
   );
 };
 
-const size = 0.8;
-
 const Container = styled.div`
-  position: relative;
-  width: ${460 * size}px;
-  height: ${215 * size}px;
-  /* border: 1px solid red; */
+  width: 460px;
+  background: #1c1c1c;
   margin: 10px;
-  border-radius: 6px;
+  padding-bottom: 14px;
+  border-radius: 10px;
+  overflow: hidden;
   cursor: pointer;
+  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.25));
 `;
 
 const Image = styled.img`
-  position: absolute;
   width: 100%;
-  height: 100%;
+  height: 215px;
   object-fit: cover;
+`;
+
+const Description = styled.div`
+  margin-top: 12px;
+  padding: 0px 20px;
+`;
+
+const GameName = styled.div`
+  font-size: 26px;
 `;
 
 export default Game;

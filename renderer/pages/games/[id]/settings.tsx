@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 
 import Layout from "../../../components/Layout";
+import Button from "../../../components/Button";
 import FileInput from "../../../components/FileInput";
 import GlobalContext from "../../../components/GlobalContext";
 
@@ -68,12 +69,14 @@ const GamePage = () => {
 
       <FileInput label=".exe file" path={exePath} onClick={onChooseExe} />
 
-      <FileInput
-        label="Save file(s) path"
-        path={saves?.path}
-        isDisabled={!exePath}
-        onClick={onChooseSavesPath}
-      />
+      {exePath && (
+        <FileInput
+          label="Save file(s) path"
+          path={saves?.path}
+          isDisabled={!exePath}
+          onClick={onChooseSavesPath}
+        />
+      )}
 
       <div>
         Files:
@@ -87,15 +90,5 @@ const GamePage = () => {
     </Layout>
   );
 };
-
-const Button = styled.button`
-  width: 150px;
-  height: 50px;
-  color: white;
-  border: 0px;
-  border-radius: 6px;
-  background: #20af13;
-  margin-top: 16px;
-`;
 
 export default GamePage;

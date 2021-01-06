@@ -1,10 +1,10 @@
 import { useContext } from "react";
-import Link from "next/link";
 import styled from "styled-components";
 
 import Game from "../components/Game";
 import Layout from "../components/Layout";
 import GlobalContext from "../components/GlobalContext";
+import Button from "../components/Button";
 
 const IndexPage = () => {
   const { state } = useContext(GlobalContext);
@@ -15,9 +15,24 @@ const IndexPage = () => {
     <Layout title="Saves List">
       <Header>
         <h1>Games</h1>
-        <Link href="/games/[id]/settings" as="/games/new/settings">
-          <a>Add new game</a>
-        </Link>
+
+        <Button icon="add" href="/games/[id]/settings" as="/games/new/settings">
+          Add game
+        </Button>
+
+        {/* <Button href="/games/[id]/settings" as="/games/new/settings">
+          Add game
+        </Button>
+
+        <Button href="/games/[id]/settings" isDisabled={true}>
+          Add game
+        </Button>
+
+        <Button href="/games/[id]/settings" isLoading={true}>
+          Add game
+        </Button>
+
+        <Button icon="add" href="/games/[id]/settings" /> */}
       </Header>
 
       <Games>
@@ -39,6 +54,7 @@ const Games = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: -10px;
+  margin-top: 20px;
 `;
 
 export default IndexPage;

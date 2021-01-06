@@ -6,8 +6,9 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    /* font-family: ; */
-    /* font-size:  */
+    color: white;
+    font-family: "Open Sans";
+    font-size: 18px;
     font-weight: normal;
     font-smoothing: antialiased;
 
@@ -18,9 +19,6 @@ export const GlobalStyles = createGlobalStyle`
 
     backface-visibility: visible;
     overflow-y: scroll;
-
-    color: white;
-    /* background:  */
   }
 
   code {
@@ -30,10 +28,17 @@ export const GlobalStyles = createGlobalStyle`
 
   input, textarea, select, button {
     font-size: 1em;
+    font-family: "Open Sans";
   }
 
   a {
     text-decoration: none;
+  }
+
+  h1 {
+    font-size: 54px;
+    font-weight: bolder;
+    margin: 0px;
   }
 
   h2 {

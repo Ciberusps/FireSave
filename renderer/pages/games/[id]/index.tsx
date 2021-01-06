@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import Link from "next/link";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
 import Layout from "../../../components/Layout";
+import GameHeader from "../../../components/GameHeader";
 import GlobalContext from "../../../components/GlobalContext";
 
 const GamePage = () => {
@@ -14,16 +14,6 @@ const GamePage = () => {
   if (!game) return <div>error</div>;
 
   const savePoints = game.savePoints && Object.values(game.savePoints);
-
-  const onSave = async () => {
-    const newExePath = await ipcRenderer.invoke("saveGame", game.id);
-    // TODO: handle error
-    if (newExePath) {
-      console.log("Game Saved", newExePath);
-      //   setExePath(newExePath);
-    } else {
-    }
-  };
 
   const onLoadSave = async (savePoint: TSavePoint) => {
     const newExePath = await ipcRenderer.invoke("loadSavePoint", game.id, savePoint.id);
@@ -40,21 +30,12 @@ const GamePage = () => {
   };
 
   return (
-    <Layout title="New Game">
-      <Header>
-        <h1>{game.name}</h1>
+    <Layout title="New Game" contentStyles={{ padding: 0 }}>
+      <GameHeader game={game} />
 
-        <div>
-          <Button onClick={onSave}>Save</Button>
-          <Link href="/games/[id]/settings" as={`/games/${game.id}/settings`}>
-            <a>Settings</a>
-          </Link>
-        </div>
-      </Header>
-
-      <div>
+      <SavePoints>
         {savePoints?.reverse()?.map((point) => (
-          <Save>
+          <Save key={point.id}>
             {point.screenshot && <Screenshot src={"file://" + point.screenshot} />}
             <Info>
               <Description>
@@ -70,15 +51,14 @@ const GamePage = () => {
             </Info>
           </Save>
         ))}
-      </div>
+      </SavePoints>
     </Layout>
   );
 };
 
-const Header = styled.div`
-  display: flex;
+const SavePoints = styled.div`
+  margin-top: 40px;
   align-items: center;
-  justify-content: space-between;
 `;
 
 const Save = styled.div`
