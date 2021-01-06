@@ -38,7 +38,7 @@ const GameHeader = (props: TProps) => {
         <SettingsButton
           icon="settings"
           href="/games/[id]/settings"
-          as={`/games/${game.id}/settings`}
+          forwardedAs={`/games/${game.id}/settings`}
         />
       </CtaButtons>
     </Container>

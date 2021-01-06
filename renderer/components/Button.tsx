@@ -49,7 +49,7 @@ const Button = forwardRef<
 
   console.log("OTHER PROPS", otherProps);
 
-  const Content = (
+  const content = (
     <Container
       ref={ref}
       type={getType()}
@@ -72,12 +72,12 @@ const Button = forwardRef<
   if (href) {
     return (
       <Link href={href} as={as}>
-        {Content}
+        {content}
       </Link>
     );
   }
 
-  return Content;
+  return content;
 });
 
 export default Button;
