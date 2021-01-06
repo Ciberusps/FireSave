@@ -1,7 +1,7 @@
 {
   "name": "GSM",
   "description": "Saves manager",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "author": "Ciberusps",
   "license": "MIT",
   "main": "main/index.js",
@@ -64,6 +64,9 @@
     "win": {
       "publish": [
         "github"
+      ],
+      "asarUnpack": [
+        "node_modules/screenshot-desktop/lib/win32"
       ]
     }
   }
