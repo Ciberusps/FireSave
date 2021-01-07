@@ -48,7 +48,7 @@ const SettingsPage = () => {
 
         <FileInput
           label="Store folder"
-          path={state?.storePath}
+          value={state?.storePath}
           description="Place there saves, screenshots and config will be stored"
           onClick={onChangeStorePath}
         />

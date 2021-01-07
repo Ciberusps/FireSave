@@ -69,17 +69,6 @@ const Top = styled.div`
   }
 `;
 
-const Path = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  background: #333;
-  padding: 5px 15px;
-  border-radius: 4px;
-  font-weight: 300;
-  font-size: 14px;
-`;
-
 const Description = styled.div`
   font-style: normal;
   font-weight: lighter;

@@ -10,7 +10,7 @@ type TProps = {
 };
 
 const NumberInput = (props: TProps) => {
-  const { label, value = 0, description, isDisabled, onChange } = props;
+  const { label, value = 1, description, isDisabled, onChange } = props;
 
   const onChangeValue = (event: ChangeEvent<HTMLInputElement>) => {
     let newVal = Number(event.target.value.slice(0, 2));

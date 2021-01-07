@@ -10,6 +10,7 @@ import Saves from "./utils/saves";
 import Store from "./utils/store";
 import AppTray from "./utils/tray";
 import Shortcuts from "./utils/shortcuts";
+import Scheduler from "./utils/scheduler";
 import {
   getFileName,
   getFileNameWithExtension,
@@ -33,20 +34,7 @@ app.on("ready", async () => {
 
   await prepareNext("./renderer");
 
-  if (Store.store.isAutoSaveOn) {
-    Saves.tryAutoSave();
-
-    // cron.schedule("* * * * *", () => {
-    //   console.log("running a task every minute");
-    // });
-
-    // console.log("GAME ID", getGameId(Store.store.games[0].exePath));
-
-    setInterval(() => {
-      console.log("TRY AUTO SAVE");
-      Saves.tryAutoSave();
-    }, Store.store.autoSaveMinutes * 60 * 1000);
-  }
+  Scheduler.runAutoSaves();
 
   const mainWindow = new BrowserWindow({
     width: 1080,
@@ -229,6 +217,10 @@ ipcMain.handle("getState", async () => {
 
 ipcMain.handle("openProfileLink", async () => {
   shell.openExternal("https://github.com/Ciberusps");
+});
+
+ipcMain.handle("openPcGamingWiki", async () => {
+  shell.openExternal("https://pcgamingwiki.com");
 });
 
 ipcMain.handle("changeAutoSaveInterval", async (_, newVal: number) => {

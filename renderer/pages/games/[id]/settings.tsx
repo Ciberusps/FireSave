@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
-// import styled from "styled-components";
+import styled from "styled-components";
 import { useRouter } from "next/router";
 
 import Layout from "../../../components/Layout";
 import Button from "../../../components/Button";
 import FileInput from "../../../components/FileInput";
 import GlobalContext from "../../../components/GlobalContext";
+import FormBlock from "../../../components/FormBlock";
 
 const GamePage = () => {
   const { state } = useContext(GlobalContext);
@@ -63,32 +64,78 @@ const GamePage = () => {
     Router.push(`/`);
   };
 
+  const onOpenPcGamingWiki = () => {
+    ipcRenderer.invoke("openPcGamingWiki");
+  };
+
   return (
     <Layout title="New Game">
-      <h1>{isEditing ? game?.name : "Add game"}</h1>
+      <Header>{isEditing ? game?.name : "Add game"}</Header>
 
-      <FileInput label=".exe file" path={exePath} onClick={onChooseExe} />
+      <FormBlock>
+        {/* <Description>
+          Don't know where save file located?
+          <br />
+          - search by game name on PCGamingWiki
+          <br />- find "Save game data location"
+        </Description> */}
 
-      {exePath && (
         <FileInput
-          label="Save file(s) path"
-          path={saves?.path}
-          isDisabled={!exePath}
-          onClick={onChooseSavesPath}
+          label=".exe file"
+          value={exePath}
+          description={`Path to game ".exe" file`}
+          onClick={onChooseExe}
         />
-      )}
 
-      <div>
-        Files:
-        {saves?.files?.map((file) => (
-          <div>- {file}</div>
-        ))}
-      </div>
-
-      <Button onClick={onSave}>Save</Button>
-      <Button onClick={onRemove}>Remove game</Button>
+        {exePath && (
+          <FileInput
+            label="Save file path"
+            value={saves?.path}
+            files={saves?.files}
+            description={
+              <Description>
+                <div>Path to game save file. Don't know where save file located?</div>
+                <div style={{ display: "flex" }}>
+                  You can find game on&nbsp;
+                  <Link onClick={onOpenPcGamingWiki}>PCGamingWiki.com</Link>&nbsp;under
+                  "Save game data location" will be path to save file
+                </div>
+              </Description>
+            }
+            isDisabled={!exePath}
+            onClick={onChooseSavesPath}
+          />
+        )}
+        <CtaButtons>
+          <Button onClick={onSave}>Save</Button>
+          {isEditing && <Button onClick={onRemove}>Remove game</Button>}
+        </CtaButtons>
+      </FormBlock>
     </Layout>
   );
 };
 
 export default GamePage;
+
+const Header = styled.h1`
+  margin-bottom: 20px;
+`;
+
+const Description = styled.div``;
+
+const Link = styled.span`
+  display: flex;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+`;
+
+const CtaButtons = styled.div`
+  display: flex;
+
+  > {
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
+`;
