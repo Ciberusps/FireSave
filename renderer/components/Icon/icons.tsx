@@ -49,3 +49,23 @@ export const close = (props: any) => (
     />
   </svg>
 );
+
+export const openInNew = (props: any) => (
+  <svg viewBox="0 0 20 20" {...props}>
+    <path
+      d="M15.8333 15.8333H4.16667V4.16667H10V2.5H4.16667C3.24167 2.5 2.5 3.25 2.5 4.16667V15.8333c0 .9167.74167 1.6667 1.66667 1.6667H15.8333c.9167 0 1.6667-.75 1.6667-1.6667V10h-1.6667v5.8333zM11.6667 2.5v1.66667h2.9916L6.46667 12.3583l1.175 1.175 8.19163-8.19163v2.99166H17.5V2.5h-5.8333z"
+      fill={props.fill}
+    />
+  </svg>
+);
+
+export const check = (props: any) => (
+  <svg viewBox="0 0 20 20" {...props}>
+    <path
+      d="M7.50013 13.475l-3.475-3.47501L2.8418 11.175l4.65833 4.6583 9.99997-9.99997-1.175-1.175L7.50013 13.475z"
+      fill={props.fill}
+    />
+  </svg>
+);
+
+export const visuallyHidden = (props: any) => <svg viewBox="0 0 20 20" {...props} />;

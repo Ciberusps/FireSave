@@ -226,3 +226,11 @@ ipcMain.handle("revealInFileExplorer", async (_, path: string) => {
 ipcMain.handle("getState", async () => {
   return Store.store;
 });
+
+ipcMain.handle("openProfileLink", async () => {
+  shell.openExternal("https://github.com/Ciberusps");
+});
+
+ipcMain.handle("changeAutoSaveInterval", async (_, newVal: number) => {
+  Store.set("autoSaveMinutes", newVal);
+});

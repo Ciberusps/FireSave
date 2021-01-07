@@ -8,6 +8,7 @@ declare module "styled-components" {
     borderRadius: string;
     dark: string;
     darkOpacity: string;
+    underlay: string;
     purple: string;
     purpleHovered: string;
     white: string;

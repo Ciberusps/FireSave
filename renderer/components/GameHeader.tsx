@@ -49,13 +49,15 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(34, 34, 34, 0.8);
+  background: rgba(34, 34, 34, 0.65);
   height: 80px;
   position: sticky;
   padding: 0px 25px;
   top: 0px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
   z-index: 99999;
+  box-shadow: 0px 10px 6px -6px rgba(0, 0, 0, 0.75);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.75);
 `;
 
 const Info = styled.div`

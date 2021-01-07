@@ -4,14 +4,14 @@ import { ThemeContext } from "styled-components";
 import * as ICONS from "./icons";
 
 const sizes = {
-  small: 16,
+  small: 20,
   medium: 26,
   large: 30,
 };
 export type TSizes = keyof typeof sizes;
 export type TIcons = keyof typeof ICONS;
 
-type TProps = {
+export type TProps = {
   icon: TIcons;
   size?: TSizes;
   color?: string;
@@ -20,9 +20,12 @@ type TProps = {
 
 const Icon = (props: TProps) => {
   const theme = useContext(ThemeContext);
-  const { icon, size = "medium", color = theme.white, className } = props;
+  const { icon, size, color, className } = props;
 
-  const sizePx = sizes[size];
+  const _color = color || theme.white;
+  const _size = size || "medium";
+
+  const sizePx = sizes[_size];
   const Component = ICONS[icon];
   return (
     <Component
@@ -32,7 +35,7 @@ const Icon = (props: TProps) => {
         height: sizePx,
         minWidth: sizePx,
         minHeight: sizePx,
-        fill: color,
+        fill: _color,
       }}
     />
   );

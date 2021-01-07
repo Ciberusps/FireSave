@@ -1,21 +1,19 @@
-import styled from "styled-components";
+import { useContext } from "react";
+import styled, { ThemeContext } from "styled-components";
 
 import Button from "./Button";
 
 type TProps = {
   label: string;
-  path: string | undefined;
+  value: boolean | undefined;
   description: string;
   isDisabled?: boolean;
   onClick: () => void;
 };
 
 const FileInput = (props: TProps) => {
-  const { label, path, description, isDisabled, onClick } = props;
-
-  const onShowInExplorer = () => {
-    ipcRenderer.invoke("revealInFileExplorer", path);
-  };
+  const { label, value = false, description, isDisabled, onClick } = props;
+  const theme = useContext(ThemeContext);
 
   return (
     <Container isDisabled={isDisabled}>
@@ -23,17 +21,11 @@ const FileInput = (props: TProps) => {
 
       <InputContainer>
         <Top>
-          <Path>{path ? path : "..."}</Path>
-
-          <Button size="small" onClick={onClick}>
-            Choose
-          </Button>
-
           <Button
-            icon="openInNew"
+            icon={value ? "check" : "visuallyHidden"}
             size="small"
-            title="Reveal in expolorer"
-            onClick={onShowInExplorer}
+            iconProps={{ color: theme.purple }}
+            onClick={onClick}
           />
         </Top>
 

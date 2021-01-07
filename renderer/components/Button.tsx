@@ -3,15 +3,18 @@ import styled, { css } from "styled-components";
 import Link, { LinkProps } from "next/link";
 
 import Text from "./Text";
-import Icon, { TIcons, TSizes } from "./Icon";
+import Icon, { TIcons, TSizes, TProps as TIconProps } from "./Icon";
 import ActivityIndicator from "./ActivityIndicator";
 
+type TSize = "normal" | "small";
+
 type TProps = Partial<LinkProps> & {
-  size?: "big" | "normal";
+  size?: TSize;
   href?: string;
   as?: string;
   icon?: TIcons;
   iconSize?: TSizes;
+  iconProps?: Partial<TIconProps>;
   isLoading?: boolean;
   isDisabled?: boolean;
   isSubmit?: boolean;
@@ -29,6 +32,7 @@ const Button = forwardRef<
     size = "normal",
     icon,
     iconSize,
+    iconProps,
     href,
     as,
     isLoading = false,
@@ -52,6 +56,7 @@ const Button = forwardRef<
       ref={ref}
       type={getType()}
       role="button"
+      size={size}
       hasChildren={!!children}
       isLoading={!!isLoading}
       disabled={!!isDisabled}
@@ -59,8 +64,15 @@ const Button = forwardRef<
       tabIndex={0}
       {...otherProps}
     >
-      <TextStyled isLoading={isLoading} hasChildren={!!children}>
-        {icon && <IconStyled icon={icon} size={iconSize} hasChildren={!!children} />}
+      <TextStyled size={size} isLoading={isLoading} hasChildren={!!children}>
+        {icon && (
+          <IconStyled
+            icon={icon}
+            size={iconSize || size === "small" ? "small" : "medium"}
+            hasChildren={!!children}
+            {...iconProps}
+          />
+        )}
         {children}
       </TextStyled>
       {isLoading && <ActivityIndicatorStyled />}
@@ -82,27 +94,11 @@ export default Button;
 
 const height = "48px";
 
-type TTextStyled = {
-  hasChildren: boolean;
-  isLoading?: boolean;
-};
-const TextStyled = styled(Text)<TTextStyled>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-  width: 100%;
-  height: ${height};
-  font-weight: 600;
-  font-size: 18px;
-  padding: 0 19px;
-  outline: none;
-`;
-
 type TContainer = Pick<HTMLProps<HTMLAnchorElement>, "href"> & {
   hasChildren: boolean;
   disabled: boolean;
   isLoading: boolean;
+  size: TSize;
 };
 const Container = styled.button<TContainer>`
   position: relative;
@@ -112,7 +108,8 @@ const Container = styled.button<TContainer>`
   justify-content: center;
 
   width: fit-content;
-  min-height: ${height};
+  height: ${({ size }) => (size === "normal" ? height : "30px")};
+  min-height: ${({ size }) => (size === "normal" ? height : "30px")};
 
   background: ${({ theme, hasChildren }) =>
     hasChildren ? theme.purple : theme.darkOpacity};
@@ -129,28 +126,27 @@ const Container = styled.button<TContainer>`
   &:hover,
   &.hover {
     text-decoration: none;
-    ${({ disabled }) =>
+    ${({ disabled, hasChildren }) =>
       !disabled &&
       css`
-        background: ${({ theme }) => theme.purpleHovered};
+        background: ${({ theme }) =>
+          hasChildren ? theme.purpleHovered : theme.purpleHovered};
       `}
   }
 
   &:focus,
   &.focus {
     outline: 0;
-    /* text-decoration: none;
-    box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 1),
-      0px 0px 0px 2px ${({ theme }) => theme.purple}; */
   }
 
   &:active,
   &.active {
     text-decoration: none;
-    ${({ disabled }) =>
+    ${({ disabled, hasChildren }) =>
       !disabled &&
       css`
-        background: ${({ theme }) => theme.purpleHovered};
+        background: ${({ theme }) =>
+          hasChildren ? theme.purpleHovered : theme.purpleHovered};
       `}
   }
 
@@ -165,6 +161,26 @@ const Container = styled.button<TContainer>`
         color: ${({ theme }) => theme.dark};
       }
     `}
+`;
+
+type TTextStyled = {
+  hasChildren: boolean;
+  isLoading?: boolean;
+  size?: TSize;
+};
+
+const TextStyled = styled(Text)<TTextStyled>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
+  width: 100%;
+  height: ${height};
+  font-weight: 600;
+  font-size: ${({ size }) => (size === "normal" ? "18px" : "14px")};
+  padding: ${({ size, hasChildren }) =>
+    size === "normal" ? "0 19px" : `5px ${hasChildren ? 20 : 5}px`};
+  outline: none;
 `;
 
 type TIcon = {

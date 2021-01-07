@@ -1,20 +1,21 @@
+import { ChangeEvent } from "react";
 import styled from "styled-components";
-
-import Button from "./Button";
 
 type TProps = {
   label: string;
-  path: string | undefined;
+  value: number | undefined;
   description: string;
   isDisabled?: boolean;
-  onClick: () => void;
+  onChange: (value: number) => void;
 };
 
-const FileInput = (props: TProps) => {
-  const { label, path, description, isDisabled, onClick } = props;
+const NumberInput = (props: TProps) => {
+  const { label, value = 0, description, isDisabled, onChange } = props;
 
-  const onShowInExplorer = () => {
-    ipcRenderer.invoke("revealInFileExplorer", path);
+  const onChangeValue = (event: ChangeEvent<HTMLInputElement>) => {
+    let newVal = Number(event.target.value.slice(0, 2));
+    if (newVal <= 0) newVal = 1;
+    onChange(newVal);
   };
 
   return (
@@ -23,18 +24,7 @@ const FileInput = (props: TProps) => {
 
       <InputContainer>
         <Top>
-          <Path>{path ? path : "..."}</Path>
-
-          <Button size="small" onClick={onClick}>
-            Choose
-          </Button>
-
-          <Button
-            icon="openInNew"
-            size="small"
-            title="Reveal in expolorer"
-            onClick={onShowInExplorer}
-          />
+          <Input value={value} type="number" min={1} max={60} onChange={onChangeValue} />
         </Top>
 
         <Description>{description}</Description>
@@ -49,7 +39,8 @@ type TContainer = {
 
 const Container = styled.div<TContainer>`
   display: flex;
-  background: ${({ isDisabled }) => (isDisabled ? "red" : "transparent")};
+  background: ${({ theme, isDisabled }) =>
+    isDisabled ? theme.darkOpacity : "transparent"};
 `;
 
 const Label = styled.div`
@@ -77,15 +68,14 @@ const Top = styled.div`
   }
 `;
 
-const Path = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  background: #333;
-  padding: 5px 15px;
+const Input = styled.input`
+  background: ${({ theme }) => theme.darkOpacity};
+  outline: none;
+  border: 0px;
   border-radius: 4px;
-  font-weight: 300;
-  font-size: 14px;
+  height: 30px;
+  color: ${({ theme }) => theme.white};
+  padding-left: 15px;
 `;
 
 const Description = styled.div`
@@ -95,4 +85,4 @@ const Description = styled.div`
   margin-top: 10px;
 `;
 
-export default FileInput;
+export default NumberInput;
