@@ -47,7 +47,6 @@ const save = async (game: TGame, type: TSavePointType) => {
       const saveStoreFileName = getSaveStoreFileName(file);
       const saveStorePath = path.join(gameStorePath, getSaveStoreFileName(file));
 
-      // console.log("SavePath", savePath, saveStorePath);
       if (!savePath) return;
 
       FileSystem.createDir(gameStorePath);

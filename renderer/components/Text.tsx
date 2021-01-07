@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-type TProps = {
+type TProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: React.ReactNode;
 };
 

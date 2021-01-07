@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { format, formatDistance } from "date-fns";
 
 import Text from "./Text";
 import Button from "./Button";
@@ -28,19 +29,22 @@ const SavePoint = (props: TProps) => {
   };
 
   const name = savePoint?.name || savePoint.id;
+  const date = new Date(savePoint.date);
+  const distance = formatDistance(date, new Date());
+  const formatedDate = format(date, "dd.MM.yyyy, HH:mm") + " - " + distance + " ago";
 
   return (
     <Container className={className}>
       {savePoint?.screenshot && <Screenshot src={"file://" + savePoint.screenshot} />}
       <Info>
         <Description>
-          <Name>{name}</Name>
+          <Name title={savePoint.id}>{name}</Name>
           <Type>
-            {savePoint?.type === "manualsave" ? "Ручное сохранение" : "Автосохранение"}{" "}
+            {savePoint?.type === "manualsave" ? "Manual save" : "Autosave"}{" "}
             {savePoint.typeNumber && " - " + savePoint.typeNumber}
           </Type>
         </Description>
-        <DateText>{new Date(savePoint.date).getTime()}</DateText>
+        <DateText>{formatedDate}</DateText>
       </Info>
 
       <CTAButtons>
