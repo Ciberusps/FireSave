@@ -38,7 +38,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: ${sidebarWidth}px;
-  padding: 30px 40px;
+  padding: 30px 30px;
   position: relative;
 `;
 

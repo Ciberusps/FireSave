@@ -7,6 +7,11 @@ declare global {
   type TStore = {
     isAutoSaveOn: boolean;
     autoSaveMinutes: number;
+    stats: {
+      allSavesCount: number;
+      autoSaveCount: number;
+      manualSaveCount: number;
+    };
     storePath: string;
     version: string;
     saveShortcut: string;
@@ -28,10 +33,16 @@ declare global {
     files: string[];
   };
 
+  type TSavePointType = "manualsave" | "autosave";
+
   type TSavePoint = {
     id: string;
     date: string;
     path: string;
+    type?: TSavePointType;
+    number?: number;
+    typeNumber?: number;
+    tags?: string[];
     screenshot?: string;
   };
 

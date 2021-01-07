@@ -13,5 +13,6 @@ const Text = (props: TProps) => {
 export default Text;
 
 const Container = styled.div`
+  overflow-wrap: anywhere;
   color: ${({ theme }) => theme.white};
 `;

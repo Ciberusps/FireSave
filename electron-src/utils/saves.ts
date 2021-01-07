@@ -36,7 +36,7 @@ const getSaveStoreFileName = (file: string): string => {
   }
 };
 
-const save = async (game: TGame) => {
+const save = async (game: TGame, type: TSavePointType) => {
   try {
     const gameStorePath = path.join(Store.store.storePath, game.name);
 
@@ -55,11 +55,29 @@ const save = async (game: TGame) => {
 
       const savePointId = getId(saveStorePath);
       const savePointPathInStore = `games.${game.id}.savePoints.${savePointId}`;
-      Store.set(savePointPathInStore, {
+
+      Store.set("stats.allSavesCount", Store.store.stats.allSavesCount + 1);
+      if (type === "manualsave") {
+        Store.set("stats.manualSaveCount", Store.store.stats.manualSaveCount + 1);
+      } else {
+        Store.set("stats.autoSaveCount", Store.store.stats.autoSaveCount + 1);
+      }
+      const typeNumber =
+        type === "autosave"
+          ? Store.store.stats.autoSaveCount
+          : Store.store.stats.manualSaveCount;
+
+      const savePoint: TSavePoint = {
         id: savePointId,
         date: new Date().toISOString(),
         path: saveStorePath,
-      });
+        type,
+        number: Store.store.stats.allSavesCount,
+        typeNumber,
+        tags: [type],
+      };
+
+      Store.set(savePointPathInStore, savePoint);
 
       const screenshotsPath = path.join(gameStorePath, "screenshots");
       FileSystem.createDir(screenshotsPath);
@@ -85,7 +103,7 @@ const load = async (gameId: string, savePointId: string) => {
     const savePoint = game.savePoints?.[savePointId];
     if (!savePoint) throw new Error("SavePoint not found");
 
-    await save(game);
+    await save(game, "manualsave");
 
     if (game.saves.files.length === 1) {
       const file = game.saves.files[0];
@@ -120,7 +138,7 @@ const tryAutoSave = async () => {
     const isRunning = await isGameRunning(game);
     if (!isRunning) return;
 
-    save(game);
+    save(game, "autosave");
     console.log("Process running, game", game.exePath);
   });
 };
@@ -128,7 +146,7 @@ const tryAutoSave = async () => {
 const saveRunningGames = () => {
   Object.entries(Store.store.games).map(([key, game]) => {
     if (isGameRunning(game)) {
-      save(game);
+      save(game, "manualsave");
     }
   });
 };

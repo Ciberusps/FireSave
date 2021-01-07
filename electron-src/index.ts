@@ -207,7 +207,7 @@ ipcMain.handle("toggleAutoSave", async () => {
 
 ipcMain.handle("saveGame", async (_, gameId) => {
   // TODO: dont create screenshot if game not runned
-  Saves.save(Store.store.games[gameId]);
+  Saves.save(Store.store.games[gameId], "manualsave");
 });
 
 ipcMain.handle("loadSavePoint", async (_, gameId: string, savePointId: string) => {

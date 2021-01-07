@@ -47,8 +47,6 @@ const Button = forwardRef<
     return isSubmit ? "submit" : "button";
   };
 
-  console.log("OTHER PROPS", otherProps);
-
   const content = (
     <Container
       ref={ref}

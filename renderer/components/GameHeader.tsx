@@ -54,7 +54,8 @@ const Container = styled.div`
   position: sticky;
   padding: 0px 25px;
   top: 0px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
 `;
 
 const Info = styled.div`
