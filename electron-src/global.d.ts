@@ -31,6 +31,7 @@ type TSavePointType = "manualsave" | "autosave";
 
 type TSavePoint = {
   id: string;
+  name: string;
   date: string;
   path: string;
   type?: TSavePointType;

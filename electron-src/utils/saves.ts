@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import findProcess from "find-process";
+import faker from "faker";
 // screenshot-desktop dont work without asarUnpack
 // @ts-ignore
 import screenshot from "screenshot-desktop";
@@ -69,6 +70,7 @@ const save = async (game: TGame, type: TSavePointType) => {
 
       const savePoint: TSavePoint = {
         id: savePointId,
+        name: faker.random.words(2),
         date: new Date().toISOString(),
         path: saveStorePath,
         type,

@@ -37,6 +37,7 @@ declare global {
 
   type TSavePoint = {
     id: string;
+    name: string;
     date: string;
     path: string;
     type?: TSavePointType;

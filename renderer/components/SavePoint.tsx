@@ -27,13 +27,14 @@ const SavePoint = (props: TProps) => {
     await ipcRenderer.invoke("removeSavePoint", game.id, savePoint.id);
   };
 
+  const name = savePoint?.name || savePoint.id;
+
   return (
     <Container className={className}>
       {savePoint?.screenshot && <Screenshot src={"file://" + savePoint.screenshot} />}
       <Info>
         <Description>
-          {/* <Name>{savePoint.id}</Name> */}
-          <Name>Босс в пажилой гавани</Name>
+          <Name>{name}</Name>
           <Type>
             {savePoint?.type === "manualsave" ? "Ручное сохранение" : "Автосохранение"}{" "}
             {savePoint.typeNumber && " - " + savePoint.typeNumber}
