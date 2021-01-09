@@ -108,7 +108,7 @@ const GamePage = () => {
         )}
         <CtaButtons>
           <Button onClick={onSave}>Save</Button>
-          {isEditing && <Button onClick={onRemove}>Remove game</Button>}
+          {/* {isEditing && <Button onClick={onRemove}>Remove game</Button>} */}
         </CtaButtons>
       </FormBlock>
     </Layout>

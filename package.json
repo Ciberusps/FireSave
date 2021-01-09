@@ -1,7 +1,7 @@
 {
   "name": "GSM",
   "description": "Saves manager",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "author": "Ciberusps",
   "license": "MIT",
   "main": "main/index.js",

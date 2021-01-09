@@ -145,8 +145,9 @@ const tryAutoSave = async () => {
 };
 
 const saveRunningGames = () => {
-  Object.entries(Store.store.games).map(([key, game]) => {
-    if (isGameRunning(game)) {
+  Object.entries(Store.store.games).map(async ([key, game]) => {
+    const isRunning = await isGameRunning(game);
+    if (isRunning) {
       save(game, "manualsave");
     }
   });

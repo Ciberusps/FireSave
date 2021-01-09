@@ -20,9 +20,6 @@ import {
 } from "./utils";
 import { fillSteamGameInfo } from "./utils/steam";
 
-// let tray: Tray | null = null;
-// let isQuiting = false;
-
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
   autoUpdater.checkForUpdatesAndNotify();
@@ -43,10 +40,7 @@ app.on("ready", async () => {
     maximizable: true,
     webPreferences: {
       nodeIntegration: false,
-      // nodeIntegration: true,
-      // enableRemoteModule: true,
-      // webSecurity: !isDev,
-      webSecurity: false,
+      webSecurity: !isDev,
       preload: join(__dirname, "preload.js"),
       devTools: isDev,
     },
@@ -63,11 +57,6 @@ app.on("ready", async () => {
       });
 
   AppTray.init(mainWindow);
-
-  // mainWindow.webContents.once("did-finish-load", () => {
-  //   // console.log("FINISHED LOADING", Store.store);
-  //   // mainWindow.webContents.send("stateUpdate", Store.store);
-  // });
 
   mainWindow.on("minimize", () => {
     mainWindow.hide();
