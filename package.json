@@ -58,7 +58,8 @@
     "asar": true,
     "files": [
       "main",
-      "renderer/out"
+      "renderer/out",
+      "build/**.*"
     ],
     "extraResources": [
       "./assets/**"

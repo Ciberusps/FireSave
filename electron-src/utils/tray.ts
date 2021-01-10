@@ -8,7 +8,7 @@ let isQuiting = false;
 const getIsQuiting = () => isQuiting;
 
 const init = (window: BrowserWindow) => {
-  const appIconPath = getAssetPath("tray.ico");
+  const appIconPath = getAssetPath("tray.png");
   console.log("AppIcon", appIconPath);
   tray = new Tray(appIconPath);
   const contextMenu = Menu.buildFromTemplate([
