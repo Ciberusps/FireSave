@@ -17,7 +17,7 @@ const GamePage = () => {
   const savePoints = game.savePoints && Object.values(game.savePoints);
 
   return (
-    <Layout title="New Game" contentStyles={{ padding: 0 }}>
+    <Layout contentStyles={{ padding: 0 }}>
       <GameHeader game={game} />
 
       <SavePoints>

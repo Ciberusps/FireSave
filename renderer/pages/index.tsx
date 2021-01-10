@@ -12,7 +12,7 @@ const IndexPage = () => {
   const games = state?.games && Object.values(state?.games);
 
   return (
-    <Layout title="Saves List">
+    <Layout>
       <Header>
         <h1>Games</h1>
 

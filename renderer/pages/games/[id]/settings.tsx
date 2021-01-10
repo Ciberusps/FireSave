@@ -59,17 +59,17 @@ const GamePage = () => {
     Router.push(`/`);
   };
 
-  const onRemove = () => {
-    ipcRenderer.invoke("removeGame", game?.id);
-    Router.push(`/`);
-  };
+  // const onRemove = () => {
+  //   ipcRenderer.invoke("removeGame", game?.id);
+  //   Router.push(`/`);
+  // };
 
   const onOpenPcGamingWiki = () => {
     ipcRenderer.invoke("openPcGamingWiki");
   };
 
   return (
-    <Layout title="New Game">
+    <Layout>
       <Header>{isEditing ? game?.name : "Add game"}</Header>
 
       <FormBlock>

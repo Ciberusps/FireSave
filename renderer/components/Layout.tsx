@@ -10,11 +10,7 @@ type Props = {
   contentStyles?: any;
 };
 
-const Layout = ({
-  children,
-  title = "This is the default title",
-  contentStyles,
-}: Props) => (
+const Layout = ({ children, title = "FireSave", contentStyles }: Props) => (
   <Container>
     <Head>
       <title>{title}</title>

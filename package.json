@@ -1,11 +1,11 @@
 {
-  "name": "GSM",
+  "name": "FireSave",
   "description": "Saves manager",
   "version": "0.0.30",
   "author": "Ciberusps",
   "license": "MIT",
   "main": "main/index.js",
-  "productName": "GSM",
+  "productName": "FireSave",
   "scripts": {
     "clean": "rimraf dist main renderer/out renderer/.next",
     "dev": "npm run build-electron && electron .",
@@ -54,7 +54,7 @@
     "typescript": "^4.0.5"
   },
   "build": {
-    "appId": "gg.ciberus.gsm",
+    "appId": "gg.ciberus.firesave",
     "asar": true,
     "files": [
       "main",
