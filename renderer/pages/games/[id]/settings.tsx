@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import Button from "../../../components/Button";
 import FileInput from "../../../components/FileInput";
-import GlobalContext from "../../../components/GlobalContext";
 import FormBlock from "../../../components/FormBlock";
+import GlobalContext from "../../../components/GlobalContext";
 
 const GamePage = () => {
   const { state } = useContext(GlobalContext);
@@ -22,7 +22,10 @@ const GamePage = () => {
   );
 
   const onChooseExe = async () => {
-    const newExePath = await ipcRenderer.invoke("chooseGameExe");
+    const newExePath = await ipcRenderer.invoke(
+      "chooseGameExe",
+      exePath || game?.exePath
+    );
     // TODO: handle error
     if (newExePath) {
       console.log("ExePath added", newExePath);
@@ -32,7 +35,10 @@ const GamePage = () => {
   };
 
   const onChooseSavesPath = async () => {
-    const newSaves = await ipcRenderer.invoke("chooseSavesPath");
+    const newSaves = await ipcRenderer.invoke(
+      "chooseSavesPath",
+      saves?.path || game?.saves?.path
+    );
     // TODO: handle error
     if (newSaves) {
       console.log("SavePath added", newSaves);

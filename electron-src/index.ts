@@ -104,8 +104,12 @@ ipcMain.handle("chooseStorePath", async () => {
   }
 });
 
-ipcMain.handle("chooseGameExe", () => {
-  const exePath = dialog.showOpenDialogSync({ properties: ["openFile"] })?.[0];
+ipcMain.handle("chooseGameExe", (_, defaultPath?: string) => {
+  const exePath = dialog.showOpenDialogSync({
+    properties: ["openFile"],
+    defaultPath,
+    filters: [{ name: "All Files", extensions: ["exe"] }],
+  })?.[0];
   if (!exePath) return null;
   if (!isGameExist(exePath)) {
     return exePath;
@@ -115,12 +119,14 @@ ipcMain.handle("chooseGameExe", () => {
   }
 });
 
-ipcMain.handle("chooseSavesPath", async () => {
+ipcMain.handle("chooseSavesPath", async (_, defaultPath?: string) => {
   const saveFiles = dialog.showOpenDialogSync({
     properties: [
       "openFile",
-      // , "multiSelections" // TODO: add multiple files saves support
+      // TODO: add multiple files saves support
+      // , "multiSelections"
     ],
+    defaultPath,
   });
   if (!saveFiles) return null;
   const savesPath = getFilePath(saveFiles[0]);
