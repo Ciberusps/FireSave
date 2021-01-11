@@ -192,6 +192,7 @@ ipcMain.handle("removeGame", async (event, id) => {
 
 ipcMain.handle("toggleAutoSave", async () => {
   Store.set("isAutoSaveOn", !Store.store.isAutoSaveOn);
+  Scheduler.runAutoSaves();
 });
 
 ipcMain.handle("saveGame", async (_, gameId) => {
