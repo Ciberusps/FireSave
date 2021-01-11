@@ -56,16 +56,17 @@ const save = async (game: TGame, type: TSavePointType) => {
       const savePointId = getId(saveStorePath);
       const savePointPathInStore = `games.${game.id}.savePoints.${savePointId}`;
 
-      Store.set("stats.allSavesCount", Store.store.stats.allSavesCount + 1);
+      let typeNumber = 0;
+      const statsPath = `games.${game.id}.stats`;
+      const curStats = game.stats;
+      Store.set(`${statsPath}.allSavesCount`, curStats.allSavesCount + 1);
       if (type === "manualsave") {
-        Store.set("stats.manualSaveCount", Store.store.stats.manualSaveCount + 1);
+        typeNumber = curStats.manualSaveCount + 1;
+        Store.set(`${statsPath}.manualSaveCount`, typeNumber);
       } else {
-        Store.set("stats.autoSaveCount", Store.store.stats.autoSaveCount + 1);
+        typeNumber = curStats.autoSaveCount + 1;
+        Store.set(`${statsPath}.autoSaveCount`, typeNumber);
       }
-      const typeNumber =
-        type === "autosave"
-          ? Store.store.stats.autoSaveCount
-          : Store.store.stats.manualSaveCount;
 
       const savePoint: TSavePoint = {
         id: savePointId,
@@ -73,7 +74,7 @@ const save = async (game: TGame, type: TSavePointType) => {
         date: new Date().toISOString(),
         path: saveStorePath,
         type,
-        number: Store.store.stats.allSavesCount,
+        number: curStats.allSavesCount,
         typeNumber,
         tags: [type],
       };

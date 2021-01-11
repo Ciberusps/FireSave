@@ -143,7 +143,13 @@ ipcMain.handle("createGame", async (event, { exePath, saves }: TCreateGamePayloa
   if (!isGameExist(exePath)) {
     const id = getId(exePath);
     const name = getFileName(exePath);
-    const newGame: TGame = { id, name, exePath, saves };
+    const newGame: TGame = {
+      id,
+      name,
+      exePath,
+      saves,
+      stats: { allSavesCount: 0, autoSaveCount: 0, manualSaveCount: 0 },
+    };
     Store.set(`games.${id}`, newGame);
 
     const isSteamGame = exePath.includes("steamapps");

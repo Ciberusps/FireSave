@@ -15,6 +15,7 @@ const GamePage = () => {
   const id = Router.query?.id as string;
   const isEditing = id !== "new";
   const game = state?.games?.[id];
+  const name = game?.steamInfo?.name || game?.name;
 
   const [exePath, setExePath] = useState<string | undefined>(game?.exePath);
   const [saves, setSaves] = useState<{ path: string; files: string[] } | undefined>(
@@ -76,7 +77,7 @@ const GamePage = () => {
 
   return (
     <Layout>
-      <Header>{isEditing ? game?.name : "Add game"}</Header>
+      <Header>{isEditing ? name : "Add game"}</Header>
 
       <FormBlock>
         {/* <Description>

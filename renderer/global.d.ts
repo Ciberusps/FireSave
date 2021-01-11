@@ -7,11 +7,6 @@ declare global {
   type TStore = {
     isAutoSaveOn: boolean;
     autoSaveMinutes: number;
-    stats: {
-      allSavesCount: number;
-      autoSaveCount: number;
-      manualSaveCount: number;
-    };
     storePath: string;
     version: string;
     saveShortcut: string;
@@ -26,6 +21,11 @@ declare global {
     savePoints?: { [key: string]: TSavePoint };
     steamInfo?: TSteamInfo;
     steamManifest?: string;
+    stats: {
+      allSavesCount: number;
+      autoSaveCount: number;
+      manualSaveCount: number;
+    };
   };
 
   type TSaves = {

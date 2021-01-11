@@ -1,11 +1,6 @@
 type TStore = {
   isAutoSaveOn: boolean;
   autoSaveMinutes: number;
-  stats: {
-    allSavesCount: number;
-    autoSaveCount: number;
-    manualSaveCount: number;
-  };
   storePath: string;
   version: string;
   saveShortcut: string;
@@ -20,6 +15,11 @@ type TGame = {
   savePoints?: { [key: string]: TSavePoint };
   steamInfo?: TSteamInfo;
   steamManifest?: TAppManifest;
+  stats: {
+    allSavesCount: number;
+    autoSaveCount: number;
+    manualSaveCount: number;
+  };
 };
 
 type TSaves = {
