@@ -1,6 +1,10 @@
 import ElectronStore from "electron-store";
+import path from "path";
+
+const defaultStorePath = path.resolve("C:/GamesSaves");
 
 const Store = new ElectronStore<TStore>({
+  cwd: defaultStorePath,
   defaults: {
     // TODO: add window position save https://github.com/mawie81/electron-window-state
     // window: {
@@ -13,7 +17,7 @@ const Store = new ElectronStore<TStore>({
     isAutoSaveOn: true,
     autoSaveMinutes: 15,
     saveShortcut: "F5",
-    storePath: "C:\\GamesSaves",
+    storePath: defaultStorePath,
     version: "unknown",
     games: {
       // {

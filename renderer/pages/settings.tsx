@@ -49,7 +49,8 @@ const SettingsPage = () => {
         <FileInput
           label="Store folder"
           value={state?.storePath}
-          description="Place there saves, screenshots and config will be stored"
+          description="CANNOT BE CHANGED(for now). Place there saves, screenshots and config will be stored."
+          isDisabled={true}
           onClick={onChangeStorePath}
         />
       </MainSettingsBlock>

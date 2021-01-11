@@ -59,7 +59,8 @@ type TContainer = {
 
 const Container = styled.div<TContainer>`
   display: flex;
-  background: ${({ isDisabled }) => (isDisabled ? "red" : "transparent")};
+  opacity: ${({ isDisabled }) => (isDisabled ? 0.3 : 1)};
+  pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "unset")};
 `;
 
 const Label = styled.div`
