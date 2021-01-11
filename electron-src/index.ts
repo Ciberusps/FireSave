@@ -227,3 +227,8 @@ ipcMain.handle("openPcGamingWiki", async () => {
 ipcMain.handle("changeAutoSaveInterval", async (_, newVal: number) => {
   Store.set("autoSaveMinutes", newVal);
 });
+
+ipcMain.handle("openLatestReleasePage", async () => {
+  // https://github.com/Ciberusps/FireSave/releases/latest
+  shell.openExternal("https://cutt.ly/kjxFNiB");
+});

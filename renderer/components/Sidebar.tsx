@@ -12,6 +12,10 @@ const Sidebar = () => {
   const isSavesTabActive = pathname === "/" || pathname.startsWith("/games");
   const isSettingsTabActive = pathname === "/settings";
 
+  const onLatestReleaseLink = () => {
+    ipcRenderer.invoke("openLatestReleasePage");
+  };
+
   return (
     <Container>
       <Link href="/">
@@ -25,6 +29,13 @@ const Sidebar = () => {
           <Icon icon="settings" color={isSettingsTabActive ? undefined : theme.dark} />
         </Tab>
       </Link>
+
+      <Update
+        title={`Link on latest version. To update manually download "exe" file`}
+        onClick={onLatestReleaseLink}
+      >
+        <Icon icon="upload" color={theme.dark} />
+      </Update>
     </Container>
   );
 };
@@ -58,6 +69,16 @@ const Tab = styled.a<TTab>`
   &.hover {
     background: ${({ theme }) => theme.darkOpacity};
   }
+`;
+
+const Update = styled(Tab)`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: ${sidebarWidth}px;
+  bottom: 0px;
 `;
 
 export default Sidebar;
