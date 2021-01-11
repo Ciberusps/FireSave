@@ -11,9 +11,9 @@ type TProps = {
 };
 
 const NumberInput = (props: TProps) => {
-  const { label, value = 1, description, isDisabled, onChange } = props;
+  const { label, value, description, isDisabled, onChange } = props;
   const [lastVal, setLastVal] = useState(value);
-  const [val, setVal] = useState(value);
+  const [val, setVal] = useState(value || 1);
 
   useDebounce(
     () => {
