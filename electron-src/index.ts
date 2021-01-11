@@ -226,6 +226,7 @@ ipcMain.handle("openPcGamingWiki", async () => {
 
 ipcMain.handle("changeAutoSaveInterval", async (_, newVal: number) => {
   Store.set("autoSaveMinutes", newVal);
+  Scheduler.runAutoSaves();
 });
 
 ipcMain.handle("openLatestReleasePage", async () => {

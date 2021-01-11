@@ -1,5 +1,6 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
+import useDebounce from "react-use/lib/useDebounce";
 
 type TProps = {
   label: string;
@@ -11,11 +12,24 @@ type TProps = {
 
 const NumberInput = (props: TProps) => {
   const { label, value = 1, description, isDisabled, onChange } = props;
+  const [lastVal, setLastVal] = useState(value);
+  const [val, setVal] = useState(value);
+
+  useDebounce(
+    () => {
+      if (val !== lastVal) {
+        onChange(val);
+        setLastVal(val);
+      }
+    },
+    1000,
+    [val]
+  );
 
   const onChangeValue = (event: ChangeEvent<HTMLInputElement>) => {
     let newVal = Number(event.target.value.slice(0, 2));
     if (newVal <= 0) newVal = 1;
-    onChange(newVal);
+    setVal(newVal);
   };
 
   return (
@@ -24,7 +38,7 @@ const NumberInput = (props: TProps) => {
 
       <InputContainer>
         <Top>
-          <Input value={value} type="number" min={1} max={60} onChange={onChangeValue} />
+          <Input value={val} type="number" min={1} max={60} onChange={onChangeValue} />
         </Top>
 
         <Description>{description}</Description>
