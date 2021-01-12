@@ -29,7 +29,7 @@ const init = (window: BrowserWindow) => {
   tray.on("double-click", () => {
     window.show();
   });
-  tray.setToolTip("Tray Tutorial");
+  tray.setToolTip("FireSave");
   tray.setContextMenu(contextMenu);
 };
 

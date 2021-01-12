@@ -83,25 +83,24 @@ const GamePage = () => {
           onClick={onChooseExe}
         />
 
-        {exePath && (
-          <FileInput
-            label="Save file path"
-            value={saves?.path}
-            files={saves?.files}
-            description={
-              <Description>
-                <div>Path to game save file. Don't know where save file located?</div>
-                <div style={{ display: "flex" }}>
-                  You can find game on&nbsp;
-                  <Link onClick={onOpenPcGamingWiki}>PCGamingWiki.com</Link>&nbsp;under
-                  "Save game data location" will be path to save file
-                </div>
-              </Description>
-            }
-            isDisabled={!exePath}
-            onClick={onChooseSavesPath}
-          />
-        )}
+        <FileInput
+          label="Save file path"
+          value={saves?.path}
+          files={saves?.files}
+          description={
+            <Description>
+              <div>Path to game save file. Don't know where save file located?</div>
+              <div style={{ display: "flex" }}>
+                You can find game on&nbsp;
+                <Link onClick={onOpenPcGamingWiki}>PCGamingWiki.com</Link>,&nbsp;under
+                "Save game data location" will be path to save file
+              </div>
+            </Description>
+          }
+          isDisabled={!exePath}
+          onClick={onChooseSavesPath}
+        />
+
         <CtaButtons>
           <Button onClick={onSave}>Save</Button>
           {/* {isEditing && <Button onClick={onRemove}>Remove game</Button>} */}

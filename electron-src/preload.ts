@@ -3,6 +3,7 @@
 import { ipcRenderer, contextBridge } from "electron";
 
 contextBridge.exposeInMainWorld("electron", {
+  getConfig: () => ipcRenderer.invoke("getConfig"),
   revealInFileExplorer: (val: string) => ipcRenderer.invoke("revealInFileExplorer", val),
   saveGame: async (val: string) => ipcRenderer.invoke("saveGame", val),
   getState: async () => ipcRenderer.invoke("getState"),

@@ -19,6 +19,7 @@ import {
   isGameExist,
 } from "./utils";
 import { fillSteamGameInfo } from "./utils/steam";
+import { RESOURCES_PATH } from "./utils/config";
 
 // Prepare the renderer once the app is ready
 app.on("ready", async () => {
@@ -240,4 +241,9 @@ ipcMain.handle("openLatestReleasePage", async () => {
 
 ipcMain.handle("analyticsPageView", async (_, url: string) => {
   Analytics.pageView(url);
+});
+ipcMain.handle("getConfig", async () => {
+  return {
+    RESOURCES_PATH,
+  };
 });

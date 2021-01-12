@@ -11,6 +11,7 @@ const Sidebar = () => {
   console.log(pathname);
   const isSavesTabActive = pathname === "/" || pathname.startsWith("/games");
   const isSettingsTabActive = pathname === "/settings";
+  const isAboutTabActive = pathname === "/about";
 
   const onLatestReleaseLink = () => {
     window.electron.openLatestReleasePage();
@@ -27,6 +28,12 @@ const Sidebar = () => {
       <Link href="/settings">
         <Tab isActive={isSettingsTabActive}>
           <Icon icon="settings" color={isSettingsTabActive ? undefined : theme.dark} />
+        </Tab>
+      </Link>
+
+      <Link href="/about">
+        <Tab isActive={isAboutTabActive}>
+          <Icon icon="help" color={isAboutTabActive ? undefined : theme.dark} />
         </Tab>
       </Link>
 

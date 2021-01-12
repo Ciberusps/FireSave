@@ -49,7 +49,11 @@ const SavePoint = (props: TProps) => {
       </Info>
 
       <CTAButtons>
-        <Button icon="upload" onClick={() => onLoadSave(savePoint)}>
+        <Button
+          title="Save current & load"
+          icon="upload"
+          onClick={() => onLoadSave(savePoint)}
+        >
           Load
         </Button>
         <Button icon="close" onClick={() => onRemoveSave(savePoint)} />
