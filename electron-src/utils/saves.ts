@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import Store from "./store";
 import FileSystem from "./fileSystem";
 import { getId, getFileNameWithExtension } from ".";
+import Analytics from "./analytics";
 
 const isGameRunning = async (game: TGame) => {
   try {
@@ -37,7 +38,11 @@ const getSaveStoreFileName = (file: string): string => {
   }
 };
 
-const save = async (game: TGame, type: TSavePointType) => {
+const save = async (
+  game: TGame,
+  type: TSavePointType,
+  options?: { isBeforeLoad: boolean }
+) => {
   try {
     const gameStorePath = path.join(Store.store.storePath, game.name);
 
@@ -87,7 +92,19 @@ const save = async (game: TGame, type: TSavePointType) => {
         screenshotsPath,
         saveStoreFileName.split(".")[0] + ".jpg"
       );
-      console.log(screenshotFilePath);
+
+      let labels = [game.name, type];
+      if (options?.isBeforeLoad) {
+        labels.push("before_load");
+      }
+
+      Analytics.sendEvent({
+        category: "savePoints",
+        action: "saved",
+        labels,
+      });
+
+      // console.log(screenshotFilePath);
       await screenshot({ filename: screenshotFilePath, format: "jpg" });
       Store.set(savePointPathInStore + ".screenshot", screenshotFilePath);
     } else {
@@ -105,7 +122,7 @@ const load = async (gameId: string, savePointId: string) => {
     const savePoint = game.savePoints?.[savePointId];
     if (!savePoint) throw new Error("SavePoint not found");
 
-    await save(game, "manualsave");
+    await save(game, "manualsave", { isBeforeLoad: true });
 
     if (game.saves.files.length === 1) {
       const file = game.saves.files[0];
@@ -113,6 +130,11 @@ const load = async (gameId: string, savePointId: string) => {
 
       fs.copyFileSync(savePoint.path, savePath);
       console.log("LOADED");
+      Analytics.sendEvent({
+        category: "savePoints",
+        action: "loaded",
+        labels: [game.name],
+      });
     } else {
       throw new Error("Need support for many files");
     }
@@ -130,6 +152,11 @@ const remove = async (gameId: string, savePointId: string) => {
     FileSystem.removeFile(savePoint.path);
     // @ts-ignore
     Store.delete(`games.${gameId}.savePoints.${savePoint.id}`);
+    Analytics.sendEvent({
+      category: "savePoints",
+      action: "removed",
+      labels: [game.name],
+    });
   } catch (err) {
     console.error(err);
   }

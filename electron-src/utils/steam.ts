@@ -29,7 +29,6 @@ const getAllAppManifests = async (steamappsPath: string): Promise<TAppManifest[]
 
   return Promise.all(promises).then((result) => {
     const res = result.map((file) => VDF.parse(file) as TAppManifest);
-    console.log(res);
     return res;
     //   baseListOfFiles = result[0];
     //   currentListOfFiles = result[1];
@@ -53,7 +52,6 @@ export const fillSteamGameInfo = async (game: TGame) => {
       0,
       game.exePath.indexOf("steamapps") + "steamapps".length
     );
-    console.log(steamappsPath);
 
     const manifest = await getGameManifest(steamappsPath, game);
     if (!manifest) throw new Error("Failed to find game manifest");
@@ -63,7 +61,6 @@ export const fillSteamGameInfo = async (game: TGame) => {
         `https://store.steampowered.com/api/appdetails/?appids=${manifest.AppState.appid}`
       )
     ).data;
-    console.log("steamInfo", steamInfo);
     if (steamInfo?.[manifest.AppState.appid]?.data) {
       Store.set(`games.${game.id}.steamInfo`, steamInfo[manifest.AppState.appid].data);
       Store.set(`games.${game.id}.steamManifest`, manifest);

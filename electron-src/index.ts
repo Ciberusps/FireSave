@@ -67,7 +67,6 @@ app.on("ready", async () => {
   });
 
   mainWindow.on("close", (event) => {
-    console.log("isQuiting", AppTray.getIsQuiting());
     if (!AppTray.getIsQuiting()) {
       event.preventDefault();
       mainWindow.hide();
@@ -141,7 +140,7 @@ type TCreateGamePayload = {
   saves: TSaves;
 };
 
-ipcMain.handle("createGame", async (event, { exePath, saves }: TCreateGamePayload) => {
+ipcMain.handle("createGame", async (_, { exePath, saves }: TCreateGamePayload) => {
   if (!isGameExist(exePath)) {
     const id = getId(exePath);
     const name = getFileName(exePath);
@@ -153,6 +152,8 @@ ipcMain.handle("createGame", async (event, { exePath, saves }: TCreateGamePayloa
       stats: { allSavesCount: 0, autoSaveCount: 0, manualSaveCount: 0 },
     };
     Store.set(`games.${id}`, newGame);
+
+    Analytics.sendEvent({ category: "games", action: "added", labels: [name] });
 
     const isSteamGame = exePath.includes("steamapps");
     if (isSteamGame) fillSteamGameInfo(newGame);
@@ -170,7 +171,7 @@ type TEditGamePayload = {
   saves: TSaves;
 };
 
-ipcMain.handle("editGame", async (event, { game, exePath, saves }: TEditGamePayload) => {
+ipcMain.handle("editGame", async (_, { game, exePath, saves }: TEditGamePayload) => {
   const oldId = game.id;
   const newId = getId(exePath);
   const newGameName = getFileName(exePath);
@@ -186,7 +187,7 @@ ipcMain.handle("editGame", async (event, { game, exePath, saves }: TEditGamePayl
   return true;
 });
 
-ipcMain.handle("removeGame", async (event, id) => {
+ipcMain.handle("removeGame", async (_, id) => {
   // @ts-ignore
   Store.delete(`games.${id}`);
   return true;
