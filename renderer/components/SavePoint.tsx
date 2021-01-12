@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { format, formatDistance } from "date-fns";
 
 import Text from "./Text";
+import Image from "./Image";
 import Button from "./Button";
 
 type TProps = {
@@ -57,13 +58,16 @@ const SavePoint = (props: TProps) => {
   );
 };
 
+const height = 170;
+const maxImgWidth = (height * 16) / 9;
+
 const Container = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: ${height}px;
   max-width: 900px;
-  max-height: 170px;
+  max-height: ${height}px;
   background: #1c1c1c;
   border-radius: 10px;
   margin-bottom: 15px;
@@ -72,7 +76,8 @@ const Container = styled.div`
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.75));
 `;
 
-const Screenshot = styled.img`
+const Screenshot = styled(Image)`
+  max-width: ${maxImgWidth}px;
   max-height: 100%;
   object-fit: cover;
 `;
