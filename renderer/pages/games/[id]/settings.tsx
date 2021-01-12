@@ -23,10 +23,7 @@ const GamePage = () => {
   );
 
   const onChooseExe = async () => {
-    const newExePath = await ipcRenderer.invoke(
-      "chooseGameExe",
-      exePath || game?.exePath
-    );
+    const newExePath = await window.electron.chooseGameExe(exePath || game?.exePath);
     // TODO: handle error
     if (newExePath) {
       console.log("ExePath added", newExePath);
@@ -36,8 +33,7 @@ const GamePage = () => {
   };
 
   const onChooseSavesPath = async () => {
-    const newSaves = await ipcRenderer.invoke(
-      "chooseSavesPath",
+    const newSaves = await window.electron.chooseSavesPath(
       saves?.path || game?.saves?.path
     );
     // TODO: handle error
@@ -50,17 +46,10 @@ const GamePage = () => {
   const onSave = () => {
     if (!exePath || !saves) return;
     if (isEditing) {
-      const isEdited = ipcRenderer.invoke("editGame", {
-        game,
-        exePath,
-        saves,
-      });
+      const isEdited = window.electron.editGame({ game, exePath, saves });
       console.log("game edited", isEdited);
     } else {
-      const isCreated = ipcRenderer.invoke("createGame", {
-        exePath,
-        saves,
-      });
+      const isCreated = window.electron.createGame({ exePath, saves });
       console.log("game created", isCreated);
     }
     Router.push(`/`);
@@ -72,7 +61,7 @@ const GamePage = () => {
   // };
 
   const onOpenPcGamingWiki = () => {
-    ipcRenderer.invoke("openPcGamingWiki");
+    window.electron.openPcGamingWiki();
   };
 
   return (

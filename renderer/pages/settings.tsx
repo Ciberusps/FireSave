@@ -12,19 +12,19 @@ const SettingsPage = () => {
   const { state } = useContext(GlobalContext);
 
   const onAutoSaveToggle = () => {
-    ipcRenderer.invoke("toggleAutoSave");
+    window.electron.toggleAutoSave();
   };
 
   const onAutoSaveIntervalChange = (val: number) => {
-    ipcRenderer.invoke("changeAutoSaveInterval", val);
+    window.electron.changeAutoSaveInterval(val);
   };
 
   const onChangeStorePath = () => {
-    ipcRenderer.invoke("chooseStorePath");
+    window.electron.chooseStorePath();
   };
 
   const onOpenProfileLink = () => {
-    ipcRenderer.invoke("openProfileLink");
+    window.electron.openProfileLink();
   };
 
   return (

@@ -14,7 +14,7 @@ const GameHeader = (props: TProps) => {
   const imgSrc = game.steamInfo?.header_image;
 
   const onSave = async () => {
-    const newExePath = await ipcRenderer.invoke("saveGame", game.id);
+    const newExePath = await window.electron.saveGame(game.id);
     // TODO: handle error
     if (newExePath) {
       console.log("Game Saved", newExePath);

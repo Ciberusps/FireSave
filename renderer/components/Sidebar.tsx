@@ -13,7 +13,7 @@ const Sidebar = () => {
   const isSettingsTabActive = pathname === "/settings";
 
   const onLatestReleaseLink = () => {
-    ipcRenderer.invoke("openLatestReleasePage");
+    window.electron.openLatestReleasePage();
   };
 
   return (

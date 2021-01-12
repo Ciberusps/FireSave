@@ -1,8 +1,9 @@
 import { IpcRenderer, Remote } from "electron";
 
 declare global {
-  var ipcRenderer: IpcRenderer;
-  var remote: Remote;
+  interface Window {
+    electron: any;
+  }
 
   type TStore = {
     isAutoSaveOn: boolean;

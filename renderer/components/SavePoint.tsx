@@ -15,7 +15,7 @@ const SavePoint = (props: TProps) => {
   const { game, savePoint, className } = props;
 
   const onLoadSave = async (savePoint: TSavePoint) => {
-    const newExePath = await ipcRenderer.invoke("loadSavePoint", game.id, savePoint.id);
+    const newExePath = await window.electron.loadSavePoint(game.id, savePoint.id);
     // TODO: handle error
     if (newExePath) {
       console.log("Game Saved", newExePath);
@@ -25,7 +25,7 @@ const SavePoint = (props: TProps) => {
   };
 
   const onRemoveSave = async (savePoint: TSavePoint) => {
-    await ipcRenderer.invoke("removeSavePoint", game.id, savePoint.id);
+    await window.electron.removeSavePoint(game.id, savePoint.id);
   };
 
   const name = savePoint?.name || savePoint.id;

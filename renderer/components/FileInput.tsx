@@ -15,7 +15,7 @@ const FileInput = (props: TProps) => {
   const { label, value, files, description, isDisabled, onClick } = props;
 
   const onShowInExplorer = () => {
-    ipcRenderer.invoke("revealInFileExplorer", value);
+    window.electron.revealInFileExplorer(value);
   };
 
   return (

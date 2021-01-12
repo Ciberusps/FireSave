@@ -1,4 +1,3 @@
-import cron from "node-cron";
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
 import { autoUpdater } from "electron-updater";
@@ -11,6 +10,7 @@ import Store from "./utils/store";
 import AppTray from "./utils/tray";
 import Shortcuts from "./utils/shortcuts";
 import Scheduler from "./utils/scheduler";
+import Analytics from "./utils/analytics";
 import {
   getFileName,
   getFileNameWithExtension,
@@ -39,7 +39,7 @@ app.on("ready", async () => {
     minimizable: true,
     maximizable: true,
     webPreferences: {
-      nodeIntegration: false,
+      contextIsolation: true,
       webSecurity: !isDev,
       preload: join(__dirname, "preload.js"),
       devTools: isDev,
@@ -87,6 +87,8 @@ app.on("ready", async () => {
   mainWindow.maximize();
 
   Shortcuts.registerSaveKey(Store.store.saveShortcut);
+
+  Analytics.init();
 });
 
 app.on("will-quit", () => {
@@ -233,4 +235,8 @@ ipcMain.handle("changeAutoSaveInterval", async (_, newVal: number) => {
 ipcMain.handle("openLatestReleasePage", async () => {
   // https://github.com/Ciberusps/FireSave/releases/latest
   shell.openExternal("https://cutt.ly/kjxFNiB");
+});
+
+ipcMain.handle("analyticsPageView", async (_, url: string) => {
+  Analytics.pageView(url);
 });

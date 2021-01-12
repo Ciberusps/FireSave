@@ -17,16 +17,15 @@ const GlobalProvider = (props: TProps) => {
   const [state, setState] = useState<any | null>(null);
 
   const getState = async () => {
-    const newState = await ipcRenderer.invoke("getState");
+    const newState = await window.electron.getState();
     setState(newState);
   };
 
   useEffect(() => {
     getState();
 
-    ipcRenderer.on("stateUpdate", (_, arg) => {
-      console.log("State updated", arg);
-      setState(arg);
+    window.electron.onStateUpdate((_: any, newState: any) => {
+      setState(newState);
     });
   }, []);
 
