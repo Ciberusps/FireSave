@@ -37,9 +37,9 @@ Short-term:
   - sorts & filters
   - search
 - More games support(Hollow Knight?)
-- Saves folder choose
+- Saves folder change
 
-Mid-term: 
+Mid-term:
 
 - Localization
 - Auto detect installed games
@@ -47,12 +47,14 @@ Mid-term:
 - MacOS/Linux support(for strange ppl (¬‿¬))
 
 Long-term:
+
 - Saves library - opportunity to share saves with other users
 - Cloud sync Google Drive/Dropbox/Yandex Drive/whatever...
 
 ## Troubleshooting
 
 If u found game that doesn't work or malfunction u can open new [issue](https://github.com/Ciberusps/FireSave/issues)
+
 ## Support
 
 You can boost up my motivation/development speed via DonationAlerts - https://www.donationalerts.com/r/ciberusps
