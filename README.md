@@ -2,7 +2,7 @@
 
 Saves manager
 
-[![In a nutshell](https://cdn.ciberus.gg/how-to-use-it-raw_2.gif)](https://youtu.be/-yJCGQrfI6c)
+<img src="https://cdn.ciberus.gg/final_5.png" width="500">
 
 ## Motivation
 
