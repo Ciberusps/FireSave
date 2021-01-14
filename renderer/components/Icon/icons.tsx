@@ -78,3 +78,12 @@ export const help = (props: any) => (
     />
   </svg>
 );
+
+export const leftArrow = (props: any) => (
+  <svg viewBox="0 0 26 26" {...props}>
+    <path
+      fill={props.fill}
+      d="M21.6666 11.9166H8.48242l6.05588-6.05579-1.5384-1.5275L4.33325 13l8.66665 8.6666 1.5275-1.5275-6.04498-6.0558H21.6666v-2.1667z"
+    />
+  </svg>
+);

@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import Text from "./Text";
 import Image from "./Image";
+import Stats from "./Stats";
 import Button from "./Button";
 
 type TProps = {
@@ -27,8 +28,13 @@ const GameHeader = (props: TProps) => {
   return (
     <Container>
       <Info>
+        <BackArrow icon="leftArrow" href="/" />
+
         <Image width={150} height={70} src={imgSrc} />
-        <Name>{name}</Name>
+        <Description>
+          <Name>{name}</Name>
+          <Stats game={game} />
+        </Description>
       </Info>
 
       <CtaButtons>
@@ -66,9 +72,17 @@ const Info = styled.div`
   align-items: center;
 `;
 
-const Name = styled(Text)`
+const BackArrow = styled(Button)`
+  margin-right: 20px;
+`;
+
+const Description = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-left: 24px;
 `;
+
+const Name = styled(Text)``;
 
 const CtaButtons = styled.div`
   display: flex;
