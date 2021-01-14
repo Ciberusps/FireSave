@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import styled from "styled-components";
 
+import Image from "../components/Image";
+
 type TProps = {
   game: TGame;
   className?: string;
@@ -12,7 +14,7 @@ const Game = (props: TProps) => {
   return (
     <Link href="/games/[id]" as={`/games/${game.id}`}>
       <Container className={className}>
-        <Image src={game?.steamInfo?.header_image} />
+        <Img width="100%" height={215} src={game?.steamInfo?.header_image} />
         <Description>
           <GameName>{game?.steamInfo?.name || game.name}</GameName>
         </Description>
@@ -32,9 +34,7 @@ const Container = styled.div`
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.25));
 `;
 
-const Image = styled.img`
-  width: 100%;
-  height: 215px;
+const Img = styled(Image)`
   object-fit: cover;
 `;
 

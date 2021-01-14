@@ -6,6 +6,9 @@ import Text from "./Text";
 import Image from "./Image";
 import Button from "./Button";
 
+const height = 170;
+const maxImgWidth = (height * 16) / 9;
+
 type TProps = {
   game: TGame;
   savePoint: TSavePoint;
@@ -36,7 +39,11 @@ const SavePoint = (props: TProps) => {
 
   return (
     <Container className={className}>
-      {savePoint?.screenshot && <Screenshot src={"file://" + savePoint.screenshot} />}
+      <Screenshot
+        src={savePoint?.screenshot ? "file://" + savePoint.screenshot : undefined}
+        width={maxImgWidth}
+        height={height}
+      />
       <Info>
         <Description>
           <Name title={savePoint.id}>{name}</Name>
@@ -61,9 +68,6 @@ const SavePoint = (props: TProps) => {
     </Container>
   );
 };
-
-const height = 170;
-const maxImgWidth = (height * 16) / 9;
 
 const Container = styled.div`
   display: flex;

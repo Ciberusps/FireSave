@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 import Text from "./Text";
+import Image from "./Image";
 import Button from "./Button";
 
 type TProps = {
@@ -26,7 +27,7 @@ const GameHeader = (props: TProps) => {
   return (
     <Container>
       <Info>
-        {imgSrc && <Img src={imgSrc} />}
+        <Image width={150} height={70} src={imgSrc} />
         <Name>{name}</Name>
       </Info>
 
@@ -63,11 +64,6 @@ const Container = styled.div`
 const Info = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const Img = styled.img`
-  width: 150px;
-  height: 70px;
 `;
 
 const Name = styled(Text)`
