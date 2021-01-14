@@ -6,29 +6,20 @@ const defaultStorePath = path.resolve("C:/GamesSaves");
 const Store = new ElectronStore<TStore>({
   cwd: defaultStorePath,
   defaults: {
-    // TODO: add window position save https://github.com/mawie81/electron-window-state
-    // window: {
-    //     x: 0,
-    //     y: 0,
-    //     widht: 123,
-    //     height: 123,
-    // },
-    // minimize: true
+    window: {
+      x: 0,
+      y: 0,
+      width: 1920,
+      height: 1080,
+    },
+    // TODO: minimize on start or start in tray?
+    // minimizeOnStart: true
     isAutoSaveOn: true,
     autoSaveMinutes: 15,
     saveShortcut: "F5",
     storePath: defaultStorePath,
     version: "unknown",
-    games: {
-      // {
-      //   steamAppId: "",
-      //   exePath:
-      //     "G:/SteamLibrary/steamapps/common/Dark Souls II Scholar of the First Sin/Game/DarkSoulsII.exe",
-      //   savesPath: "C:/Users/Ciber/AppData/Roaming/DarkSoulsII/011000010969832b",
-      //   savesFiles: ["DS2SOFS0000.sl2"],
-      //   // savesPattern:
-      // },
-    },
+    games: {},
   },
 });
 

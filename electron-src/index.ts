@@ -11,6 +11,7 @@ import AppTray from "./utils/tray";
 import Shortcuts from "./utils/shortcuts";
 import Scheduler from "./utils/scheduler";
 import Analytics from "./utils/analytics";
+import WindowUtils from "./utils/window";
 import {
   getFileName,
   getFileNameWithExtension,
@@ -72,6 +73,9 @@ app.on("ready", async () => {
       event.preventDefault();
       mainWindow.hide();
     }
+
+    WindowUtils.savePositionAndSize(mainWindow);
+
     return false;
   });
 
@@ -84,7 +88,7 @@ app.on("ready", async () => {
 
   mainWindow.loadURL(url);
 
-  mainWindow.maximize();
+  WindowUtils.loadPositionAndSize(mainWindow);
 
   Shortcuts.registerSaveKey(Store.store.saveShortcut);
 

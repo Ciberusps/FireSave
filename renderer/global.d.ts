@@ -12,6 +12,12 @@ declare global {
     version: string;
     saveShortcut: string;
     games: { [key: string]: TGame };
+    window: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
   };
 
   type TGame = {
