@@ -9,6 +9,12 @@ const myTheme: DefaultTheme = {
   purple: "#7B61FF",
   purpleHovered: "#5D47CC",
   white: "#FFF",
+  feedback: {
+    info: "#7B61FF",
+    warning: "orange",
+    error: "red",
+    success: "#7B61FF",
+  },
 };
 
 export { myTheme };

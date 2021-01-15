@@ -3,18 +3,21 @@ import { useRouter } from "next/router";
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "styled-components";
 import "../fonts.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import { GlobalProvider } from "../components/GlobalContext";
 import { GlobalStyles } from "../components/GlobalStyles";
 
+import Toaster from "../utils/Toaster";
 import Analytics from "../utils/analytics";
 import { myTheme } from "../utils/defaultTheme";
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
 
   useEffect(() => {
     Analytics.pageView(router.pathname);
+    Toaster.init();
 
     const handleRouteChange = (url: string) => {
       Analytics.pageView(url);
@@ -34,6 +37,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       </ThemeProvider>
     </GlobalProvider>
   );
-}
+};
 
 export default MyApp;

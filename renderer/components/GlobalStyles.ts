@@ -48,4 +48,37 @@ export const GlobalStyles = createGlobalStyle`
   .lazyload-wrapper {
     display: flex;
   }
+
+  /* Toaster */
+  .Toastify__toast {
+    border-radius: 12px;
+    border: 2px solid ${({ theme }) => theme.feedback.info};
+    padding: 6px;
+    padding-left: 14px;
+    font-family: "Open Sans";
+    font-size: 16px;
+  }
+  .Toastify__toast-container {
+    /* bottom: 5em; */
+  }
+  .Toastify__close-button {
+    width: 19px;
+    height: 19px;
+  }
+  .Toastify__toast.Toastify__toast--error {
+    background: ${({ theme }) => theme.feedback.error};
+    border-color: ${({ theme }) => theme.feedback.error};
+  }
+  .Toastify__toast.Toastify__toast--info {
+    background: ${({ theme }) => theme.feedback.info};
+    border-color: ${({ theme }) => theme.feedback.info};
+  }
+  .Toastify__toast.Toastify__toast--success {
+    background: ${({ theme }) => theme.feedback.success};
+    border-color: ${({ theme }) => theme.feedback.success};
+  }
+  .Toastify__toast.Toastify__toast--warning {
+    background: ${({ theme }) => theme.feedback.warning};
+    border-color: ${({ theme }) => theme.feedback.warning};
+  }
 `;

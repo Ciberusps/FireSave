@@ -5,6 +5,7 @@ import { format, formatDistance } from "date-fns";
 import Text from "./Text";
 import Image from "./Image";
 import Button from "./Button";
+import Toaster from "../utils/Toaster";
 
 const height = 170;
 const maxImgWidth = (height * 16) / 9;
@@ -19,12 +20,11 @@ const SavePoint = (props: TProps) => {
   const { game, savePoint, className } = props;
 
   const onLoadSave = async (savePoint: TSavePoint) => {
-    const newExePath = await window.electron.loadSavePoint(game.id, savePoint.id);
-    // TODO: handle error
-    if (newExePath) {
-      console.log("Game Saved", newExePath);
-      //   setExePath(newExePath);
+    const isLoaded = await window.electron.loadSavePoint(game.id, savePoint.id);
+    if (isLoaded) {
+      Toaster.add({ content: "Saved & Loaded", intent: "success" });
     } else {
+      Toaster.add({ content: "Load failed", intent: "error" });
     }
   };
 

@@ -138,8 +138,11 @@ const load = async (gameId: string, savePointId: string) => {
     } else {
       throw new Error("Need support for many files");
     }
+
+    return true;
   } catch (err) {
     console.error(err);
+    return false;
   }
 };
 

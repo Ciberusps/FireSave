@@ -12,5 +12,11 @@ declare module "styled-components" {
     purple: string;
     purpleHovered: string;
     white: string;
+    feedback: {
+      info: string;
+      warning: string;
+      error: string;
+      success: string;
+    };
   }
 }
