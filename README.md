@@ -2,6 +2,8 @@
 
 Saves manager
 
+<img src="https://cdn.ciberus.gg/final_5.png" width="500">
+
 ## Motivation
 
 Many games have imperfect or simplified saves system - single save slot, save slots overwriting, no manual saves, terrible autosaves system and so on. FireSave is attempt to fix such problems in as much games as possible and provide a convenient way to manage your saves.
