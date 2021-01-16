@@ -3,8 +3,8 @@ import Link from "next/link";
 import styled from "styled-components";
 import { formatDistance } from "date-fns";
 
-import Stats from "../components/Stats";
-import Image from "../components/Image";
+import Stats from "./Stats";
+import Image from "./Image";
 
 type TProps = {
   game: TGame;

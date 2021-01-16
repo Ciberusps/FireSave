@@ -1,12 +1,16 @@
 module.exports = {
-  webpack: (config, { isServer }) => {
+  webpack: (config, options) => {
     config.target = "electron-renderer";
 
-    // override config here (e.g. `url-loader` you mentioned)
-
-    if (isServer) {
-      // if you need to handle NEXT.js' server webpack process, configure it here
+    if (!options.isServer) {
+      config.resolve.alias["@sentry/node"] = "@sentry/browser";
     }
+
+    config.plugins.push(
+      new options.webpack.DefinePlugin({
+        "process.env.NEXT_IS_SERVER": JSON.stringify(options.isServer.toString()),
+      })
+    );
 
     return config;
   },

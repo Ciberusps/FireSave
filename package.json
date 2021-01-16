@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rimraf dist main renderer/out renderer/.next",
     "dev": "npm run build-electron && electron .",
+    "devn": "next dev renderer",
     "build-renderer": "next build renderer && next export renderer",
     "build-electron": "tsc -p electron-src",
     "build": "npm run clean && npm run build-renderer && npm run build-electron",
@@ -19,7 +20,10 @@
     "lint": "eslint . --ext ts --ext tsx --ext js"
   },
   "dependencies": {
-    "@sentry/electron": "^2.0.4",
+    "@sentry/browser": "^5.21.3",
+    "@sentry/electron": "^2.1.0",
+    "@sentry/node": "^5.21.3",
+    "@sentry/webpack-plugin": "^1.14.0",
     "axios": "^0.21.1",
     "base64url": "^3.0.1",
     "date-fns": "^2.16.1",
@@ -66,7 +70,7 @@
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-react": "^7.22.0",
     "rimraf": "^3.0.0",
-    "typescript": "^4.0.5"
+    "typescript": "^4.1.3"
   },
   "build": {
     "appId": "gg.ciberus.firesave",

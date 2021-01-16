@@ -11,6 +11,7 @@ const Store = new ElectronStore<TStore>({
       y: 0,
       width: 1920,
       height: 1080,
+      isMaximized: true,
     },
     // TODO: minimize on start or start in tray?
     // minimizeOnStart: true

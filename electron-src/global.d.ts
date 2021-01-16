@@ -10,6 +10,7 @@ type TStore = {
     y: number;
     width: number;
     height: number;
+    isMaximized: boolean;
   };
 };
 

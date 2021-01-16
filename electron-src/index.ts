@@ -1,5 +1,6 @@
 import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
+import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
 import { BrowserWindow, app, protocol } from "electron";
 import { join } from "path";
@@ -11,7 +12,12 @@ import Shortcuts from "./utils/shortcuts";
 import Scheduler from "./utils/scheduler";
 import Analytics from "./utils/analytics";
 import WindowUtils from "./utils/window";
+import { SENTRY_DSN } from "./utils/config";
 import "./handlers";
+
+Sentry.init({
+  dsn: SENTRY_DSN,
+});
 
 const onReady = async () => {
   autoUpdater.checkForUpdatesAndNotify();
@@ -25,9 +31,9 @@ const onReady = async () => {
 
   Scheduler.runAutoSaves();
 
+  const { isMaximized, ...posAndSize } = WindowUtils.loadPositionAndSize();
   const mainWindow = new BrowserWindow({
-    width: 1080,
-    height: 1266,
+    ...posAndSize,
     minimizable: true,
     maximizable: true,
     webPreferences: {
@@ -37,8 +43,7 @@ const onReady = async () => {
       devTools: isDev,
     },
   });
-
-  isDev && mainWindow.setPosition(-1080, 690);
+  if (isMaximized) mainWindow.maximize();
 
   const url = isDev
     ? "http://localhost:8000/"
@@ -76,8 +81,6 @@ const onReady = async () => {
   Store.set("version", app.getVersion());
 
   mainWindow.loadURL(url);
-
-  WindowUtils.loadPositionAndSize(mainWindow);
 
   Shortcuts.registerSaveKey(Store.store.saveShortcut);
 

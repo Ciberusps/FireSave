@@ -1,4 +1,5 @@
 import { ipcMain, dialog, shell } from "electron";
+import isDev from "electron-is-dev";
 
 import Saves from "../utils/saves";
 import Store from "../utils/store";
@@ -157,8 +158,10 @@ ipcMain.handle("openLatestReleasePage", async () => {
 ipcMain.handle("analyticsPageView", async (_, url: string) => {
   Analytics.pageView(url);
 });
-ipcMain.handle("getConfig", async () => {
+ipcMain.handle("getConfig", () => {
+  console.log("isDev", isDev);
   return {
     RESOURCES_PATH,
+    IS_DEV: isDev,
   };
 });

@@ -5,7 +5,7 @@ import { format, formatDistance } from "date-fns";
 import Text from "./Text";
 import Image from "./Image";
 import Button from "./Button";
-import Toaster from "../utils/Toaster";
+import Toaster from "../utils/toaster";
 
 const height = 170;
 const maxImgWidth = (height * 16) / 9;

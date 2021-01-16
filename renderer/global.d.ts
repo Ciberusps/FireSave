@@ -17,6 +17,7 @@ declare global {
       y: number;
       width: number;
       height: number;
+      isMaximized: boolean;
     };
   };
 
