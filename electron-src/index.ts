@@ -2,7 +2,7 @@ import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
-import { BrowserWindow, app, protocol } from "electron";
+import { BrowserWindow, app, protocol, shell } from "electron";
 import { join } from "path";
 import { format } from "url";
 
@@ -83,6 +83,11 @@ const onReady = async () => {
   mainWindow.loadURL(url);
 
   Shortcuts.registerSaveKey(Store.store.saveShortcut);
+
+  mainWindow.webContents.on("new-window", (event, url) => {
+    event.preventDefault();
+    shell.openExternal(url);
+  });
 
   Analytics.init();
 };

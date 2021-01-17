@@ -1,45 +1,36 @@
 import React, { useContext } from "react";
-import Link from "next/link";
 import styled, { ThemeContext } from "styled-components";
-import Icon from "./Icon";
 import { useRouter } from "next/router";
+
+import Icon from "./Icon";
+import Link from "./Link";
 
 const Sidebar = () => {
   const { pathname } = useRouter();
   const theme = useContext(ThemeContext);
 
-  console.log(pathname);
   const isSavesTabActive = pathname === "/" || pathname.startsWith("/games");
   const isSettingsTabActive = pathname === "/settings";
   const isAboutTabActive = pathname === "/about";
 
-  const onLatestReleaseLink = () => {
-    window.electron.openLatestReleasePage();
-  };
-
   return (
     <Container>
-      <Link href="/">
-        <Tab isActive={isSavesTabActive}>
-          <Icon icon="save" color={isSavesTabActive ? undefined : theme.dark} />
-        </Tab>
-      </Link>
+      <Tab href="/" isActive={isSavesTabActive}>
+        <Icon icon="save" color={isSavesTabActive ? undefined : theme.dark} />
+      </Tab>
 
-      <Link href="/settings">
-        <Tab isActive={isSettingsTabActive}>
-          <Icon icon="settings" color={isSettingsTabActive ? undefined : theme.dark} />
-        </Tab>
-      </Link>
+      <Tab href="/settings" isActive={isSettingsTabActive}>
+        <Icon icon="settings" color={isSettingsTabActive ? undefined : theme.dark} />
+      </Tab>
 
-      <Link href="/about">
-        <Tab isActive={isAboutTabActive}>
-          <Icon icon="help" color={isAboutTabActive ? undefined : theme.dark} />
-        </Tab>
-      </Link>
+      <Tab href="/about" isActive={isAboutTabActive}>
+        <Icon icon="help" color={isAboutTabActive ? undefined : theme.dark} />
+      </Tab>
 
       <Update
+        href="https://cutt.ly/kjxFNiB"
+        target="_blank"
         title={`Link on latest version. To update manually download "exe" file`}
-        onClick={onLatestReleaseLink}
       >
         <Icon icon="upload" color={theme.dark} />
       </Update>
@@ -61,7 +52,7 @@ type TTab = {
   isActive?: boolean;
 };
 
-const Tab = styled.a<TTab>`
+const Tab = styled(Link)<TTab>`
   display: flex;
   align-items: center;
   justify-content: center;

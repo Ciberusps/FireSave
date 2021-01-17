@@ -15,13 +15,15 @@ import {
 import { fillSteamGameInfo } from "../utils/steam";
 import { RESOURCES_PATH } from "../utils/config";
 
-ipcMain.handle("chooseStorePath", async () => {
-  const folders = dialog.showOpenDialogSync({ properties: ["openDirectory"] });
-  console.log("folders", folders);
-  if (folders?.[0]) {
-    Store.set("storePath", folders[0]);
+ipcMain.handle(
+  "chooseStorePath",
+  async (): Promise<string | null> => {
+    const folders = dialog.showOpenDialogSync({ properties: ["openDirectory"] });
+    console.log("folders", folders);
+    if (folders?.[0]) return folders[0];
+    return null;
   }
-});
+);
 
 ipcMain.handle("chooseGameExe", (_, defaultPath?: string) => {
   const exePath = dialog.showOpenDialogSync({
@@ -137,27 +139,15 @@ ipcMain.handle("getState", async () => {
   return Store.store;
 });
 
-ipcMain.handle("openProfileLink", async () => {
-  shell.openExternal("https://github.com/Ciberusps");
-});
-
-ipcMain.handle("openPcGamingWiki", async () => {
-  shell.openExternal("https://pcgamingwiki.com");
-});
-
 ipcMain.handle("changeAutoSaveInterval", async (_, newVal: number) => {
   Store.set("autoSaveMinutes", newVal);
   Scheduler.runAutoSaves();
 });
 
-ipcMain.handle("openLatestReleasePage", async () => {
-  // https://github.com/Ciberusps/FireSave/releases/latest
-  shell.openExternal("https://cutt.ly/kjxFNiB");
-});
-
 ipcMain.handle("analyticsPageView", async (_, url: string) => {
   Analytics.pageView(url);
 });
+
 ipcMain.handle("getConfig", () => {
   console.log("isDev", isDev);
   return {

@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
+import Link from "../../../components/Link";
 import Layout from "../../../components/Layout";
 import Button from "../../../components/Button";
 import FileInput from "../../../components/FileInput";
@@ -60,10 +61,6 @@ const GamePage = () => {
   //   Router.push(`/`);
   // };
 
-  const onOpenPcGamingWiki = () => {
-    window.electron.openPcGamingWiki();
-  };
-
   return (
     <Layout>
       <Header>{isEditing ? name : "Add game"}</Header>
@@ -92,8 +89,10 @@ const GamePage = () => {
               <div>Path to game save file. Don't know where save file located?</div>
               <div style={{ display: "flex" }}>
                 You can find game on&nbsp;
-                <Link onClick={onOpenPcGamingWiki}>PCGamingWiki.com</Link>,&nbsp;under
-                "Save game data location" will be path to save file
+                <PcGamingWikiLink href="https://pcgamingwiki.com" target="_blank">
+                  PCGamingWiki.com
+                </PcGamingWikiLink>
+                ,&nbsp;under "Save game data location" will be path to save file
               </div>
             </Description>
           }
@@ -118,11 +117,8 @@ const Header = styled.h1`
 
 const Description = styled.div``;
 
-const Link = styled.span`
-  display: flex;
-  font-weight: bold;
+const PcGamingWikiLink = styled(Link)`
   text-decoration: underline;
-  cursor: pointer;
 `;
 
 const CtaButtons = styled.div`

@@ -1,6 +1,9 @@
 import { useContext } from "react";
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
 
+import Link from "../components/Link";
+import Button from "../components/Button";
 import Layout from "../components/Layout";
 import FileInput from "../components/FileInput";
 import FormBlock from "../components/FormBlock";
@@ -8,8 +11,26 @@ import ToggleInput from "../components/ToggleInput";
 import NumberInput from "../components/NumberInput";
 import GlobalContext from "../components/GlobalContext";
 
+type TSettingsForm = {
+  isAutoSaveOn: boolean;
+  autoSaveMinutes: number;
+  storePath: string;
+};
+
 const SettingsPage = () => {
   const { state } = useContext(GlobalContext);
+  if (!state) return null;
+
+  const defaultValues: TSettingsForm = {
+    isAutoSaveOn: state.isAutoSaveOn,
+    autoSaveMinutes: state.autoSaveMinutes,
+    storePath: state.storePath,
+  };
+
+  const { register, handleSubmit } = useForm<TSettingsForm>({
+    mode: "onChange",
+    defaultValues,
+  });
 
   const onAutoSaveToggle = () => {
     window.electron.toggleAutoSave();
@@ -20,12 +41,11 @@ const SettingsPage = () => {
   };
 
   const onChangeStorePath = () => {
-    window.electron.chooseStorePath();
+    const storePath = window.electron.chooseStorePath();
+    console.log("STORE PATH", storePath);
   };
 
-  const onOpenProfileLink = () => {
-    window.electron.openProfileLink();
-  };
+  const onSave = () => {};
 
   return (
     <Layout contentStyles={{ height: "100vh" }}>
@@ -55,11 +75,18 @@ const SettingsPage = () => {
         />
       </MainSettingsBlock>
 
+      <CtaButtons>
+        <Button onClick={onSave}>Save</Button>
+      </CtaButtons>
+
       <About>
         <Version>v{state?.version}</Version>
         <WithLove>
-          by&nbsp;<Username onClick={onOpenProfileLink}>Ciberus</Username>&nbsp;for gamers
-          ♥
+          by&nbsp;
+          <Link href="https://github.com/Ciberusps" target="_blank">
+            Ciberus
+          </Link>
+          &nbsp;for gamers ♥
         </WithLove>
       </About>
     </Layout>
@@ -90,18 +117,19 @@ const WithLove = styled.div`
   line-height: 19px;
 `;
 
-const Username = styled.div`
-  font-weight: bold;
-  font-weight: 600;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
 const MainSettingsBlock = styled(FormBlock)`
   margin-top: 30px;
+`;
+
+const CtaButtons = styled.div`
+  display: flex;
+  margin-top: 20px;
+
+  > {
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
 `;
 
 export default SettingsPage;
