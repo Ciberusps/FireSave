@@ -10,8 +10,18 @@ const init = async () => {
   });
 };
 
-const Sentry = {
-  init,
+const send = (error: any, tags?: Record<string, any>, extras?: Record<string, any>) => {
+  SentryInstance.withScope((scope) => {
+    if (tags) scope.setTags(tags);
+    if (extras) scope.setExtras(extras);
+    SentryInstance.captureException(error);
+    console.error(error);
+  });
 };
 
-export default Sentry;
+const ErrorReporter = {
+  init,
+  send,
+};
+
+export default ErrorReporter;
