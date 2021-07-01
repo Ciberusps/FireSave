@@ -1,4 +1,4 @@
-import { ipcMain, dialog } from "electron";
+import { ipcMain } from "electron";
 import isDev from "electron-is-dev";
 
 import Store from "../utils/store";
@@ -10,18 +10,11 @@ import "./game";
 import "./saves";
 import "./fileSystem";
 
-ipcMain.handle("chooseGameExe", (_, defaultPath?: string) => {
-  const exePath = dialog.showOpenDialogSync({
-    properties: ["openFile"],
-    defaultPath,
-    filters: [{ name: "All Files", extensions: ["exe"] }],
-  })?.[0];
-  if (!exePath) return null;
-  if (!isGameExist(exePath)) {
-    return exePath;
+ipcMain.handle("isGameExist", (_, path: string) => {
+  if (!isGameExist(path)) {
+    return false;
   } else {
-    console.error("GAME ALREADY EXISTS");
-    return null;
+    return true;
   }
 });
 

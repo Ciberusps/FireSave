@@ -1,9 +1,9 @@
+import { useMemo } from "react";
 import styled from "styled-components";
 import { Controller, Control } from "react-hook-form";
 
 import Button from "./Button";
 import InputWrapper from "./InputWrapper";
-import { useMemo } from "react";
 
 export type TFileInputValue = {
   path: string;
@@ -23,7 +23,7 @@ type TProps = {
 };
 
 const FileInput = (props: TProps) => {
-  const { control, properties, label, name, description, isDisabled } = props;
+  const { control, properties, filters, label, name, description, isDisabled } = props;
 
   return (
     <InputWrapper label={label} description={description} isDisabled={isDisabled}>
@@ -46,6 +46,7 @@ const FileInput = (props: TProps) => {
                   onClick={async () => {
                     const newVal = await window.electron.openDialog({
                       properties,
+                      filters,
                       defaultPath: parsedValue?.path,
                     });
                     if (newVal) {

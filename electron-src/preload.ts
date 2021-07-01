@@ -11,12 +11,11 @@ contextBridge.exposeInMainWorld("electron", {
   removeSavePoint: async (...args: any[]) =>
     ipcRenderer.invoke("removeSavePoint", ...args),
   changeSettings: (...args: any[]) => ipcRenderer.invoke("changeSettings", ...args),
-  // chooseGameExe: (...args: any[]) => ipcRenderer.invoke("chooseGameExe", ...args),
-  // chooseSavesPath: (...args: any[]) => ipcRenderer.invoke("chooseSavesPath", ...args),
   editGame: (...args: any[]) => ipcRenderer.invoke("editGame", ...args),
   createGame: (...args: any[]) => ipcRenderer.invoke("createGame", ...args),
   analyticsPageView: (...args: any[]) => ipcRenderer.invoke("analyticsPageView", ...args),
   openDialog: (...args: any[]) => ipcRenderer.invoke("openDialog", ...args),
+  isGameExist: (...args: any[]) => ipcRenderer.invoke("isGameExist", ...args),
 
   onStateUpdate: (somfunc = () => null) => ipcRenderer.on("stateUpdate", somfunc),
 });
