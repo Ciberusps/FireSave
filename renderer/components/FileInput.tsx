@@ -1,84 +1,98 @@
 import styled from "styled-components";
+import { Controller, Control } from "react-hook-form";
 
 import Button from "./Button";
+import InputWrapper from "./InputWrapper";
+import { useMemo } from "react";
+
+export type TFileInputValue = {
+  path: string;
+  files: string[];
+};
+
+type TProp = "openFile" | "openDirectory" | "multiSelections";
 
 type TProps = {
+  control: Control;
   label: string;
-  value: string | undefined;
-  files?: string[];
+  name: string;
   description: string | React.ReactNode;
+  properties: TProp[];
+  filters?: { name: string; extensions: string[] }[];
   isDisabled?: boolean;
-  onClick: () => void;
 };
 
 const FileInput = (props: TProps) => {
-  const { label, value, files, description, isDisabled, onClick } = props;
-
-  const onShowInExplorer = () => {
-    window.electron.revealInFileExplorer(value);
-  };
+  const { control, properties, label, name, description, isDisabled } = props;
 
   return (
-    <Container isDisabled={isDisabled}>
-      <Label>{label}</Label>
+    <InputWrapper label={label} description={description} isDisabled={isDisabled}>
+      <Controller
+        name={name}
+        control={control}
+        render={({ onChange, onBlur, value, ref }) => {
+          const parsedValue: TFileInputValue | undefined = useMemo(
+            () => (value ? JSON.parse(value) : undefined),
+            [value]
+          );
 
-      <InputContainer>
-        <Top>
-          <Path>{value ? value : "..."}</Path>
+          return (
+            <>
+              <Top>
+                <Path>{parsedValue?.path ? parsedValue.path : "..."}</Path>
 
-          <Button size="small" onClick={onClick}>
-            Choose
-          </Button>
+                <Button
+                  size="small"
+                  onClick={async () => {
+                    const newVal = await window.electron.openDialog({
+                      properties,
+                      defaultPath: parsedValue?.path,
+                    });
+                    if (newVal) {
+                      console.log(newVal);
+                      onChange(JSON.stringify(newVal));
+                    } else {
+                      //TODO: error
+                    }
+                  }}
+                >
+                  Choose
+                </Button>
 
-          <Button
-            icon="openInNew"
-            size="small"
-            title="Reveal in expolorer"
-            onClick={onShowInExplorer}
-          />
-        </Top>
+                <Button
+                  icon="openInNew"
+                  size="small"
+                  title="Reveal in expolorer"
+                  onClick={() => window.electron.revealInFileExplorer(value)}
+                />
 
-        {files && (
-          <Files>
-            <FilesHeader>Files:</FilesHeader>
-            {files.map((file) => (
-              <File>{file}</File>
-            ))}
-          </Files>
-        )}
+                <Input
+                  ref={ref}
+                  type="string"
+                  onBlur={onBlur}
+                  value={value}
+                  onChange={onChange}
+                />
+              </Top>
 
-        <Description>{description}</Description>
-      </InputContainer>
-    </Container>
+              {parsedValue?.files && (
+                <Files>
+                  <FilesHeader>Files:</FilesHeader>
+                  {parsedValue.files.map((file) => (
+                    <File key={file}>{file}</File>
+                  ))}
+                </Files>
+              )}
+            </>
+          );
+        }}
+      />
+    </InputWrapper>
   );
 };
 
-type TContainer = {
-  isDisabled?: boolean;
-};
-
-const Container = styled.div<TContainer>`
-  display: flex;
-  opacity: ${({ isDisabled }) => (isDisabled ? 0.3 : 1)};
-  pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "unset")};
-`;
-
-const Label = styled.div`
-  width: 120px;
-  padding-right: 20px;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 19px;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
 const Top = styled.div`
+  width: 100%;
   display: flex;
 
   > * {
@@ -95,8 +109,16 @@ const Path = styled.div`
   background: #333;
   padding: 5px 15px;
   border-radius: 4px;
-  font-weight: 300;
+  font-weight: 350;
   font-size: 14px;
+`;
+
+const Input = styled.input`
+  position: absolute;
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
 `;
 
 const Files = styled.div`
@@ -119,7 +141,6 @@ const FilesHeader = styled.div`
 `;
 
 const File = styled.div`
-  flex: 0;
   display: flex;
   align-items: center;
   background: ${({ theme }) => theme.darkOpacity};
@@ -127,13 +148,6 @@ const File = styled.div`
   border-radius: 4px;
   font-weight: 300;
   font-size: 14px;
-`;
-
-const Description = styled.div`
-  font-style: normal;
-  font-weight: lighter;
-  font-size: 14px;
-  margin-top: 10px;
 `;
 
 export default FileInput;

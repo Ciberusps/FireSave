@@ -14,9 +14,14 @@ const createDir = (path: string) => {
   }
 };
 
+const isDir = (path: string) => {
+  return fs.lstatSync(path).isDirectory();
+};
+
 const FileSystem = {
   removeFile,
   createDir,
+  isDir,
 };
 
 export default FileSystem;

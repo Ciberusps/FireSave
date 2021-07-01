@@ -1,86 +1,47 @@
-import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
-import useDebounce from "react-use/lib/useDebounce";
+import { Controller, Control } from "react-hook-form";
+
+import InputWrapper from "./InputWrapper";
 
 type TProps = {
+  name: string;
   label: string;
-  value: number | undefined;
+  min: number;
+  max: number;
   description: string;
+  control: Control;
   isDisabled?: boolean;
-  onChange: (value: number) => void;
 };
 
 const NumberInput = (props: TProps) => {
-  const { label, value, description, isDisabled, onChange } = props;
-  const [lastVal, setLastVal] = useState(value);
-  const [val, setVal] = useState(value || 1);
-
-  useDebounce(
-    () => {
-      if (val !== lastVal) {
-        onChange(val);
-        setLastVal(val);
-      }
-    },
-    1000,
-    [val]
-  );
-
-  const onChangeValue = (event: ChangeEvent<HTMLInputElement>) => {
-    let newVal = Number(event.target.value.slice(0, 2));
-    if (newVal <= 0) newVal = 1;
-    setVal(newVal);
-  };
+  const { control, label, name, min, max, description, isDisabled } = props;
 
   return (
-    <Container isDisabled={isDisabled}>
-      <Label>{label}</Label>
-
-      <InputContainer>
-        <Top>
-          <Input value={val} type="number" min={1} max={60} onChange={onChangeValue} />
-        </Top>
-
-        <Description>{description}</Description>
-      </InputContainer>
-    </Container>
+    <InputWrapper label={label} description={description} isDisabled={isDisabled}>
+      <Controller
+        name={name}
+        control={control}
+        render={({ onChange, onBlur, value, ref }) => (
+          <Input
+            ref={ref}
+            type="number"
+            min={min}
+            max={max}
+            onBlur={onBlur}
+            onChange={(e) => {
+              e.preventDefault();
+              let newVal = Number(e.target.value.slice(0, 2));
+              if (newVal <= 0) newVal = 1;
+              e.target.value = String(newVal);
+              onChange(newVal);
+            }}
+            value={value}
+          />
+        )}
+      />
+    </InputWrapper>
   );
 };
-
-type TContainer = {
-  isDisabled?: boolean;
-};
-
-const Container = styled.div<TContainer>`
-  display: flex;
-  background: ${({ theme, isDisabled }) =>
-    isDisabled ? theme.darkOpacity : "transparent"};
-`;
-
-const Label = styled.div`
-  width: 120px;
-  padding-right: 20px;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 19px;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
-const Top = styled.div`
-  display: flex;
-
-  > * {
-    &:not(:first-child) {
-      margin-left: 10px;
-    }
-  }
-`;
 
 const Input = styled.input`
   background: ${({ theme }) => theme.darkOpacity};
@@ -89,14 +50,9 @@ const Input = styled.input`
   border-radius: 4px;
   height: 30px;
   color: ${({ theme }) => theme.white};
-  padding-left: 15px;
-`;
-
-const Description = styled.div`
-  font-style: normal;
-  font-weight: lighter;
+  font-weight: 350;
   font-size: 14px;
-  margin-top: 10px;
+  padding-left: 15px;
 `;
 
 export default NumberInput;

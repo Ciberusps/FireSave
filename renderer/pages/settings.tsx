@@ -24,60 +24,53 @@ const SettingsPage = () => {
   const defaultValues: TSettingsForm = {
     isAutoSaveOn: state.isAutoSaveOn,
     autoSaveMinutes: state.autoSaveMinutes,
-    storePath: state.storePath,
+    storePath: JSON.stringify({ path: state.storePath }),
   };
 
-  const { register, handleSubmit } = useForm<TSettingsForm>({
-    mode: "onChange",
+  const { register, handleSubmit, control } = useForm<TSettingsForm>({
     defaultValues,
   });
 
-  const onAutoSaveToggle = () => {
-    window.electron.toggleAutoSave();
+  const onSubmit = (data: TSettingsForm) => {
+    const { storePath, ...restData } = data;
+    const parsedStorePath = JSON.parse(storePath).path;
+    window.electron.changeSettings({ ...restData, storePath: parsedStorePath });
   };
-
-  const onAutoSaveIntervalChange = (val: number) => {
-    window.electron.changeAutoSaveInterval(val);
-  };
-
-  const onChangeStorePath = () => {
-    const storePath = window.electron.chooseStorePath();
-    console.log("STORE PATH", storePath);
-  };
-
-  const onSave = () => {};
 
   return (
     <Layout contentStyles={{ height: "100vh" }}>
       <h1>Settings</h1>
 
-      <MainSettingsBlock>
+      <MainSettingsBlock onSubmit={handleSubmit(onSubmit)}>
         <ToggleInput
+          ref={register}
+          name="isAutoSaveOn"
           label="Autosaves"
-          value={state?.isAutoSaveOn}
           description="Makes autosaves when game runned"
-          onClick={onAutoSaveToggle}
         />
 
         <NumberInput
+          control={control}
+          min={1}
+          max={60}
+          name="autoSaveMinutes"
           label="Autosaves interval"
-          value={Number(state?.autoSaveMinutes)}
           description="Interval in minutes between autosaves"
-          onChange={onAutoSaveIntervalChange}
         />
 
         <FileInput
+          control={control}
+          name="storePath"
           label="Store folder"
-          value={state?.storePath}
-          description="CANNOT BE CHANGED(for now). Place there saves, screenshots and config will be stored."
+          description="CANNOT BE CHANGED(for now). Folder for saves, screenshots and config."
+          properties={["openDirectory"]}
           isDisabled={true}
-          onClick={onChangeStorePath}
         />
-      </MainSettingsBlock>
 
-      <CtaButtons>
-        <Button onClick={onSave}>Save</Button>
-      </CtaButtons>
+        <CtaButtons>
+          <Button isSubmit={true}>Save</Button>
+        </CtaButtons>
+      </MainSettingsBlock>
 
       <About>
         <Version>v{state?.version}</Version>

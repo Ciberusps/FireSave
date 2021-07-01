@@ -7,7 +7,7 @@ const myTheme: DefaultTheme = {
   darkOpacity: "#323232",
   underlay: "#1c1c1c",
   purple: "#7B61FF",
-  purpleHovered: "#5D47CC",
+  purpleHovered: "#3c2d85",
   white: "#FFF",
   feedback: {
     info: "#7B61FF",

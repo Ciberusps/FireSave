@@ -1,16 +1,20 @@
 import styled from "styled-components";
 
-type TProps = {
+type TProps = React.FormHTMLAttributes<HTMLFormElement> & {
   children: any;
   className?: string;
 };
 
 const FormBlock = (props: TProps) => {
-  const { children, className } = props;
-  return <Container className={className}>{children}</Container>;
+  const { children, className, ...restProps } = props;
+  return (
+    <Container className={className} {...restProps}>
+      {children}
+    </Container>
+  );
 };
 
-const Container = styled.div`
+const Container = styled.form`
   display: flex;
   flex-direction: column;
   padding: 20px;

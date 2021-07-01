@@ -1,79 +1,73 @@
-import { useContext } from "react";
+import { forwardRef, useContext } from "react";
 import styled, { ThemeContext } from "styled-components";
 
-import Button from "./Button";
+import Icon from "./Icon";
+import InputWrapper from "./InputWrapper";
 
 type TProps = {
+  name: string;
   label: string;
-  value: boolean | undefined;
   description: string;
   isDisabled?: boolean;
-  onClick: () => void;
 };
 
-const FileInput = (props: TProps) => {
-  const { label, value = false, description, isDisabled, onClick } = props;
+const ToggleInput = forwardRef((props: TProps, ref: any) => {
+  const { name, label, description, isDisabled } = props;
   const theme = useContext(ThemeContext);
 
   return (
-    <Container isDisabled={isDisabled}>
-      <Label>{label}</Label>
-
-      <InputContainer>
-        <Top>
-          <Button
-            icon={value ? "check" : "visuallyHidden"}
-            size="small"
-            iconProps={{ color: theme.purple }}
-            onClick={onClick}
-          />
-        </Top>
-
-        <Description>{description}</Description>
-      </InputContainer>
-    </Container>
+    <InputWrapper label={label} description={description} isDisabled={isDisabled}>
+      <Label>
+        <Input ref={ref} name={name} type="checkbox" />
+        <FakeInput isDisabled={isDisabled}>
+          <InputIcon icon="check" size="small" color={theme.purple} />
+        </FakeInput>
+      </Label>
+    </InputWrapper>
   );
-};
+});
 
-type TContainer = {
+const InputIcon = styled(Icon)`
+  visibility: hidden;
+  transition: 0.1s;
+`;
+
+type TFakeInput = {
   isDisabled?: boolean;
 };
 
-const Container = styled.div<TContainer>`
+const FakeInput = styled.div<TFakeInput>`
   display: flex;
-  background: ${({ isDisabled }) => (isDisabled ? "red" : "transparent")};
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: ${({ theme }) => theme.darkOpacity};
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+
+  &:hover {
+    background: ${({ isDisabled, theme }) =>
+      !isDisabled ? theme.purpleHovered : theme.darkOpacity};
+  }
 `;
 
-const Label = styled.div`
-  width: 120px;
-  padding-right: 20px;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 19px;
-`;
+const Input = styled.input`
+  position: absolute;
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
 
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
-const Top = styled.div`
-  display: flex;
-
-  > * {
-    &:not(:first-child) {
-      margin-left: 10px;
+  &:checked {
+    + ${FakeInput} {
+      ${InputIcon} {
+        visibility: visible;
+      }
     }
   }
 `;
 
-const Description = styled.div`
-  font-style: normal;
-  font-weight: lighter;
-  font-size: 14px;
-  margin-top: 10px;
-`;
+const Label = styled.label``;
 
-export default FileInput;
+export default ToggleInput;
