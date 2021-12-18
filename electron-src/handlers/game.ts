@@ -2,7 +2,7 @@ import { ipcMain } from "electron";
 
 import Stores from "../utils/stores";
 import Analytics from "../utils/analytics";
-import { getFileName, getId, isGameExist } from "../utils";
+import { getFileName, getPathHash, isGameExist } from "../utils";
 import { fillSteamGameInfo } from "../utils/steam";
 
 type TCreateGamePayload = {
@@ -12,7 +12,7 @@ type TCreateGamePayload = {
 
 ipcMain.handle("createGame", async (_, { exePath, saves }: TCreateGamePayload) => {
   if (!isGameExist(exePath)) {
-    const id = getId(exePath);
+    const id = getPathHash(exePath);
     const name = getFileName(exePath);
     const newGame: TGame = {
       id,
@@ -43,7 +43,7 @@ type TEditGamePayload = {
 
 ipcMain.handle("editGame", async (_, { game, exePath, saves }: TEditGamePayload) => {
   const oldId = game.id;
-  const newId = getId(exePath);
+  const newId = getPathHash(exePath);
   const newGameName = getFileName(exePath);
   game.id = newId;
   game.name = newGameName;

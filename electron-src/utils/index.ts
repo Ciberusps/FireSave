@@ -14,13 +14,13 @@ export const getFileName = (filePath: string): string =>
 export const getFilePath = (filePath: string) => path.dirname(filePath);
 
 export const isGameExist = (exePath: string): boolean => {
-  const gameId = getId(exePath);
+  const gameId = getPathHash(exePath);
   const isGameExist = Stores.Settings.has(`games.${gameId}`);
   console.log("isGameExist", !!isGameExist);
   return isGameExist;
 };
 
-export const getId = (path: string) =>
+export const getPathHash = (path: string) =>
   base64url.fromBase64(createHash("sha1").update(path).digest("base64"));
 
 export const getAssetPath = (...paths: string[]): string =>

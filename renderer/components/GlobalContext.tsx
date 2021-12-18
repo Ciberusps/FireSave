@@ -16,8 +16,8 @@ const GlobalContext = React.createContext<TState>({
 
 const GlobalProvider = (props: TProps) => {
   const { children } = props;
-  const [settingsStore, setSettingsStore] = useState<any | null>(null);
-  const [persistentStore, setPersistentStore] = useState<any | null>(null);
+  const [settingsStore, setSettingsStore] = useState<TSettingsStore | null>(null);
+  const [persistentStore, setPersistentStore] = useState<TPersistentStore | null>(null);
 
   const getState = async () => {
     const persistentStore = await window.electron.getPersistentStore();

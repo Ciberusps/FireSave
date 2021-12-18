@@ -12,12 +12,13 @@ const maxImgWidth = (height * 16) / 9;
 
 type TProps = {
   game: TGame;
+  gamePath: string;
   savePoint: TSavePoint;
   className?: string;
 };
 
 const SavePoint = (props: TProps) => {
-  const { game, savePoint, className } = props;
+  const { game, gamePath, savePoint, className } = props;
 
   const onLoadSave = async (savePoint: TSavePoint) => {
     const isLoaded = await window.electron.loadSavePoint(game.id, savePoint.id);
@@ -36,14 +37,13 @@ const SavePoint = (props: TProps) => {
   const date = new Date(savePoint.date);
   const distance = formatDistance(date, new Date());
   const formatedDate = format(date, "dd.MM.yyyy, HH:mm") + " - " + distance + " ago";
+  const screenshotPath =
+    savePoint?.screenshot &&
+    "file://" + gamePath + "/" + "screenshots" + "/" + savePoint?.screenshot;
 
   return (
     <Container className={className}>
-      <Screenshot
-        src={savePoint?.screenshot ? "file://" + savePoint.screenshot : undefined}
-        width={maxImgWidth}
-        height={height}
-      />
+      <Screenshot src={screenshotPath} width={maxImgWidth} height={height} />
       <Info>
         <Description>
           <Name title={savePoint.id}>{name}</Name>

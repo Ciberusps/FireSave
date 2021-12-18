@@ -8,13 +8,14 @@ import GameHeader from "../../../components/GameHeader";
 import GlobalContext from "../../../components/GlobalContext";
 
 const GamePage = () => {
-  const { settingsStore: state } = useContext(GlobalContext);
+  const { settingsStore, persistentStore } = useContext(GlobalContext);
   const Router = useRouter();
   const id = Router.query?.id as string;
-  const game = state?.games?.[id];
+  const game = settingsStore?.games?.[id];
   if (!game) return <div>error</div>;
 
   const savePoints = game.savePoints && Object.values(game.savePoints);
+  const gamePath = persistentStore?.settingsStorePath + "/" + game.name;
 
   return (
     <Layout contentStyles={{ padding: 0 }}>
@@ -22,7 +23,7 @@ const GamePage = () => {
 
       <SavePoints>
         {savePoints?.reverse()?.map((point) => (
-          <SavePoint key={point.id} game={game} savePoint={point} />
+          <SavePoint key={point.id} game={game} gamePath={gamePath} savePoint={point} />
         ))}
       </SavePoints>
     </Layout>

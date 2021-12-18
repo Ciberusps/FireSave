@@ -1,3 +1,23 @@
+type TElectronApi = {
+  getConfig: () => Promise<any>;
+  revealInFileExplorer: (val: string) => Promise<any>;
+  saveGame: (val: string) => Promise<any>;
+  loadSavePoint: (...args: any[]) => Promise<any>;
+  removeSavePoint: (...args: any[]) => Promise<any>;
+  changeSettings: (...args: any[]) => Promise<any>;
+  changePersistentStore: (...args: any[]) => Promise<any>;
+  editGame: (...args: any[]) => Promise<any>;
+  createGame: (...args: any[]) => Promise<any>;
+  analyticsPageView: (...args: any[]) => Promise<any>;
+  openDialog: (...args: any[]) => Promise<any>;
+  isGameExist: (...args: any[]) => Promise<any>;
+
+  getSettingsStore: () => Promise<any>;
+  getPersistentStore: () => Promise<any>;
+  onStateUpdate: (somfunc = () => null) => any;
+  onPersistentStoreUpdate: (somfunc = () => null) => any;
+};
+
 interface Window {
   electron: any;
 }

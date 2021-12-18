@@ -21,8 +21,6 @@ const SettingsPage = () => {
   const { settingsStore, persistentStore } = useContext(GlobalContext);
   if (!settingsStore) return null;
 
-  console.log("persistentStore?.settingsStorePath", persistentStore?.settingsStorePath);
-
   const defaultValues: TSettingsForm = {
     isAutoSaveOn: settingsStore.isAutoSaveOn,
     autoSaveMinutes: settingsStore.autoSaveMinutes,

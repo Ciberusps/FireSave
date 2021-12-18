@@ -2,12 +2,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ipcRenderer, contextBridge } from "electron";
 
-contextBridge.exposeInMainWorld("electron", {
+const electronApi: TElectronApi = {
   getConfig: () => ipcRenderer.invoke("getConfig"),
   revealInFileExplorer: (val: string) => ipcRenderer.invoke("revealInFileExplorer", val),
   saveGame: async (val: string) => ipcRenderer.invoke("saveGame", val),
-  getSettingsStore: async () => ipcRenderer.invoke("getSettingsStore"),
-  getPersistentStore: async () => ipcRenderer.invoke("getPersistentStore"),
   loadSavePoint: async (...args: any[]) => ipcRenderer.invoke("loadSavePoint", ...args),
   removeSavePoint: async (...args: any[]) =>
     ipcRenderer.invoke("removeSavePoint", ...args),
@@ -20,7 +18,11 @@ contextBridge.exposeInMainWorld("electron", {
   openDialog: (...args: any[]) => ipcRenderer.invoke("openDialog", ...args),
   isGameExist: (...args: any[]) => ipcRenderer.invoke("isGameExist", ...args),
 
+  getSettingsStore: async () => ipcRenderer.invoke("getSettingsStore"),
+  getPersistentStore: async () => ipcRenderer.invoke("getPersistentStore"),
   onStateUpdate: (somfunc = () => null) => ipcRenderer.on("stateUpdate", somfunc),
   onPersistentStoreUpdate: (somfunc = () => null) =>
     ipcRenderer.on("persistentStoreUpdate", somfunc),
-});
+};
+
+contextBridge.exposeInMainWorld("electron", electronApi);
