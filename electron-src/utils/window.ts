@@ -1,6 +1,6 @@
 import { BrowserWindow } from "electron";
 
-import Store from "./store";
+import Stores from "./stores";
 
 const savePositionAndSize = (mainWindow: BrowserWindow) => {
   const position = mainWindow.getPosition();
@@ -14,11 +14,11 @@ const savePositionAndSize = (mainWindow: BrowserWindow) => {
     height: size[1],
     isMaximized,
   };
-  Store.set("window", newWindowState);
+  Stores.Settings.set("window", newWindowState);
 };
 
 const loadPositionAndSize = () => {
-  return Store.store.window;
+  return Stores.Settings.store.window;
 };
 
 const WindowUtils = {

@@ -2,7 +2,7 @@ import path from "path";
 import base64url from "base64url";
 import { createHash } from "crypto";
 
-import Store from "./store";
+import Stores from "./stores";
 import { RESOURCES_PATH } from "./config";
 
 export const getFileNameWithExtension = (filePath: string): string =>
@@ -15,7 +15,7 @@ export const getFilePath = (filePath: string) => path.dirname(filePath);
 
 export const isGameExist = (exePath: string): boolean => {
   const gameId = getId(exePath);
-  const isGameExist = Store.has(`games.${gameId}`);
+  const isGameExist = Stores.Settings.has(`games.${gameId}`);
   console.log("isGameExist", !!isGameExist);
   return isGameExist;
 };

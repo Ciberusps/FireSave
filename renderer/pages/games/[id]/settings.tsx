@@ -16,7 +16,7 @@ type TGameForm = {
 };
 
 const GamePage = () => {
-  const { state } = useContext(GlobalContext);
+  const { settingsStore: state } = useContext(GlobalContext);
   const Router = useRouter();
 
   const id = Router.query?.id as string;

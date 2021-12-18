@@ -8,7 +8,7 @@ import GameHeader from "../../../components/GameHeader";
 import GlobalContext from "../../../components/GlobalContext";
 
 const GamePage = () => {
-  const { state } = useContext(GlobalContext);
+  const { settingsStore: state } = useContext(GlobalContext);
   const Router = useRouter();
   const id = Router.query?.id as string;
   const game = state?.games?.[id];

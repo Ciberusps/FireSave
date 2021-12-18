@@ -2,12 +2,12 @@ import { useContext } from "react";
 import styled from "styled-components";
 
 import Game from "../components/Game";
+import Button from "../components/Button";
 import Layout from "../components/Layout";
 import GlobalContext from "../components/GlobalContext";
-import Button from "../components/Button";
 
 const IndexPage = () => {
-  const { state } = useContext(GlobalContext);
+  const { settingsStore: state } = useContext(GlobalContext);
 
   const games = state?.games && Object.values(state?.games);
 

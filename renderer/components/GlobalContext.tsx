@@ -5,34 +5,44 @@ type TProps = {
 };
 
 type TState = {
-  state: TStore | null;
+  settingsStore: TSettingsStore | null;
+  persistentStore: TPersistentStore | null;
 };
 
 const GlobalContext = React.createContext<TState>({
-  state: null,
+  settingsStore: null,
+  persistentStore: null,
 });
 
 const GlobalProvider = (props: TProps) => {
   const { children } = props;
-  const [state, setState] = useState<any | null>(null);
+  const [settingsStore, setSettingsStore] = useState<any | null>(null);
+  const [persistentStore, setPersistentStore] = useState<any | null>(null);
 
   const getState = async () => {
-    const newState = await window.electron.getState();
-    setState(newState);
+    const persistentStore = await window.electron.getPersistentStore();
+    const settingsState = await window.electron.getSettingsStore();
+    setPersistentStore(persistentStore);
+    setSettingsStore(settingsState);
   };
 
   useEffect(() => {
     getState();
 
-    window.electron.onStateUpdate((_: any, newState: any) => {
-      setState(newState);
+    window.electron.onStateUpdate((_: any, newStore: any) => {
+      setSettingsStore(newStore);
+    });
+
+    window.electron.onPersistentStoreUpdate((_: any, newStore: any) => {
+      setPersistentStore(newStore);
     });
   }, []);
 
   return (
     <GlobalContext.Provider
       value={{
-        state,
+        settingsStore,
+        persistentStore,
       }}
     >
       {children}

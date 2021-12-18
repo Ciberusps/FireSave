@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
 
-import Store from "../utils/store";
+import Stores from "../utils/stores";
 import Analytics from "../utils/analytics";
 import { getFileName, getId, isGameExist } from "../utils";
 import { fillSteamGameInfo } from "../utils/steam";
@@ -21,7 +21,7 @@ ipcMain.handle("createGame", async (_, { exePath, saves }: TCreateGamePayload) =
       saves,
       stats: { allSavesCount: 0, autoSaveCount: 0, manualSaveCount: 0 },
     };
-    Store.set(`games.${id}`, newGame);
+    Stores.Settings.set(`games.${id}`, newGame);
 
     Analytics.sendEvent({ category: "games", action: "added", labels: [name] });
 
@@ -51,14 +51,14 @@ ipcMain.handle("editGame", async (_, { game, exePath, saves }: TEditGamePayload)
   game.saves = saves;
   if (oldId !== newId) {
     // @ts-ignore
-    Store.delete(`games.${oldId}`);
+    Stores.Settings.delete(`games.${oldId}`);
   }
-  Store.set(`games.${newId}`, game);
+  Stores.Settings.set(`games.${newId}`, game);
   return true;
 });
 
 ipcMain.handle("removeGame", async (_, id) => {
   // @ts-ignore
-  Store.delete(`games.${id}`);
+  Stores.Settings.delete(`games.${id}`);
   return true;
 });

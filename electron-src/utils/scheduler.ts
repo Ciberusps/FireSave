@@ -1,4 +1,4 @@
-import Store from "./store";
+import Stores from "./stores";
 import Saves from "./saves";
 
 // let autoSavesTask: ScheduledTask | null = null;
@@ -17,9 +17,9 @@ let autoSavesTask: NodeJS.Timer | null = null;
 // };
 
 const foolCheck = () => {
-  const mins = Store.store.autoSaveMinutes;
+  const mins = Stores.Settings.store.autoSaveMinutes;
   if (typeof mins !== "number" || mins < 1 || mins > 60) {
-    Store.set("autoSaveMinutes", 15);
+    Stores.Settings.set("autoSaveMinutes", 15);
   }
 };
 
@@ -31,7 +31,7 @@ const runAutoSaves = () => {
       clearInterval(autoSavesTask);
     }
 
-    if (Store.store.isAutoSaveOn) {
+    if (Stores.Settings.store.isAutoSaveOn) {
       foolCheck();
       console.info("AutoSaves enabled, start or restart scheduler");
 
@@ -47,7 +47,7 @@ const runAutoSaves = () => {
       autoSavesTask = setInterval(() => {
         console.log("running a task every minute");
         Saves.tryAutoSave();
-      }, Store.store.autoSaveMinutes * 60 * 1000);
+      }, Stores.Settings.store.autoSaveMinutes * 60 * 1000);
     } else {
       console.info("AutoSaves disabled, scheduler wont start");
     }

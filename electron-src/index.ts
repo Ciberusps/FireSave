@@ -6,7 +6,7 @@ import { BrowserWindow, app, protocol, shell } from "electron";
 import { join } from "path";
 import { format } from "url";
 
-import Store from "./utils/store";
+import Stores from "./utils/stores";
 import AppTray from "./utils/tray";
 import Shortcuts from "./utils/shortcuts";
 import Scheduler from "./utils/scheduler";
@@ -74,15 +74,19 @@ const onReady = async () => {
     return false;
   });
 
-  Store.onDidAnyChange((newVal) => {
+  Stores.Persistent.onDidAnyChange((newVal) => {
+    mainWindow.webContents.send("persistentStoreUpdate", newVal);
+  });
+
+  Stores.Settings.onDidAnyChange((newVal) => {
     mainWindow.webContents.send("stateUpdate", newVal);
   });
 
-  Store.set("version", app.getVersion());
+  Stores.Settings.set("version", app.getVersion());
 
   mainWindow.loadURL(url);
 
-  Shortcuts.registerSaveKey(Store.store.saveShortcut);
+  Shortcuts.registerSaveKey(Stores.Settings.store.saveShortcut);
 
   mainWindow.webContents.on("new-window", (event, url) => {
     event.preventDefault();

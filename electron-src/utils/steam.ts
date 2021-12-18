@@ -4,7 +4,7 @@ import glob from "glob";
 import axios from "axios";
 // @ts-ignore
 import VDF from "simple-vdf";
-import Store from "./store";
+import Stores from "./stores";
 
 const readFromFile = (file: string): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -62,8 +62,11 @@ export const fillSteamGameInfo = async (game: TGame) => {
       )
     ).data;
     if (steamInfo?.[manifest.AppState.appid]?.data) {
-      Store.set(`games.${game.id}.steamInfo`, steamInfo[manifest.AppState.appid].data);
-      Store.set(`games.${game.id}.steamManifest`, manifest);
+      Stores.Settings.set(
+        `games.${game.id}.steamInfo`,
+        steamInfo[manifest.AppState.appid].data
+      );
+      Stores.Settings.set(`games.${game.id}.steamManifest`, manifest);
     }
   } catch (err) {
     // TODO: send logs

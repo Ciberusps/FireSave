@@ -6,11 +6,14 @@ contextBridge.exposeInMainWorld("electron", {
   getConfig: () => ipcRenderer.invoke("getConfig"),
   revealInFileExplorer: (val: string) => ipcRenderer.invoke("revealInFileExplorer", val),
   saveGame: async (val: string) => ipcRenderer.invoke("saveGame", val),
-  getState: async () => ipcRenderer.invoke("getState"),
+  getSettingsStore: async () => ipcRenderer.invoke("getSettingsStore"),
+  getPersistentStore: async () => ipcRenderer.invoke("getPersistentStore"),
   loadSavePoint: async (...args: any[]) => ipcRenderer.invoke("loadSavePoint", ...args),
   removeSavePoint: async (...args: any[]) =>
     ipcRenderer.invoke("removeSavePoint", ...args),
   changeSettings: (...args: any[]) => ipcRenderer.invoke("changeSettings", ...args),
+  changePersistentStore: (...args: any[]) =>
+    ipcRenderer.invoke("changePersistentStore", ...args),
   editGame: (...args: any[]) => ipcRenderer.invoke("editGame", ...args),
   createGame: (...args: any[]) => ipcRenderer.invoke("createGame", ...args),
   analyticsPageView: (...args: any[]) => ipcRenderer.invoke("analyticsPageView", ...args),
@@ -18,4 +21,6 @@ contextBridge.exposeInMainWorld("electron", {
   isGameExist: (...args: any[]) => ipcRenderer.invoke("isGameExist", ...args),
 
   onStateUpdate: (somfunc = () => null) => ipcRenderer.on("stateUpdate", somfunc),
+  onPersistentStoreUpdate: (somfunc = () => null) =>
+    ipcRenderer.on("persistentStoreUpdate", somfunc),
 });

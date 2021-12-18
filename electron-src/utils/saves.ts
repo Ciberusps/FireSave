@@ -7,10 +7,10 @@ import faker from "faker";
 import screenshot from "screenshot-desktop";
 import { format } from "date-fns";
 
-import Store from "./store";
+import Stores from "./stores";
+import Analytics from "./analytics";
 import FileSystem from "./fileSystem";
 import { getId, getFileNameWithExtension } from ".";
-import Analytics from "./analytics";
 
 const isGameRunning = async (game: TGame) => {
   try {
@@ -44,7 +44,7 @@ const save = async (
   options?: { isBeforeLoad: boolean }
 ) => {
   try {
-    const gameStorePath = path.join(Store.store.storePath, game.name);
+    const gameStorePath = path.join(Stores.Persistent.store.settingsStorePath, game.name);
 
     if (game.saves.files.length === 1) {
       const file = game.saves.files[0];
@@ -64,13 +64,13 @@ const save = async (
       let typeNumber = 0;
       const statsPath = `games.${game.id}.stats`;
       const curStats = game.stats;
-      Store.set(`${statsPath}.allSavesCount`, curStats.allSavesCount + 1);
+      Stores.Settings.set(`${statsPath}.allSavesCount`, curStats.allSavesCount + 1);
       if (type === "manualsave") {
         typeNumber = curStats.manualSaveCount + 1;
-        Store.set(`${statsPath}.manualSaveCount`, typeNumber);
+        Stores.Settings.set(`${statsPath}.manualSaveCount`, typeNumber);
       } else {
         typeNumber = curStats.autoSaveCount + 1;
-        Store.set(`${statsPath}.autoSaveCount`, typeNumber);
+        Stores.Settings.set(`${statsPath}.autoSaveCount`, typeNumber);
       }
 
       const savePoint: TSavePoint = {
@@ -84,7 +84,7 @@ const save = async (
         tags: [type],
       };
 
-      Store.set(savePointPathInStore, savePoint);
+      Stores.Settings.set(savePointPathInStore, savePoint);
 
       const screenshotsPath = path.join(gameStorePath, "screenshots");
       FileSystem.createDir(screenshotsPath);
@@ -106,7 +106,7 @@ const save = async (
 
       // console.log(screenshotFilePath);
       await screenshot({ filename: screenshotFilePath, format: "jpg" });
-      Store.set(savePointPathInStore + ".screenshot", screenshotFilePath);
+      Stores.Settings.set(savePointPathInStore + ".screenshot", screenshotFilePath);
     } else {
       throw new Error("Need support for many files");
     }
@@ -118,7 +118,7 @@ const save = async (
 
 const load = async (gameId: string, savePointId: string) => {
   try {
-    const game = Store.store.games[gameId];
+    const game = Stores.Settings.store.games[gameId];
     const savePoint = game.savePoints?.[savePointId];
     if (!savePoint) throw new Error("SavePoint not found");
 
@@ -148,13 +148,13 @@ const load = async (gameId: string, savePointId: string) => {
 
 const remove = async (gameId: string, savePointId: string) => {
   try {
-    const game = Store.store.games[gameId];
+    const game = Stores.Settings.store.games[gameId];
     const savePoint = game.savePoints?.[savePointId];
     if (!savePoint) throw new Error("SavePoint not found");
     if (savePoint?.screenshot) FileSystem.removeFile(savePoint.screenshot);
     FileSystem.removeFile(savePoint.path);
     // @ts-ignore
-    Store.delete(`games.${gameId}.savePoints.${savePoint.id}`);
+    Stores.delete(`games.${gameId}.savePoints.${savePoint.id}`);
     Analytics.sendEvent({
       category: "savePoints",
       action: "removed",
@@ -166,7 +166,7 @@ const remove = async (gameId: string, savePointId: string) => {
 };
 
 const tryAutoSave = async () => {
-  Object.values(Store.store.games).forEach(async (game) => {
+  Object.values(Stores.Settings.store.games).forEach(async (game) => {
     const isRunning = await isGameRunning(game);
     if (!isRunning) return;
 
@@ -176,7 +176,7 @@ const tryAutoSave = async () => {
 };
 
 const saveRunningGames = () => {
-  Object.entries(Store.store.games).map(async ([key, game]) => {
+  Object.entries(Stores.Settings.store.games).map(async ([key, game]) => {
     const isRunning = await isGameRunning(game);
     if (isRunning) {
       save(game, "manualsave");

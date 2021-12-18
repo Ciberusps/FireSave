@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import isDev from "electron-is-dev";
 
-import Store from "../utils/store";
+import Stores from "../utils/stores";
 import Analytics from "../utils/analytics";
 import Scheduler from "../utils/scheduler";
 import { isGameExist } from "../utils";
@@ -22,8 +22,12 @@ ipcMain.handle("analyticsPageView", async (_, url: string) => {
   Analytics.pageView(url);
 });
 
-ipcMain.handle("getState", async () => {
-  return Store.store;
+ipcMain.handle("getSettingsStore", async () => {
+  return Stores.Settings.store;
+});
+
+ipcMain.handle("getPersistentStore", async () => {
+  return Stores.Persistent.store;
 });
 
 ipcMain.handle("getConfig", () => {
@@ -36,13 +40,16 @@ ipcMain.handle("getConfig", () => {
 type TSettings = {
   isAutoSaveOn: boolean;
   autoSaveMinutes: number;
-  storePath: string;
 };
 
 ipcMain.handle("changeSettings", (_, newSettings: TSettings) => {
-  Store.set("isAutoSaveOn", newSettings.isAutoSaveOn);
-  Store.set("autoSaveMinutes", newSettings.autoSaveMinutes);
-  // Store.set("storePath", newSettings.storePath);
+  Stores.Settings.set("isAutoSaveOn", newSettings.isAutoSaveOn);
+  Stores.Settings.set("autoSaveMinutes", newSettings.autoSaveMinutes);
   Scheduler.runAutoSaves();
+  return true;
+});
+
+ipcMain.handle("changePersistentStore", (_, newSettings: TPersistentStore) => {
+  Stores.Persistent.set("settingsStorePath", newSettings.settingsStorePath);
   return true;
 });

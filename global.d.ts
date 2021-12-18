@@ -1,7 +1,14 @@
-type TStore = {
+interface Window {
+  electron: any;
+}
+
+type TPersistentStore = {
+  settingsStorePath: string;
+};
+
+type TSettingsStore = {
   isAutoSaveOn: boolean;
   autoSaveMinutes: number;
-  storePath: string;
   version: string;
   saveShortcut: string;
   games: { [key: string]: TGame };

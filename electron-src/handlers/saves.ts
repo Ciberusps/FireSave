@@ -1,11 +1,11 @@
 import { ipcMain } from "electron";
 
 import Saves from "../utils/saves";
-import Store from "../utils/store";
+import Stores from "../utils/stores";
 
 ipcMain.handle("saveGame", async (_, gameId) => {
   // TODO: dont create screenshot if game not runned
-  Saves.save(Store.store.games[gameId], "manualsave");
+  Saves.save(Stores.Settings.store.games[gameId], "manualsave");
 });
 
 ipcMain.handle("loadSavePoint", (_, gameId: string, savePointId: string) => {

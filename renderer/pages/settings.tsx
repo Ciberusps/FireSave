@@ -14,17 +14,19 @@ import GlobalContext from "../components/GlobalContext";
 type TSettingsForm = {
   isAutoSaveOn: boolean;
   autoSaveMinutes: number;
-  storePath: string;
+  settingsStorePath: string;
 };
 
 const SettingsPage = () => {
-  const { state } = useContext(GlobalContext);
-  if (!state) return null;
+  const { settingsStore, persistentStore } = useContext(GlobalContext);
+  if (!settingsStore) return null;
+
+  console.log("persistentStore?.settingsStorePath", persistentStore?.settingsStorePath);
 
   const defaultValues: TSettingsForm = {
-    isAutoSaveOn: state.isAutoSaveOn,
-    autoSaveMinutes: state.autoSaveMinutes,
-    storePath: JSON.stringify({ path: state.storePath }),
+    isAutoSaveOn: settingsStore.isAutoSaveOn,
+    autoSaveMinutes: settingsStore.autoSaveMinutes,
+    settingsStorePath: JSON.stringify({ path: persistentStore?.settingsStorePath }),
   };
 
   const { register, handleSubmit, control } = useForm<TSettingsForm>({
@@ -32,9 +34,10 @@ const SettingsPage = () => {
   });
 
   const onSubmit = (data: TSettingsForm) => {
-    const { storePath, ...restData } = data;
-    const parsedStorePath = JSON.parse(storePath).path;
-    window.electron.changeSettings({ ...restData, storePath: parsedStorePath });
+    const { settingsStorePath, ...restData } = data;
+    const parsedSettingsStorePath = JSON.parse(settingsStorePath).path;
+    window.electron.changeSettings(restData);
+    window.electron.changePersistentStore({ settingsStorePath: parsedSettingsStorePath });
   };
 
   return (
@@ -60,7 +63,7 @@ const SettingsPage = () => {
 
         <FileInput
           control={control}
-          name="storePath"
+          name="settingsStorePath"
           label="Store folder"
           description="CANNOT BE CHANGED(for now). Folder for saves, screenshots and config."
           properties={["openDirectory"]}
@@ -73,7 +76,7 @@ const SettingsPage = () => {
       </MainSettingsBlock>
 
       <About>
-        <Version>v{state?.version}</Version>
+        <Version>v{settingsStore?.version}</Version>
         <WithLove>
           by&nbsp;
           <Link href="https://github.com/Ciberusps" target="_blank">
