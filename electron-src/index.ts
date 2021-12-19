@@ -2,7 +2,7 @@ import isDev from "electron-is-dev";
 import prepareNext from "electron-next";
 import * as Sentry from "@sentry/electron";
 import { autoUpdater } from "electron-updater";
-import { BrowserWindow, app, protocol, shell } from "electron";
+import { BrowserWindow, app, protocol, shell, nativeTheme } from "electron";
 import { join } from "path";
 import { format } from "url";
 
@@ -30,6 +30,8 @@ const onReady = async () => {
   await prepareNext("./renderer");
 
   Scheduler.runAutoSaves();
+
+  nativeTheme.themeSource = "dark";
 
   const { isMaximized, ...posAndSize } = WindowUtils.loadPositionAndSize();
   const mainWindow = new BrowserWindow({
