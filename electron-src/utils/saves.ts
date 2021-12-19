@@ -6,12 +6,12 @@ import faker from "faker";
 // @ts-ignore
 import screenshot from "screenshot-desktop";
 import { format } from "date-fns";
+import { nanoid } from "nanoid";
 
 import Stores from "./stores";
 import Analytics from "./analytics";
 import FileSystem from "./fileSystem";
 import { getFileNameWithExtension } from ".";
-import { nanoid } from "nanoid";
 
 const isGameRunning = async (game: TGame) => {
   try {
