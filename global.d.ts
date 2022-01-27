@@ -44,7 +44,7 @@ type TSettingsStore = {
 type TGame = {
   id: string;
   name: string;
-  exePath: string; // id
+  exePath: string | undefined; // id
   saves: TSaves;
   savePoints?: { [key: string]: TSavePoint };
   steamInfo?: TSteamInfo;

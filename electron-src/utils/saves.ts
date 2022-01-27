@@ -15,6 +15,7 @@ import { getFileNameWithExtension } from ".";
 
 const isGameRunning = async (game: TGame) => {
   try {
+    if (!game?.exePath) return false;
     const processName = getFileNameWithExtension(game.exePath);
     const list = await findProcess("name", processName);
     if (list?.length) {
