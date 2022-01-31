@@ -10,11 +10,11 @@
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts && opencollective-postinstall",
+    "prepare": "husky install",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
     "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./src/main/main.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
-    "prepare": "husky install",
     "bump:version": "node scripts/bumpVersion.js",
     "prettier:check": "cross-var prettier --check $npm_package_config_prettier_pattern",
     "prettier:all": "cross-var prettier --write $npm_package_config_prettier_pattern",
@@ -81,7 +81,8 @@
         "nsis"
       ],
       "asarUnpack": [
-        "node_modules/screenshot-desktop/lib/win32"
+        "node_modules/screenshot-desktop/lib/win32",
+        "node_modules/greenworks/lib"
       ]
     },
     "linux": {

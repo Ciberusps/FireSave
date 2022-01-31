@@ -31,3 +31,6 @@ npm-debug.log.*
 # .next
 /renderer/out
 /_OLD
+
+# steam
+release/app/steamworks_sdk

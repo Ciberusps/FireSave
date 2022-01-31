@@ -67,6 +67,12 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 
 ## Contribute
 
+## Setup
+
+- download steamworks sdk from https://partner.steamgames.com/downloads/list
+- extract content in "sdk" folder to "/release/app/steamworks_sdk"
+- `npm i`
+
 ### Build
 
 - make some changes
@@ -79,6 +85,11 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 ### utils
 
 - bump version `npm run bump:version 0.3.6-beta`
+
+## Steamworks(greenworks)
+
+- Place steamworks `sdk` from https://partner.steamgames.com/downloads/list to `node_modules/greenworks/deps/steamworks_sdk`
+  `npm install –global –production windows-build-tools`
 
 ## Based
 

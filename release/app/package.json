@@ -11,7 +11,10 @@
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts",
+    "preinstall": "echo preinstall && npm i --ignore-scripts && cp -r steamworks_sdk node_modules/greenworks/deps",
     "postinstall": "npm run electron-rebuild && npm run link-modules"
   },
-  "dependencies": {}
+  "dependencies": {
+    "greenworks": "git+https://github.com/ceifa/greenworks.git#ae02dca28e0a435332b84cd11dd5890e3cc23951"
+  }
 }
