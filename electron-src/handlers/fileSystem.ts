@@ -11,6 +11,7 @@ type TOpenDialogReturn = {
 ipcMain.handle(
   "openDialog",
   async (_, options: OpenDialogOptions): Promise<TOpenDialogReturn> => {
+    console.log("options", options);
     const filesOrDirs = dialog.showOpenDialogSync(options);
     if (!filesOrDirs) return null;
     console.log(filesOrDirs);

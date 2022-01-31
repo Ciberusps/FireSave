@@ -22,6 +22,7 @@ const FileSystem = {
   removeFile,
   createDir,
   isDir,
+  isExist,
 };
 
 export default FileSystem;

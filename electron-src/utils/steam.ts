@@ -40,7 +40,7 @@ const getGameManifest = async (steamappsPath: string, game: TGame) => {
   const allAppManifests = await getAllAppManifests(steamappsPath);
   //   console.log("allAppManifest", allAppManifests);
   const gameManifest = allAppManifests.find((manifest) =>
-    game.exePath?.includes(manifest.AppState.installdir)
+    game.exePath?.path.includes(manifest.AppState.installdir)
   );
   //   console.log("MY GAME MANIFEST", gameManifest);
   return gameManifest;
@@ -49,9 +49,9 @@ const getGameManifest = async (steamappsPath: string, game: TGame) => {
 export const fillSteamGameInfo = async (game: TGame) => {
   try {
     if (!game.exePath) throw new Error("No path to exe file");
-    const steamappsPath = game.exePath.substring(
+    const steamappsPath = game.exePath.path.substring(
       0,
-      game.exePath.indexOf("steamapps") + "steamapps".length
+      game.exePath.path.indexOf("steamapps") + "steamapps".length
     );
 
     const manifest = await getGameManifest(steamappsPath, game);

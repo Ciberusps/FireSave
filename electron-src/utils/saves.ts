@@ -11,13 +11,15 @@ import { nanoid } from "nanoid";
 import Stores from "./stores";
 import Analytics from "./analytics";
 import FileSystem from "./fileSystem";
-import { getFileNameWithExtension } from ".";
 
 const isGameRunning = async (game: TGame) => {
+  console.log("Is game running", game.exePath);
   try {
     if (!game?.exePath) return false;
-    const processName = getFileNameWithExtension(game.exePath);
+    const processName = game.exePath.files[0];
+    console.log("Is game running processName", processName);
     const list = await findProcess("name", processName);
+    console.log("list", list);
     if (list?.length) {
       return true;
     } else {
@@ -42,17 +44,20 @@ const getFileNameForNextSave = (file: string): string => {
 };
 
 type TGetGameInfoRes = {
-  path: string;
+  savePointsPath: string;
   screenshotsPath: string;
 };
 const getGameInfo = (game: TGame): TGetGameInfoRes => {
-  const gameStorePath = path.join(Stores.Persistent.store.settingsStorePath, game.name);
-  const screenshotsPath = path.join(gameStorePath, "screenshots");
+  const savePointsPath = path.join(
+    Stores.Persistent.store.settingsStorePath,
+    game.savePointsFolderName
+  );
+  const screenshotsPath = path.join(savePointsPath, "screenshots");
 
-  FileSystem.createDir(gameStorePath);
+  FileSystem.createDir(savePointsPath);
   FileSystem.createDir(screenshotsPath);
 
-  return { path: gameStorePath, screenshotsPath };
+  return { savePointsPath, screenshotsPath };
 };
 
 type TCountStatsRes = {
@@ -79,7 +84,7 @@ const getSavePointPaths = (game: TGame, savePoint: TSavePoint) => {
   const gameInfo = getGameInfo(game);
   const screenshotPath =
     savePoint.screenshot && path.join(gameInfo.screenshotsPath, savePoint.screenshot);
-  const saveDataPath = path.join(gameInfo.path, savePoint.path);
+  const saveDataPath = path.join(gameInfo.savePointsPath, savePoint.path);
   return { screenshotPath, saveDataPath };
 };
 
@@ -92,11 +97,14 @@ const save = async (
     const gameInfo = getGameInfo(game);
 
     // TODO: game.save -> game.fileOrFolderForSave
-    if (game.saves.files.length === 1) {
+    if (game.saves?.files.length === 1) {
       const file = game.saves.files[0];
       const savePath = path.join(game.saves.path, file);
       const saveFileName = getFileNameForNextSave(file);
-      const saveFileRelativePath = path.join(gameInfo.path, getFileNameForNextSave(file));
+      const saveFileRelativePath = path.join(
+        gameInfo.savePointsPath,
+        getFileNameForNextSave(file)
+      );
 
       if (!savePath) return;
 
@@ -151,7 +159,7 @@ const load = async (gameId: string, savePointId: string) => {
 
     await save(game, "manualsave", { isBeforeLoad: true });
 
-    if (game.saves.files.length === 1) {
+    if (game.saves?.files.length === 1) {
       const file = game.saves.files[0];
       const savePath = path.join(game.saves.path, file);
 

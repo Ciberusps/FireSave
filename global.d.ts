@@ -1,20 +1,25 @@
 type TElectronApi = {
   getConfig: () => Promise<any>;
+
   revealInFileExplorer: (val: string) => Promise<any>;
+
   saveGame: (val: string) => Promise<any>;
   loadSavePoint: (...args: any[]) => Promise<any>;
   removeSavePoint: (...args: any[]) => Promise<any>;
-  changeSettings: (...args: any[]) => Promise<any>;
-  changePersistentStore: (...args: any[]) => Promise<any>;
-  editGame: (...args: any[]) => Promise<any>;
+
   createGame: (...args: any[]) => Promise<any>;
+  editGame: (...args: any[]) => Promise<any>;
+  removeGame: (id: string) => Promise<any>;
+
   analyticsPageView: (...args: any[]) => Promise<any>;
   openDialog: (...args: any[]) => Promise<any>;
-  isGameExist: (...args: any[]) => Promise<any>;
 
+  changeSettings: (...args: any[]) => Promise<any>;
   getSettingsStore: () => Promise<any>;
-  getPersistentStore: () => Promise<any>;
   onStateUpdate: (somfunc = () => null) => any;
+
+  getPersistentStore: () => Promise<any>;
+  changePersistentStore: (...args: any[]) => Promise<any>;
   onPersistentStoreUpdate: (somfunc = () => null) => any;
 };
 
@@ -31,7 +36,7 @@ type TSettingsStore = {
   autoSaveMinutes: number;
   version: string;
   saveShortcut: string;
-  games: { [key: string]: TGame };
+  games: TGamesInSettingsStore;
   window: {
     x: number;
     y: number;
@@ -41,11 +46,17 @@ type TSettingsStore = {
   };
 };
 
+type TGamesInSettingsStore = { [key: string]: TGame };
+
 type TGame = {
   id: string;
   name: string;
-  exePath: string | undefined; // id
-  saves: TSaves;
+  exePath: TFolderOrFileOrMultipleFiles | undefined;
+  saves: TFolderOrFileOrMultipleFiles | undefined;
+  savePointsFolderName: string;
+  // TODO: add steamId to easier identify when folder changed
+  // steamId: string;
+  // savePointsFolder: string;
   savePoints?: { [key: string]: TSavePoint };
   steamInfo?: TSteamInfo;
   steamManifest?: TAppManifest;
@@ -56,7 +67,7 @@ type TGame = {
   };
 };
 
-type TSaves = {
+type TFolderOrFileOrMultipleFiles = {
   path: string;
   files: string[];
 };

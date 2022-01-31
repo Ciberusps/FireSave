@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import Link from "../../../components/Link";
 import Layout from "../../../components/Layout";
 import Button from "../../../components/Button";
+import Toaster from "../../../utils/toaster";
 import FileInput from "../../../components/FileInput";
 import FormBlock from "../../../components/FormBlock";
 import GlobalContext from "../../../components/GlobalContext";
@@ -25,7 +26,7 @@ const GamePage = () => {
   const name = game?.steamInfo?.name || game?.name;
 
   const defaultValues: TGameForm = {
-    exePath: JSON.stringify({ path: game?.exePath }),
+    exePath: JSON.stringify(game?.exePath || { path: undefined }),
     saves: JSON.stringify(game?.saves || { path: undefined }),
   };
 
@@ -34,46 +35,31 @@ const GamePage = () => {
   });
 
   const onSubmit = (data: TGameForm) => {
-    // const { storePath, ...restData } = data;
-    // const parsedStorePath = JSON.parse(storePath).path;
-    // window.electron.changeSettings({ ...restData, storePath: parsedStorePath });
     console.log("NEW DATA", data);
-    // if (!exePath || !saves) return;
-    // if (isEditing) {
-    //   const isEdited = window.electron.editGame({ game, exePath, saves });
-    //   console.log("game edited", isEdited);
-    // } else {
-    //   const isCreated = window.electron.createGame({ exePath, saves });
-    //   console.log("game created", isCreated);
-    // }
-    // Router.push(`/`);
+    if (!data.exePath || !data.saves) return;
+
+    try {
+      const exePath = JSON.parse(data.exePath);
+      const saves = JSON.parse(data.saves);
+
+      const isSuccess = isEditing
+        ? window.electron.editGame({ game, exePath, saves })
+        : window.electron.createGame({ exePath, saves });
+      if (isSuccess) {
+        Toaster.add({
+          intent: "success",
+          content: isEditing ? "Game edited" : "Game created",
+        });
+      } else {
+        throw new Error("Something went wrong");
+      }
+    } catch (err) {
+      console.error(err);
+      Toaster.add({ intent: "error", content: "Something went wrong" });
+    } finally {
+      Router.push(`/`);
+    }
   };
-
-  // const onChooseExe = async () => {
-  //   const newExePath = await window.electron.chooseGameExe(exePath || game?.exePath);
-  //   // TODO: handle error
-  //   if (newExePath) {
-  //     console.log("ExePath added", newExePath);
-  //     setExePath(newExePath);
-  //   } else {
-  //   }
-  // };
-
-  // const onChooseSavesPath = async () => {
-  //   const newSaves = await window.electron.chooseSavesPath(
-  //     saves?.path || game?.saves?.path
-  //   );
-  //   // TODO: handle error
-  //   if (newSaves) {
-  //     console.log("SavePath added", newSaves);
-  //     setSaves(newSaves);
-  //   }
-  // };
-
-  // const onRemove = () => {
-  //   ipcRenderer.invoke("removeGame", game?.id);
-  //   Router.push(`/`);
-  // };
 
   return (
     <Layout>
@@ -113,7 +99,10 @@ const GamePage = () => {
               </div>
             </Description>
           }
-          properties={["openFile", "openDirectory"]}
+          // Note: On Windows and Linux an open dialog can not be both a file selector and a directory selector,
+          // so if you set properties to ['openFile', 'openDirectory'] on these platforms, a directory selector will be shown.
+          // properties={["openFile", "openDirectory"]}
+          properties={["openFile"]}
           // isDisabled={!exePath}
           // onClick={onChooseSavesPath}
         />

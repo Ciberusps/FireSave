@@ -15,7 +15,7 @@ const GamePage = () => {
   if (!game) return <div>error</div>;
 
   const savePoints = game.savePoints && Object.values(game.savePoints);
-  const gamePath = persistentStore?.settingsStorePath + "/" + game.name;
+  const gamePath = persistentStore?.settingsStorePath + "/" + game.savePointsFolderName;
 
   return (
     <Layout contentStyles={{ padding: 0 }}>

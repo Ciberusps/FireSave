@@ -4,19 +4,10 @@ import isDev from "electron-is-dev";
 import Stores from "../utils/stores";
 import Analytics from "../utils/analytics";
 import Scheduler from "../utils/scheduler";
-import { isGameExist } from "../utils";
 import { RESOURCES_PATH } from "../utils/config";
 import "./game";
 import "./saves";
 import "./fileSystem";
-
-ipcMain.handle("isGameExist", (_, path: string) => {
-  if (!isGameExist(path)) {
-    return false;
-  } else {
-    return true;
-  }
-});
 
 ipcMain.handle("analyticsPageView", async (_, url: string) => {
   Analytics.pageView(url);
