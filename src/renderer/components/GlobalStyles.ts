@@ -1,13 +1,17 @@
 import { createGlobalStyle } from "styled-components";
 
-export const GlobalStyles = createGlobalStyle`
+import Fonts from "../utils/fonts";
+
+const GlobalStyles = createGlobalStyle`
+  ${Fonts}
+
   body * {
     box-sizing: border-box;
   }
 
   body {
     color: white;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Roboto", sans-serif;
     font-size: 18px;
     font-weight: normal;
     font-smoothing: antialiased;
@@ -28,7 +32,7 @@ export const GlobalStyles = createGlobalStyle`
 
   input, textarea, select, button {
     font-size: 1em;
-    font-family: "Open Sans";
+    font-family: "Roboto", sans-serif;
   }
 
   a {
@@ -55,7 +59,7 @@ export const GlobalStyles = createGlobalStyle`
     border: 2px solid ${({ theme }) => theme.feedback.info};
     padding: 6px;
     padding-left: 14px;
-    font-family: "Open Sans";
+    font-family: "Roboto", sans-serif;
     font-size: 16px;
   }
   .Toastify__toast-container {
@@ -82,3 +86,5 @@ export const GlobalStyles = createGlobalStyle`
     border-color: ${({ theme }) => theme.feedback.warning};
   }
 `;
+
+export default GlobalStyles;

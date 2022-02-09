@@ -5,9 +5,9 @@ import IndexPage from "./pages";
 import GamePage from "./pages/games/[id]";
 import AboutPage from "./pages/about";
 import SettingsPage from "./pages/settings";
+import GlobalStyles from "./components/GlobalStyles";
 import GameSettingsPage from "./pages/games/[id]/settings";
 import { GlobalProvider } from "./components/GlobalContext";
-import { GlobalStyles } from "./components/GlobalStyles";
 
 import { myTheme } from "./utils/defaultTheme";
 

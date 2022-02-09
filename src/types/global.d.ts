@@ -235,3 +235,5 @@ type TSupportInfo = {
   url: string;
   email: string;
 };
+
+declare module "*.ttf";
