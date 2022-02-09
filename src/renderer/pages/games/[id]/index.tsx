@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import Layout from "../../../components/Layout";
 import SavePoint from "../../../components/SavePoint";
@@ -9,9 +9,8 @@ import GlobalContext from "../../../components/GlobalContext";
 
 const GamePage = () => {
   const { settingsStore, persistentStore } = useContext(GlobalContext);
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get("id") as string;
-  const game = settingsStore?.games?.[id];
+  const { id } = useParams<{ id: string }>();
+  const game = id && settingsStore?.games?.[id];
   if (!game) return <div>error</div>;
 
   const savePoints = game.savePoints && Object.values(game.savePoints);

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import Link from "../../../components/Link";
@@ -20,9 +20,8 @@ type TGameForm = {
 const GameSettingsPage = () => {
   const { settingsStore: state } = useContext(GlobalContext);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { id } = useParams<{ id: string }>();
 
-  const id = searchParams.get("id");
   const isEditing = id !== "new";
   const game = id && state?.games?.[id];
   const name = game?.steamInfo?.name || game?.name;

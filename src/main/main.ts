@@ -9,7 +9,14 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from "path";
-import { app, BrowserWindow, shell, ipcMain, nativeTheme } from "electron";
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  nativeTheme,
+  protocol,
+} from "electron";
 import { autoUpdater } from "electron-updater";
 import isDev from "electron-is-dev";
 import log from "electron-log";
@@ -66,6 +73,11 @@ const installExtensions = async () => {
 };
 
 const onReady = async () => {
+  protocol.registerFileProtocol("file", (request, callback) => {
+    const pathname = request.url.replace("file:///", "");
+    callback(pathname);
+  });
+
   Scheduler.runAutoSaves();
   nativeTheme.themeSource = "dark";
 
@@ -91,6 +103,8 @@ const createWindow = async () => {
     // height: 728,
     icon: getAssetPath("icon.png"),
     webPreferences: {
+      contextIsolation: true,
+      webSecurity: !isDev,
       preload: path.join(__dirname, "preload.js"),
       devTools: isDev,
     },

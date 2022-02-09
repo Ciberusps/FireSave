@@ -21,14 +21,13 @@ const GameHeader = (props: TProps) => {
     if (newExePath) {
       console.log("Game Saved", newExePath);
       //   setExePath(newExePath);
-    } else {
     }
   };
 
   return (
     <Container>
       <Info>
-        <BackArrow icon="leftArrow" href="/" />
+        <BackArrow to="/" icon="leftArrow" />
 
         <Image width={150} height={70} src={imgSrc} />
         <Description>
@@ -42,12 +41,7 @@ const GameHeader = (props: TProps) => {
           Save
         </Button>
 
-        <SettingsButton
-          icon="settings"
-          href="/games/[id]/settings"
-          // @ts-ignore
-          forwardedAs={`/games/${game.id}/settings`}
-        />
+        <SettingsButton icon="settings" to={`/games/${game.id}/settings`} />
       </CtaButtons>
     </Container>
   );

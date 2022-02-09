@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { formatDistance } from "date-fns";
 
-import Stats from "./Stats";
 import Link from "./Link";
+import Stats from "./Stats";
 import Image from "./Image";
 
 type TProps = {
