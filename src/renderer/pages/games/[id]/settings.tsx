@@ -1,28 +1,30 @@
 import { useContext } from "react";
 import styled from "styled-components";
-import { useRouter } from "next/router";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import Link from "../../../components/Link";
 import Layout from "../../../components/Layout";
 import Button from "../../../components/Button";
-import Toaster from "../../../utils/toaster";
 import FileInput from "../../../components/FileInput";
 import FormBlock from "../../../components/FormBlock";
 import GlobalContext from "../../../components/GlobalContext";
+
+import Toaster from "../../../utils/toaster";
 
 type TGameForm = {
   exePath: string;
   saves: string;
 };
 
-const GamePage = () => {
+const GameSettingsPage = () => {
   const { settingsStore: state } = useContext(GlobalContext);
-  const Router = useRouter();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const id = Router.query?.id as string;
+  const id = searchParams.get("id");
   const isEditing = id !== "new";
-  const game = state?.games?.[id];
+  const game = id && state?.games?.[id];
   const name = game?.steamInfo?.name || game?.name;
 
   const defaultValues: TGameForm = {
@@ -57,7 +59,7 @@ const GamePage = () => {
       console.error(err);
       Toaster.add({ intent: "error", content: "Something went wrong" });
     } finally {
-      Router.push(`/`);
+      navigate("/");
     }
   };
 
@@ -89,10 +91,12 @@ const GamePage = () => {
           label="Save file path"
           description={
             <Description>
-              <div>Path to game save file. Don't know where save file located?</div>
+              <div>
+                Path to game save file. Don't know where save file located?
+              </div>
               <div style={{ display: "flex" }}>
                 You can find game on&nbsp;
-                <PcGamingWikiLink href="https://pcgamingwiki.com" target="_blank">
+                <PcGamingWikiLink to="https://pcgamingwiki.com">
                   PCGamingWiki.com
                 </PcGamingWikiLink>
                 ,&nbsp;under "Save game data location" will be path to save file
@@ -116,7 +120,7 @@ const GamePage = () => {
   );
 };
 
-export default GamePage;
+export default GameSettingsPage;
 
 const Header = styled.h1`
   margin-bottom: 20px;

@@ -1,4 +1,4 @@
-import NextLink, { LinkProps } from "next/link";
+import { Link as RouterLink, LinkProps } from "react-router-dom";
 import styled from "styled-components";
 
 type TProps = LinkProps &
@@ -8,13 +8,24 @@ type TProps = LinkProps &
   };
 
 const Link = (props: TProps) => {
-  const { href, as, children, className, ...restProps } = props;
+  const { to, children, className, ...restProps } = props;
+
+  if (to.toString().startsWith("http")) {
+    return (
+      <a href={to.toString()} target="_blank" rel="noreferrer">
+        <Container className={className} {...restProps}>
+          {children}
+        </Container>
+      </a>
+    );
+  }
+
   return (
-    <NextLink href={href} as={as} passHref={true}>
+    <RouterLink to={to}>
       <Container className={className} {...restProps}>
         {children}
       </Container>
-    </NextLink>
+    </RouterLink>
   );
 };
 

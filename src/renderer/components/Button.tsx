@@ -1,6 +1,6 @@
-import React, { HTMLProps, forwardRef, ButtonHTMLAttributes } from "react";
+import React, { HTMLProps, forwardRef } from "react";
 import styled, { css } from "styled-components";
-import Link, { LinkProps } from "next/link";
+import { Link, LinkProps } from "react-router-dom";
 
 import Text from "./Text";
 import Icon, { TIcons, TSizes, TProps as TIconProps } from "./Icon";
@@ -11,7 +11,6 @@ type TSize = "normal" | "small";
 type TProps = Partial<LinkProps> & {
   size?: TSize;
   href?: string;
-  as?: string;
   icon?: TIcons;
   iconSize?: TSizes;
   iconProps?: Partial<TIconProps>;
@@ -23,18 +22,14 @@ type TProps = Partial<LinkProps> & {
   children?: React.ReactNode;
 };
 
-const Button = forwardRef<
-  HTMLButtonElement,
-  ButtonHTMLAttributes<HTMLButtonElement> & TProps
->((props, ref) => {
+const Button = forwardRef<HTMLButtonElement, TProps>((props, ref) => {
   const {
     children,
     size = "normal",
     icon,
     iconSize,
     iconProps,
-    href,
-    as,
+    to,
     isLoading = false,
     isDisabled = false,
     isSubmit = false,
@@ -42,12 +37,8 @@ const Button = forwardRef<
     ...otherProps
   } = props;
 
-  if (!href && as) {
-    throw new Error('"as" attribute must be provided with "href"');
-  }
-
   const getType = () => {
-    if (href) return undefined;
+    if (to) return undefined;
     return isSubmit ? "submit" : "button";
   };
 
@@ -79,12 +70,8 @@ const Button = forwardRef<
     </Container>
   );
 
-  if (href) {
-    return (
-      <Link href={href} as={as}>
-        {content}
-      </Link>
-    );
+  if (to) {
+    return <Link to={to}>{content}</Link>;
   }
 
   return content;
@@ -113,7 +100,8 @@ const Container = styled.button<TContainer>`
 
   background: ${({ theme, hasChildren }) =>
     hasChildren ? theme.purple : theme.darkOpacity};
-  color: ${({ disabled, theme }) => (disabled ? theme.darkOpacity : theme.white)};
+  color: ${({ disabled, theme }) =>
+    disabled ? theme.darkOpacity : theme.white};
   text-decoration: none;
 
   border: 0;

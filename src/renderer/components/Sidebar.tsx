@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
+import { useLocation } from "react-router-dom";
 import styled, { ThemeContext } from "styled-components";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 
 import Icon from "./Icon";
-import Link from "./Link";
+// import Link from "./Link";
 
 const Sidebar = () => {
-  const { pathname } = useRouter();
+  const { pathname } = useLocation();
+  console.log({ pathname });
   const theme = useContext(ThemeContext);
 
   const isSavesTabActive = pathname === "/" || pathname.startsWith("/games");
@@ -15,25 +17,28 @@ const Sidebar = () => {
 
   return (
     <Container>
-      <Tab href="/" isActive={isSavesTabActive}>
+      <Tab to="/" isActive={isSavesTabActive}>
         <Icon icon="save" color={isSavesTabActive ? undefined : theme.dark} />
       </Tab>
 
-      <Tab href="/settings" isActive={isSettingsTabActive}>
-        <Icon icon="settings" color={isSettingsTabActive ? undefined : theme.dark} />
+      {/* <Tab to="/settings" isActive={isSettingsTabActive}>
+        <Icon
+          icon="settings"
+          color={isSettingsTabActive ? undefined : theme.dark}
+        />
       </Tab>
 
-      <Tab href="/about" isActive={isAboutTabActive}>
+      <Tab to="/about" isActive={isAboutTabActive}>
         <Icon icon="help" color={isAboutTabActive ? undefined : theme.dark} />
       </Tab>
 
       <Update
-        href="https://cutt.ly/kjxFNiB"
+        to="https://cutt.ly/kjxFNiB"
         target="_blank"
         title={`Link on latest version. To update manually download "exe" file`}
       >
         <Icon icon="upload" color={theme.dark} />
-      </Update>
+      </Update> */}
     </Container>
   );
 };

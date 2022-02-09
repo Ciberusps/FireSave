@@ -12,18 +12,36 @@ const AboutPage = () => {
     <Layout contentStyles={{ height: "100vh" }}>
       <h1>How to use</h1>
       <Description>1. Add game</Description>
-      <Screenshot width={width} height={height} src={"/static/images/add_game.png"} />
-      <Description>2. Choose ".exe" file folder and save file location</Description>
-      <Screenshot width={width} height={height} src={"/static/images/add_game_2.png"} />
+      <Screenshot
+        width={width}
+        height={height}
+        src={"/static/images/add_game.png"}
+      />
+      <Description>
+        2. Choose ".exe" file folder and save file location
+      </Description>
+      <Screenshot
+        width={width}
+        height={height}
+        src={"/static/images/add_game_2.png"}
+      />
       <Description>3. Check settings</Description>
-      <Screenshot width={width} height={height} src={"/static/images/settings.png"} />
+      <Screenshot
+        width={width}
+        height={height}
+        src={"/static/images/settings.png"}
+      />
       <Description>4. Now you are ready to go - run game</Description>
       <SmallerDescription>
-        FireSave will save your game automatically only when game is running, you can
-        press F5 to save game manually(dont work in fullscreen mode for now, "window" or
-        "borderless window" only)
+        FireSave will save your game automatically only when game is running,
+        you can press F5 to save game manually(dont work in fullscreen mode for
+        now, "window" or "borderless window" only)
       </SmallerDescription>
-      <Screenshot width={width} height={height} src={"/static/images/game.png"} />
+      <Screenshot
+        width={width}
+        height={height}
+        src={"/static/images/game.png"}
+      />
     </Layout>
   );
 };

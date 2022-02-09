@@ -1,22 +1,26 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 import styled from "styled-components";
 
-import Game from "../components/Game";
+// import Game from "../components/Game";
 import Button from "../components/Button";
 import Layout from "../components/Layout";
-import GlobalContext from "../components/GlobalContext";
+// import GlobalContext from "../components/GlobalContext";
 
 const IndexPage = () => {
-  const { settingsStore: state } = useContext(GlobalContext);
+  // const { settingsStore: state } = useContext(GlobalContext);
 
-  const games = state?.games && Object.values(state?.games);
+  // const games = state?.games && Object.values(state?.games);
 
   return (
     <Layout>
       <Header>
         <h1>Games</h1>
 
-        <Button icon="add" href="/games/[id]/settings" as="/games/new/settings">
+        <Button
+          icon="add"
+          to="/games/new/settings"
+          // href="/games/[id]/settings" as="/games/new/settings"
+        >
           Add game
         </Button>
 
@@ -35,11 +39,11 @@ const IndexPage = () => {
         <Button icon="add" href="/games/[id]/settings" /> */}
       </Header>
 
-      <Games>
+      {/* <Games>
         {games?.map((game) => (
           <Game key={game.id} game={game} />
         ))}
-      </Games>
+      </Games> */}
     </Layout>
   );
 };

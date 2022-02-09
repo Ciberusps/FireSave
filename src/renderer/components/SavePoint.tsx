@@ -36,7 +36,8 @@ const SavePoint = (props: TProps) => {
   const name = savePoint?.name || savePoint.id;
   const date = new Date(savePoint.date);
   const distance = formatDistance(date, new Date());
-  const formatedDate = format(date, "dd.MM.yyyy, HH:mm") + " - " + distance + " ago";
+  const formatedDate =
+    format(date, "dd.MM.yyyy, HH:mm") + " - " + distance + " ago";
   const screenshotPath =
     savePoint?.screenshot &&
     "file://" + gamePath + "/" + "screenshots" + "/" + savePoint?.screenshot;

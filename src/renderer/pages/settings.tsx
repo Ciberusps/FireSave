@@ -19,12 +19,13 @@ type TSettingsForm = {
 
 const SettingsPage = () => {
   const { settingsStore, persistentStore } = useContext(GlobalContext);
-  if (!settingsStore) return null;
 
   const defaultValues: TSettingsForm = {
     isAutoSaveOn: settingsStore.isAutoSaveOn,
     autoSaveMinutes: settingsStore.autoSaveMinutes,
-    settingsStorePath: JSON.stringify({ path: persistentStore?.settingsStorePath }),
+    settingsStorePath: JSON.stringify({
+      path: persistentStore?.settingsStorePath,
+    }),
   };
 
   const { register, handleSubmit, control } = useForm<TSettingsForm>({
@@ -35,8 +36,12 @@ const SettingsPage = () => {
     const { settingsStorePath, ...restData } = data;
     const parsedSettingsStorePath = JSON.parse(settingsStorePath).path;
     window.electron.changeSettings(restData);
-    window.electron.changePersistentStore({ settingsStorePath: parsedSettingsStorePath });
+    window.electron.changePersistentStore({
+      settingsStorePath: parsedSettingsStorePath,
+    });
   };
+
+  if (!settingsStore) return null;
 
   return (
     <Layout contentStyles={{ height: "100vh" }}>

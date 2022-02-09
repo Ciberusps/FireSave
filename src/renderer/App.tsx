@@ -1,50 +1,29 @@
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
-import './App.css';
+import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
 
-const Hello = () => {
+import IndexPage from "./pages";
+import GamePage from "./pages/games/[id]";
+import GameSettingsPage from "./pages/games/[id]/settings";
+import { GlobalProvider } from "./components/GlobalContext";
+import { GlobalStyles } from "./components/GlobalStyles";
+
+import { myTheme } from "./utils/defaultTheme";
+
+const App = () => {
   return (
-    <div>
-      <div className="Hello">
-        <img width="200px" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <a
-          href="https://electron-react-boilerplate.js.org/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
-    </div>
+    <ThemeProvider theme={myTheme}>
+      <GlobalStyles />
+      <GlobalProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<IndexPage />} />
+            <Route path="/games/:id" element={<GamePage />} />
+            <Route path="/games/:id/settings" element={<GameSettingsPage />} />
+          </Routes>
+        </Router>
+      </GlobalProvider>
+    </ThemeProvider>
   );
 };
 
-export default function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Hello />} />
-      </Routes>
-    </Router>
-  );
-}
+export default App;

@@ -7,7 +7,7 @@ export const GlobalStyles = createGlobalStyle`
 
   body {
     color: white;
-    font-family: "Open Sans";
+    font-family: "Open Sans", sans-serif;
     font-size: 18px;
     font-weight: normal;
     font-smoothing: antialiased;

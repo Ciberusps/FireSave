@@ -1,8 +1,8 @@
-import React, { ReactNode } from "react";
-import Head from "next/head";
+import { ReactNode } from "react";
+import { Helmet } from "react-helmet";
 import styled from "styled-components";
 
-import Sidebar, { sidebarWidth } from "./Sidebar";
+// import Sidebar, { sidebarWidth } from "./Sidebar";
 
 type Props = {
   children: ReactNode;
@@ -12,13 +12,13 @@ type Props = {
 
 const Layout = ({ children, title = "FireSave", contentStyles }: Props) => (
   <Container>
-    <Head>
+    <Helmet>
       <title>{title}</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
+    </Helmet>
 
-    <Sidebar />
+    {/* <Sidebar /> */}
 
     <Content style={contentStyles}>{children}</Content>
   </Container>
@@ -33,9 +33,17 @@ const Content = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: ${sidebarWidth}px;
   padding: 30px 30px;
   position: relative;
 `;
+
+// const Content = styled.div`
+//   flex: 1;
+//   display: flex;
+//   flex-direction: column;
+//   margin-left: ${sidebarWidth}px;
+//   padding: 30px 30px;
+//   position: relative;
+// `;
 
 export default Layout;
