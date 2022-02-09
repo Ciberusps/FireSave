@@ -21,8 +21,8 @@ const SettingsPage = () => {
   const { settingsStore, persistentStore } = useContext(GlobalContext);
 
   const defaultValues: TSettingsForm = {
-    isAutoSaveOn: settingsStore.isAutoSaveOn,
-    autoSaveMinutes: settingsStore.autoSaveMinutes,
+    isAutoSaveOn: settingsStore?.isAutoSaveOn,
+    autoSaveMinutes: settingsStore?.autoSaveMinutes,
     settingsStorePath: JSON.stringify({
       path: persistentStore?.settingsStorePath,
     }),
@@ -70,11 +70,11 @@ const SettingsPage = () => {
           label="Store folder"
           description="CANNOT BE CHANGED(for now). Folder for saves, screenshots and config."
           properties={["openDirectory"]}
-          isDisabled={true}
+          isDisabled
         />
 
         <CtaButtons>
-          <Button isSubmit={true}>Save</Button>
+          <Button isSubmit>Save</Button>
         </CtaButtons>
       </MainSettingsBlock>
 
@@ -82,9 +82,7 @@ const SettingsPage = () => {
         <Version>v{settingsStore?.version}</Version>
         <WithLove>
           by&nbsp;
-          <Link href="https://github.com/Ciberusps" target="_blank">
-            Ciberus
-          </Link>
+          <Link to="https://github.com/Ciberusps">Ciberus</Link>
           &nbsp;for gamers ♥
         </WithLove>
       </About>

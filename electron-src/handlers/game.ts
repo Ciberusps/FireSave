@@ -32,43 +32,46 @@ type TCreateGamePayload = {
   saves: TFolderOrFileOrMultipleFiles;
 };
 
-ipcMain.handle("createGame", async (_, { exePath, saves }: TCreateGamePayload) => {
-  if (isGameExist(exePath)) {
-    console.error("GAME ALREADY EXISTS");
-    return false;
+ipcMain.handle(
+  "createGame",
+  async (_, { exePath, saves }: TCreateGamePayload) => {
+    if (isGameExist(exePath)) {
+      console.error("GAME ALREADY EXISTS");
+      return false;
+    }
+
+    const id = generateUniqGameId();
+    if (!id) {
+      console.error("Cant generate game id");
+      return false;
+    }
+
+    const name = exePath.files[0].split(".")[0];
+
+    const savePointsFolderName = name + "___" + id;
+    if (FileSystem.isExist(savePointsFolderName)) {
+      console.error("Dir already exist");
+      return false;
+    }
+
+    const newGame: TGame = {
+      id,
+      name,
+      exePath,
+      savePointsFolderName,
+      saves,
+      stats: { allSavesCount: 0, autoSaveCount: 0, manualSaveCount: 0 },
+    };
+    Stores.Settings.set(`games.${id}`, newGame);
+
+    Analytics.sendEvent({ category: "games", action: "added", labels: [name] });
+
+    const isSteamGame = exePath.path.includes("steamapps");
+    if (isSteamGame) fillSteamGameInfo(newGame);
+
+    return true;
   }
-
-  const id = generateUniqGameId();
-  if (!id) {
-    console.error("Cant generate game id");
-    return false;
-  }
-
-  const name = exePath.files[0].split(".")[0];
-
-  const savePointsFolderName = name + "___" + id;
-  if (FileSystem.isExist(savePointsFolderName)) {
-    console.error("Dir already exist");
-    return false;
-  }
-
-  const newGame: TGame = {
-    id,
-    name,
-    exePath,
-    savePointsFolderName,
-    saves,
-    stats: { allSavesCount: 0, autoSaveCount: 0, manualSaveCount: 0 },
-  };
-  Stores.Settings.set(`games.${id}`, newGame);
-
-  Analytics.sendEvent({ category: "games", action: "added", labels: [name] });
-
-  const isSteamGame = exePath.path.includes("steamapps");
-  if (isSteamGame) fillSteamGameInfo(newGame);
-
-  return true;
-});
+);
 
 type TEditGamePayload = {
   game: TGame;
@@ -76,12 +79,15 @@ type TEditGamePayload = {
   saves: TFolderOrFileOrMultipleFiles;
 };
 
-ipcMain.handle("editGame", async (_, { game, exePath, saves }: TEditGamePayload) => {
-  game.exePath = exePath;
-  game.saves = saves;
-  Stores.Settings.set(`games.${game.id}`, game);
-  return true;
-});
+ipcMain.handle(
+  "editGame",
+  async (_, { game, exePath, saves }: TEditGamePayload) => {
+    game.exePath = exePath;
+    game.saves = saves;
+    Stores.Settings.set(`games.${game.id}`, game);
+    return true;
+  }
+);
 
 ipcMain.handle("removeGame", async (_, id) => {
   // @ts-ignore

@@ -64,7 +64,10 @@ type TCountStatsRes = {
   number: number;
   typeNumber: number;
 };
-const countSavePointStats = (game: TGame, type: TSavePointType): TCountStatsRes => {
+const countSavePointStats = (
+  game: TGame,
+  type: TSavePointType
+): TCountStatsRes => {
   let typeNumber = 0;
   const statsPath = `games.${game.id}.stats`;
   const curStats = game.stats;
@@ -83,7 +86,8 @@ const countSavePointStats = (game: TGame, type: TSavePointType): TCountStatsRes 
 const getSavePointPaths = (game: TGame, savePoint: TSavePoint) => {
   const gameInfo = getGameInfo(game);
   const screenshotPath =
-    savePoint.screenshot && path.join(gameInfo.screenshotsPath, savePoint.screenshot);
+    savePoint.screenshot &&
+    path.join(gameInfo.screenshotsPath, savePoint.screenshot);
   const saveDataPath = path.join(gameInfo.savePointsPath, savePoint.path);
   return { screenshotPath, saveDataPath };
 };
@@ -139,7 +143,10 @@ const save = async (
       });
 
       const screenshotFileName = saveFileName.split(".")[0] + ".jpg";
-      const screenshotFilePath = path.join(gameInfo.screenshotsPath, screenshotFileName);
+      const screenshotFilePath = path.join(
+        gameInfo.screenshotsPath,
+        screenshotFileName
+      );
       await screenshot({ filename: screenshotFilePath, format: "jpg" });
       Stores.Settings.set(pathInStore + ".screenshot", screenshotFileName);
     } else {

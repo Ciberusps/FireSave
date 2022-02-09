@@ -11,12 +11,16 @@ type TProps = {
   isDisabled?: boolean;
 };
 
-const ToggleInput = forwardRef((props: TProps, ref: any) => {
+const ToggleInput = forwardRef<HTMLInputElement, TProps>((props, ref) => {
   const { name, label, description, isDisabled } = props;
   const theme = useContext(ThemeContext);
 
   return (
-    <InputWrapper label={label} description={description} isDisabled={isDisabled}>
+    <InputWrapper
+      label={label}
+      description={description}
+      isDisabled={isDisabled}
+    >
       <Label>
         <Input ref={ref} name={name} type="checkbox" />
         <FakeInput isDisabled={isDisabled}>

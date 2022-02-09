@@ -3,6 +3,8 @@ import { ThemeProvider } from "styled-components";
 
 import IndexPage from "./pages";
 import GamePage from "./pages/games/[id]";
+import AboutPage from "./pages/about";
+import SettingsPage from "./pages/settings";
 import GameSettingsPage from "./pages/games/[id]/settings";
 import { GlobalProvider } from "./components/GlobalContext";
 import { GlobalStyles } from "./components/GlobalStyles";
@@ -17,6 +19,8 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<IndexPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/games/:id" element={<GamePage />} />
             <Route path="/games/:id/settings" element={<GameSettingsPage />} />
           </Routes>

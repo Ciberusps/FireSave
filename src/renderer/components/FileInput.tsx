@@ -23,10 +23,17 @@ type TProps = {
 };
 
 const FileInput = (props: TProps) => {
-  const { control, properties, filters, label, name, description, isDisabled } = props;
+  const { control, properties, filters, label, name, description, isDisabled } =
+    props;
+
+  // return null;
 
   return (
-    <InputWrapper label={label} description={description} isDisabled={isDisabled}>
+    <InputWrapper
+      label={label}
+      description={description}
+      isDisabled={isDisabled}
+    >
       <Controller
         name={name}
         control={control}

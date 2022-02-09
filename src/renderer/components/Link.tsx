@@ -1,35 +1,39 @@
 import { Link as RouterLink, LinkProps } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 type TProps = LinkProps &
   React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    isActive?: boolean;
     children: any;
     className?: string;
   };
 
 const Link = (props: TProps) => {
   const { to, children, className, ...restProps } = props;
+  delete restProps.isActive;
 
-  if (to.toString().startsWith("http")) {
+  if (to?.toString().startsWith("http")) {
     return (
-      <a href={to.toString()} target="_blank" rel="noreferrer">
-        <Container className={className} {...restProps}>
-          {children}
-        </Container>
-      </a>
+      <ExternalLink
+        href={to.toString()}
+        target="_blank"
+        rel="noreferrer"
+        className={className}
+        {...restProps}
+      >
+        {children}
+      </ExternalLink>
     );
   }
 
   return (
-    <RouterLink to={to}>
-      <Container className={className} {...restProps}>
-        {children}
-      </Container>
-    </RouterLink>
+    <Container to={to} className={className} {...restProps}>
+      {children}
+    </Container>
   );
 };
 
-const Container = styled.a`
+const linkStyles = css`
   display: flex;
   flex-direction: column;
   color: white;
@@ -38,6 +42,14 @@ const Container = styled.a`
   &:hover {
     text-decoration: underline;
   }
+`;
+
+const Container = styled(RouterLink)`
+  ${linkStyles}
+`;
+
+const ExternalLink = styled.a`
+  ${linkStyles}
 `;
 
 export default Link;
