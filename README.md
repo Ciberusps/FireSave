@@ -64,3 +64,5 @@ If u found game that doesn't work or malfunction u can open new [issue](https://
 ## Support
 
 You can boost up my motivation/development speed via DonationAlerts - https://www.donationalerts.com/r/ciberusps
+
+
