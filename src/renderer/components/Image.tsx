@@ -1,7 +1,7 @@
 import React from "react";
 import LazyLoad from "react-lazyload";
 
-const placeholderPath = "/static/images/placeholder.png";
+import placeholderImg from "../../../assets/images/placeholder.png";
 
 type TProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   src: string | undefined;
@@ -14,15 +14,23 @@ const Image = (props: TProps) => {
   return (
     <LazyLoad
       height={height}
-      once={true}
+      once
       placeholder={
-        <img width={width} height={height} src={placeholderPath} className={className} />
+        <img
+          width={width}
+          height={height}
+          src={placeholderImg}
+          alt={restProps.alt || ""}
+          className={className}
+          {...restProps}
+        />
       }
     >
       <img
         width={width}
         height={height}
-        src={src || placeholderPath}
+        src={src || placeholderImg}
+        alt={restProps.alt || ""}
         className={className}
         {...restProps}
       />

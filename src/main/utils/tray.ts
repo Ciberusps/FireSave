@@ -13,13 +13,13 @@ const init = (window: BrowserWindow) => {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "Show",
-      click: function () {
+      click: () => {
         window.show();
       },
     },
     {
       label: "Exit",
-      click: function () {
+      click: () => {
         isQuiting = true;
         app.quit();
       },

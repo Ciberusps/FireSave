@@ -3,6 +3,11 @@ import styled from "styled-components";
 import Image from "../components/Image";
 import Layout from "../components/Layout";
 
+import addGameImg from "../../../assets/images/add_game.png";
+import addGame2Img from "../../../assets/images/add_game_2.png";
+import settingsImg from "../../../assets/images/settings.png";
+import gameImg from "../../../assets/images/game.png";
+
 const multiplier = 50;
 const width = 16 * multiplier;
 const height = 9 * multiplier;
@@ -12,36 +17,20 @@ const AboutPage = () => {
     <Layout contentStyles={{ height: "100vh" }}>
       <h1>How to use</h1>
       <Description>1. Add game</Description>
-      <Screenshot
-        width={width}
-        height={height}
-        src={"/static/images/add_game.png"}
-      />
+      <Screenshot width={width} height={height} src={addGameImg} />
       <Description>
         2. Choose ".exe" file folder and save file location
       </Description>
-      <Screenshot
-        width={width}
-        height={height}
-        src={"/static/images/add_game_2.png"}
-      />
+      <Screenshot width={width} height={height} src={addGame2Img} />
       <Description>3. Check settings</Description>
-      <Screenshot
-        width={width}
-        height={height}
-        src={"/static/images/settings.png"}
-      />
+      <Screenshot width={width} height={height} src={settingsImg} />
       <Description>4. Now you are ready to go - run game</Description>
       <SmallerDescription>
         FireSave will save your game automatically only when game is running,
         you can press F5 to save game manually(dont work in fullscreen mode for
         now, "window" or "borderless window" only)
       </SmallerDescription>
-      <Screenshot
-        width={width}
-        height={height}
-        src={"/static/images/game.png"}
-      />
+      <Screenshot width={width} height={height} src={gameImg} />
     </Layout>
   );
 };
