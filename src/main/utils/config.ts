@@ -1,7 +1,7 @@
 import path from "path";
 import { app } from "electron";
 
-export const { NODE_ENV, PORT } = process.env;
+export const { NODE_ENV, PORT, START_MINIMIZED } = process.env;
 
 export const SENTRY_DSN =
   "https://8067b69a6c824137afacdf25c3d8987b@o240795.ingest.sentry.io/5594347";

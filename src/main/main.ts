@@ -11,19 +11,18 @@
 import path from "path";
 import { app, BrowserWindow, shell, ipcMain, nativeTheme } from "electron";
 import { autoUpdater } from "electron-updater";
-// import isDev from "electron-is-dev";
+import isDev from "electron-is-dev";
 import log from "electron-log";
-// import { format } from "url";
 
-import { resolveHtmlPath } from "./utils";
-// import Stores from "./utils/stores";
+import AppTray from "./utils/tray";
+import Stores from "./utils/stores";
+import Scheduler from "./utils/scheduler";
+import Shortcuts from "./utils/shortcuts";
 import MenuBuilder from "./utils/menu";
-import { RESOURCES_PATH } from "./utils/config";
+import WindowUtils from "./utils/window";
+import { RESOURCES_PATH, START_MINIMIZED } from "./utils/config";
+import { resolveHtmlPath } from "./utils";
 import "./handlers";
-// import AppTray from "./utils/tray";
-// import WindowUtils from "./utils/window";
-// import Scheduler from "./utils/scheduler";
-// import Shortcuts from "./utils/shortcuts";
 
 export default class AppUpdater {
   constructor() {
@@ -67,6 +66,9 @@ const installExtensions = async () => {
 };
 
 const onReady = async () => {
+  Scheduler.runAutoSaves();
+  nativeTheme.themeSource = "dark";
+
   createWindow();
 };
 
@@ -79,15 +81,35 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
+  const { isMaximized, ...posAndSize } = WindowUtils.loadPositionAndSize();
   mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
+    ...posAndSize,
+    minimizable: true,
+    maximizable: true,
+    // show: false,
+    // width: 1024,
+    // height: 728,
     icon: getAssetPath("icon.png"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      devTools: isDev,
     },
   });
+  if (isMaximized) mainWindow.maximize();
+
+  AppTray.init(mainWindow);
+
+  Stores.Persistent.onDidAnyChange((newVal) => {
+    mainWindow?.webContents.send("persistentStoreUpdate", newVal);
+  });
+
+  Stores.Settings.onDidAnyChange((newVal) => {
+    mainWindow?.webContents.send("stateUpdate", newVal);
+  });
+
+  Stores.Settings.set("version", app.getVersion());
+
+  Shortcuts.registerSaveKey(Stores.Settings.store.saveShortcut);
 
   mainWindow.loadURL(resolveHtmlPath("index.html"));
 
@@ -95,15 +117,35 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    if (process.env.START_MINIMIZED) {
+    if (START_MINIMIZED) {
       mainWindow.minimize();
     } else {
       mainWindow.show();
     }
   });
 
+  mainWindow.on("minimize", () => {
+    // if (!mainWindow) throw new Error('"mainWindow" is not defined');
+    mainWindow?.hide();
+  });
+
+  mainWindow.on("restore", () => {
+    // if (!mainWindow) throw new Error('"mainWindow" is not defined');
+    mainWindow?.show();
+  });
+
   mainWindow.on("closed", () => {
     mainWindow = null;
+  });
+
+  mainWindow.on("close", (event) => {
+    // if (!mainWindow) throw new Error('"mainWindow" is not defined');
+    if (!AppTray.getIsQuiting()) {
+      event.preventDefault();
+      mainWindow?.hide();
+    }
+    if (mainWindow) WindowUtils.savePositionAndSize(mainWindow);
+    return false;
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
@@ -114,90 +156,17 @@ const createWindow = async () => {
     shell.openExternal(edata.url);
     return { action: "deny" };
   });
-
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  // new AppUpdater();
-
-  // MYFJDSLKJFPOSIJPOFIEJOPIFJWPOIJ
-
-  // protocol.registerFileProtocol("file", (request, callback) => {
-  //   const pathname = request.url.replace("file:///", "");
-  //   callback(pathname);
-  // });
-
-  // Scheduler.runAutoSaves();
-
-  // nativeTheme.themeSource = "dark";
-
-  // const { isMaximized, ...posAndSize } = WindowUtils.loadPositionAndSize();
-  // mainWindow = new BrowserWindow({
-  //   ...posAndSize,
-  //   minimizable: true,
-  //   maximizable: true,
-  //   webPreferences: {
-  //     contextIsolation: true,
-  //     webSecurity: !isDev,
-  //     preload: path.join(__dirname, "preload.js"),
-  //     devTools: isDev,
-  //   },
-  // });
-  // if (isMaximized) mainWindow.maximize();
-
-  // const url = isDev
-  //   ? "http://localhost:8000/"
-  //   : format({
-  //       pathname: path.join(__dirname, "../renderer/out/index.html"),
-  //       protocol: "file:",
-  //       slashes: true,
-  //     });
-
-  // AppTray.init(mainWindow);
-
-  // mainWindow.on("minimize", () => {
-  //   mainWindow?.hide();
-  // });
-
-  // mainWindow.on("restore", () => {
-  //   mainWindow?.show();
-  // });
-
-  // mainWindow.on("close", (event) => {
-  //   if (!AppTray.getIsQuiting()) {
-  //     event.preventDefault();
-  //     mainWindow.hide();
-  //   }
-
-  //   WindowUtils.savePositionAndSize(mainWindow);
-
-  //   return false;
-  // });
-
-  // Stores.Persistent.onDidAnyChange((newVal) => {
-  //   mainWindow.webContents.send("persistentStoreUpdate", newVal);
-  // });
-
-  // Stores.Settings.onDidAnyChange((newVal) => {
-  //   mainWindow.webContents.send("stateUpdate", newVal);
-  // });
-
-  // Stores.Settings.set("version", app.getVersion());
-
-  // mainWindow.loadURL(url);
-
-  // Shortcuts.registerSaveKey(Stores.Settings.store.saveShortcut);
-
-  // mainWindow.webContents.on("new-window", (event, url) => {
-  //   event.preventDefault();
-  //   shell.openExternal(url);
-  // });
 };
 
 /**
  * Add event listeners...
  */
 
+app.on("will-quit", () => {
+  Shortcuts.unregisterAll();
+});
 app.on("window-all-closed", () => {
+  Shortcuts.unregisterAll();
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== "darwin") {
