@@ -1,9 +1,8 @@
-import React from "react";
-import Link from "next/link";
 import styled from "styled-components";
 import { formatDistance } from "date-fns";
 
 import Stats from "./Stats";
+import Link from "./Link";
 import Image from "./Image";
 
 type TProps = {
@@ -15,10 +14,11 @@ const Game = (props: TProps) => {
   const { game, className } = props;
 
   const savePoints = game.savePoints && Object.values(game.savePoints);
-  const lastSaveDate = savePoints && new Date(savePoints[savePoints?.length - 1].date);
+  const lastSaveDate =
+    savePoints && new Date(savePoints[savePoints?.length - 1].date);
 
   return (
-    <Link href="/games/[id]" as={`/games/${game.id}`}>
+    <Link to={`/games/${game.id}`}>
       <Container className={className}>
         <Img width="100%" height={215} src={game?.steamInfo?.header_image} />
         <Description>

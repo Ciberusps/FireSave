@@ -24,7 +24,7 @@ Many games have imperfect or simplified saves system - single save slot, save sl
 
 ## How it works
 
-FireSave copy paste save file to "store folder"(default "C://GamesSaves") and save some data about it in `config.json` file. 
+FireSave copy paste save file to "store folder"(default "C://GamesSaves") and save some data about it in `config.json` file.
 Possibility of its application strongly depends on how in-game save system works.
 
 ## Supported games(100% works)
@@ -65,4 +65,6 @@ If u found game that doesn't work or malfunction u can open new [issue](https://
 
 You can boost up my motivation/development speed via DonationAlerts - https://www.donationalerts.com/r/ciberusps
 
+## Based
 
+Based on Electron React Boilerplate - https://github.com/electron-react-boilerplate/electron-react-boilerplate

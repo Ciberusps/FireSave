@@ -1,14 +1,12 @@
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import styled, { ThemeContext } from "styled-components";
-// import { useRouter } from "next/router";
 
 import Icon from "./Icon";
 import Link from "./Link";
 
 const Sidebar = () => {
   const { pathname } = useLocation();
-  console.log({ pathname });
   const theme = useContext(ThemeContext);
 
   const isSavesTabActive = pathname === "/" || pathname.startsWith("/games");
