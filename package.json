@@ -69,6 +69,9 @@
       ]
     },
     "win": {
+      "publish": [
+        "github"
+      ],
       "target": [
         "nsis"
       ],
