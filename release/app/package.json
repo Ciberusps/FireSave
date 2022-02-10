@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Saves manager",
   "main": "./dist/main/main.js",
   "author": {
