@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import styled from "styled-components";
 
 import Game from "../components/Game";
@@ -11,6 +11,15 @@ const IndexPage = () => {
 
   const games = state?.games && Object.values(state?.games);
   console.log({ games });
+
+  const getQuota = useCallback(async () => {
+    const quota = await window.electron.getQuota();
+    console.log({ quota });
+  }, []);
+
+  useEffect(() => {
+    getQuota();
+  }, [getQuota]);
 
   return (
     <Layout>

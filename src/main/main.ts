@@ -20,8 +20,6 @@ import {
 import { autoUpdater } from "electron-updater";
 import isDev from "electron-is-dev";
 import log from "electron-log";
-// @ts-ignore
-import greenworks from "greenworks";
 
 import AppTray from "./utils/tray";
 import Stores from "./utils/stores";
@@ -29,6 +27,7 @@ import Scheduler from "./utils/scheduler";
 import Shortcuts from "./utils/shortcuts";
 import MenuBuilder from "./utils/menu";
 import WindowUtils from "./utils/window";
+import SteamworksSDK from "./utils/steamworksSDK";
 import { RESOURCES_PATH, START_MINIMIZED } from "./utils/config";
 import { resolveHtmlPath } from "./utils";
 import "./handlers";
@@ -83,22 +82,7 @@ const onReady = async () => {
   Scheduler.runAutoSaves();
   nativeTheme.themeSource = "dark";
 
-  const isInited = greenworks.init();
-  console.log({ isInited });
-  if (!isInited) return;
-
-  console.log({
-    steamId: greenworks.getSteamId(),
-    appInstall: greenworks.getAppInstallDir(480),
-  });
-
-  greenworks.getCloudQuota((total_bytes, available_bytes) => {
-    console.log("Cloud Quota");
-    console.log({
-      totalMB: total_bytes / 1000 / 1000,
-      availableMB: available_bytes / 1000 / 1000,
-    });
-  });
+  SteamworksSDK.init();
 
   createWindow();
 };
