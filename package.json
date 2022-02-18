@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.3.15",
+  "version": "0.3.16",
   "description": "Saves manager",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
