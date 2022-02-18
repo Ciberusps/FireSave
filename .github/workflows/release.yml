@@ -26,6 +26,8 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
+        env:
+          STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
 
       - name: Publish releases
         env:
