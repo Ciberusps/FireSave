@@ -13,5 +13,5 @@ console.info(
 );
 
 exec(
-  `cd steamworks_sdk && npx 7zip a ../steamworks_sdk.zip * -aoa -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -y`
+  `cd steamworks_sdk && npx node-7z-archive a ../steamworks_sdk.zip * -aoa -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -y`
 );

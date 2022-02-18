@@ -13,5 +13,6 @@ console.info(
 );
 
 exec(
-  `rm -rf ./release/app/node_modules/greenworks/deps/steamworks_sdk && npx 7zip x steamworks_sdk.zip -o./release/app/node_modules/greenworks/deps/steamworks_sdk -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -r -y -aoa`
+  `npx node-7z-archive x steamworks_sdk.zip -o./release/app/node_modules/greenworks/deps/steamworks_sdk -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -r -y -aoa`
 );
+console.log("successfully unzipped ");
