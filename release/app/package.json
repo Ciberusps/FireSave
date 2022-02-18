@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "Saves manager",
   "main": "./dist/main/main.js",
   "author": {
@@ -15,6 +15,6 @@
     "postinstall": "npm run electron-rebuild && npm run link-modules"
   },
   "dependencies": {
-    "greenworks": "git+https://github.com/ceifa/greenworks.git#ae02dca28e0a435332b84cd11dd5890e3cc23951"
+    "greenworks": "git+https://github.com/greenheartgames/greenworks.git#3ea4ab490b56676de3f0a237c74bcfdb17323e60"
   }
 }
