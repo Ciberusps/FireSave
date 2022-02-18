@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.3.9",
+  "version": "0.3.11",
   "description": "Saves manager",
   "main": "./dist/main/main.js",
   "author": {
@@ -11,7 +11,7 @@
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts",
-    "preinstall": "echo preinstall && npm i --ignore-scripts && cp -r steamworks_sdk node_modules/greenworks/deps",
+    "preinstall": "",
     "postinstall": "npm run electron-rebuild && npm run link-modules"
   },
   "dependencies": {
