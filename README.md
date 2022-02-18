@@ -69,9 +69,20 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 
 ## Setup
 
-- download steamworks sdk from https://partner.steamgames.com/downloads/list
-- extract content in "sdk" folder to "/release/app/steamworks_sdk"
+- steamworks sdk required
+- copy `.env.example` rename to `.env`
+- fill `.env`
+- make things from "How to update SteamworksSDK" section
 - `npm i`
+- now you should be ready
+
+## How to update SteamworksSDK
+
+- download steamworks sdk from https://partner.steamgames.com/downloads/list
+- extract content from "sdk" folder to "/steamworks_sdk" folder
+- fill `STEAMWORKS_SDK_ARCHIVE_PASSWORD` in `.env`
+- `npm run steamworks-sdk:zip`
+- `npm run steamworks-sdk:unzip` will automatically runned on depenecies install via `npm i`
 
 ### Build
 
