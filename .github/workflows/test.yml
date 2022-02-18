@@ -6,6 +6,9 @@ jobs:
   release:
     runs-on: ${{ matrix.os }}
 
+    env:
+      STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
+
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
