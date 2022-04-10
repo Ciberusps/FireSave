@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Game from "../components/Game";
@@ -8,14 +8,26 @@ import GlobalContext from "../components/GlobalContext";
 
 const IndexPage = () => {
   const { settingsStore: state } = useContext(GlobalContext);
+  const [quota, setQuota] = useState({});
 
   const games = state?.games && Object.values(state?.games);
   console.log({ games });
+  console.log({ quota });
+
+  const getQuota = useCallback(async () => {
+    setQuota(await window.electron.getQuota());
+  }, [setQuota]);
+
+  useEffect(() => {
+    getQuota();
+  }, [getQuota]);
 
   return (
     <Layout>
       <Header>
         <h1>Games</h1>
+
+        <div>{JSON.stringify(quota, null, 2)}</div>
 
         <Button
           icon="add"

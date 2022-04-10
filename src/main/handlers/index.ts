@@ -3,6 +3,7 @@ import isDev from "electron-is-dev";
 
 import Stores from "../utils/stores";
 import Scheduler from "../utils/scheduler";
+import SteamworksSDK from "../utils/steamworksSDK";
 import { RESOURCES_PATH } from "../utils/config";
 import "./game";
 import "./saves";
@@ -20,6 +21,14 @@ ipcMain.handle("getConfig", () => {
   return {
     RESOURCES_PATH,
     IS_DEV: isDev,
+  };
+});
+
+ipcMain.handle("getQuota", async () => {
+  const cloudQuota = await SteamworksSDK.getCloudQuota();
+  return {
+    totalMB: cloudQuota.totalBytes / 1000 / 1000,
+    availableMB: cloudQuota.availableBytes / 1000 / 1000,
   };
 });
 

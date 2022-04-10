@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.3.8",
+  "version": "0.3.19",
   "description": "Saves manager",
   "main": "./dist/main/main.js",
   "author": {
@@ -13,5 +13,7 @@
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts",
     "postinstall": "npm run electron-rebuild && npm run link-modules"
   },
-  "dependencies": {}
+  "dependencies": {
+    "greenworks": "git+https://github.com/greenheartgames/greenworks.git#3ea4ab490b56676de3f0a237c74bcfdb17323e60"
+  }
 }

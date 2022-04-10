@@ -28,6 +28,8 @@ npm-debug.log.*
 *.sass.d.ts
 *.scss.d.ts
 
-# .next
-/renderer/out
-/_OLD
+.env
+
+# steam
+/steamworks_sdk
+steamworks_sdk.zip
