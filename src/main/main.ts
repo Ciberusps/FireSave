@@ -27,6 +27,7 @@ import Scheduler from "./utils/scheduler";
 import Shortcuts from "./utils/shortcuts";
 import MenuBuilder from "./utils/menu";
 import WindowUtils from "./utils/window";
+import SteamworksSDK from "./utils/steamworksSDK";
 import { RESOURCES_PATH, START_MINIMIZED } from "./utils/config";
 import { resolveHtmlPath } from "./utils";
 import "./handlers";
@@ -80,6 +81,8 @@ const onReady = async () => {
 
   Scheduler.runAutoSaves();
   nativeTheme.themeSource = "dark";
+
+  SteamworksSDK.init();
 
   createWindow();
 };

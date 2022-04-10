@@ -67,6 +67,25 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 
 ## Contribute
 
+## Setup
+
+- steamworks sdk required
+- copy `.env.example` rename to `.env`
+- fill `.env`
+- make things from "How to update SteamworksSDK" section
+- `npm i`
+- now you should be ready
+
+## How to update SteamworksSDK
+
+- download steamworks sdk from https://partner.steamgames.com/downloads/list
+- extract content from "sdk" folder to "/steamworks_sdk" folder
+- fill `STEAMWORKS_SDK_ARCHIVE_PASSWORD` in `.env`
+- `npm run steamworks-sdk:zip`
+- upload `steamworks-sdk:zip` to google drive, make it available to "anyone with the link"(not possible to place zip in git somehow zip brokes after being pushed to any remote same for gitlab and github)
+- fill `STEAMWORKS_SDK_GOOGLE_DRIVE_LINK` in `.env` via instructions in `.env.example`
+- `npm run steamworks-sdk:unzip` will automatically runned on depenecies install via `npm i`
+
 ### Build
 
 - make some changes
@@ -79,6 +98,11 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 ### utils
 
 - bump version `npm run bump:version 0.3.6-beta`
+
+## Steamworks(greenworks)
+
+- Place steamworks `sdk` from https://partner.steamgames.com/downloads/list to `node_modules/greenworks/deps/steamworks_sdk`
+  `npm install –global –production windows-build-tools`
 
 ## Based
 

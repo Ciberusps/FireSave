@@ -4,6 +4,7 @@ import glob from "glob";
 import axios from "axios";
 // @ts-ignore
 import VDF from "simple-vdf";
+
 import Stores from "./stores";
 
 const readFromFile = (file: string): Promise<string> => {
@@ -19,7 +20,9 @@ const readFromFile = (file: string): Promise<string> => {
   });
 };
 
-const getAllAppManifests = async (steamappsPath: string): Promise<TAppManifest[]> => {
+const getAllAppManifests = async (
+  steamappsPath: string
+): Promise<TAppManifest[]> => {
   const pattern = path.join(steamappsPath, "*.acf");
   //   console.log("pattern", pattern);
   const matches = glob.sync(pattern);

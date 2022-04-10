@@ -9,3 +9,5 @@ export const SENTRY_DSN =
 export const RESOURCES_PATH = app.isPackaged
   ? path.join(process.resourcesPath, "assets")
   : path.join(__dirname, "../../../assets");
+
+export const STEAM_APP_ID = 1904150;

@@ -1,34 +1,38 @@
-name: Test
+# name: Test
 
-on: [push, pull_request]
+# on: [push, pull_request]
 
-jobs:
-  release:
-    runs-on: ${{ matrix.os }}
+# jobs:
+#   release:
+#     runs-on: ${{ matrix.os }}
 
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+#     env:
+#       STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
+#       STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
 
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
+#     strategy:
+#       matrix:
+#         os: [windows-latest]
 
-      - name: Install Node.js and NPM
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          cache: npm
+#     steps:
+#       - name: Check out Git repository
+#         uses: actions/checkout@v3
 
-      - name: npm install
-        run: |
-          npm install
+#       - name: Install Node.js and NPM
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: "16"
+#           cache: "npm"
 
-      - name: npm test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          npm run package
-          npm run lint
-          npm exec tsc
-          npm test
+#       - name: Install dependencies
+#         run: |
+#           npm install
+
+#       - name: npm test
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#         run: |
+#           npm run package
+#           npm run lint
+#           npm exec tsc
+#           npm test
