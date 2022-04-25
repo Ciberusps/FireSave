@@ -22,7 +22,6 @@ contextBridge.exposeInMainWorld("electron", {
   },
 
   getQuota: () => ipcRenderer.invoke("getQuota"),
-
   getConfig: () => ipcRenderer.invoke("getConfig"),
 
   revealInFileExplorer: (val) =>
