@@ -4,6 +4,7 @@ import ElectronStore from "electron-store";
 
 const settingsStorePath = path.join(app.getPath("userData"), "FireSave_Data");
 
+// persistent store in app folder config.json
 const persistentStore = new ElectronStore<TPersistentStore>({
   defaults: {
     // TODO: rename settingsStorePath

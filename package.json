@@ -22,7 +22,8 @@
     "prettier:staged": "prettier --write",
     "steamworks-sdk:download": "node ./scripts/steamworksSdkDownload.js",
     "steamworks-sdk:zip": "rm -rf steamworks_sdk.zip && node ./scripts/steamworksSdkZip.js",
-    "steamworks-sdk:unzip": "node ./scripts/steamworksSdkUnZip.js"
+    "steamworks-sdk:unzip": "node ./scripts/steamworksSdkUnZip.js",
+    "docs:scrap-greenworks": "node ./scripts/scrapGreensworksDocs.js"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

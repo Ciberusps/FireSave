@@ -33,3 +33,5 @@ npm-debug.log.*
 # steam
 /steamworks_sdk
 steamworks_sdk.zip
+
+greenworks-docs
