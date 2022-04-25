@@ -1,5 +1,18 @@
+declare namespace IPC {
+  type TGetConfigRes = {
+    RESOURCES_PATH: string;
+    IS_DEV: boolean;
+  };
+
+  type TGetQuotaRes = {
+    totalMB: number;
+    availableMB: number;
+  };
+}
+
 type TElectronApi = {
-  getConfig: () => Promise<any>;
+  getConfig: () => Promise<IPC.TGetConfigRes>;
+  getQuota: () => Promise<IPC.TGetQuotaRes>;
 
   revealInFileExplorer: (val: string) => Promise<any>;
 
@@ -24,11 +37,19 @@ type TElectronApi = {
 };
 
 interface Window {
-  electron: any;
+  electron: TElectronApi;
 }
 
 type TPersistentStore = {
   settingsStorePath: string;
+};
+
+type TWindowSettings = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  isMaximized: boolean;
 };
 
 type TSettingsStore = {
@@ -37,13 +58,7 @@ type TSettingsStore = {
   version: string;
   saveShortcut: string;
   games: TGamesInSettingsStore;
-  window: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    isMaximized: boolean;
-  };
+  mainWindow: TWindowSettings;
 };
 
 type TGamesInSettingsStore = { [key: string]: TGame };

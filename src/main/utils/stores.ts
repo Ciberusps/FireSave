@@ -13,10 +13,11 @@ const persistentStore = new ElectronStore<TPersistentStore>({
 });
 
 const settingsStore = new ElectronStore<TSettingsStore>({
+  // TODO: should be app folder, not %appdata%
   cwd: persistentStore.store.settingsStorePath,
   name: "settings",
   defaults: {
-    window: {
+    mainWindow: {
       x: 0,
       y: 0,
       width: 1920,
