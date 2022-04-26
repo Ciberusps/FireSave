@@ -1,7 +1,7 @@
-import { ipcMain } from "electron";
 import { nanoid } from "nanoid";
 
 import Stores from "../utils/stores";
+import ipcMain from "../utils/ipcMain";
 import FileSystem from "../utils/fileSystem";
 import { fillSteamGameInfo } from "../utils/steam";
 
@@ -26,59 +26,45 @@ const isGameExist = (exePath: TFolderOrFileOrMultipleFiles): boolean => {
   return result;
 };
 
-type TCreateGamePayload = {
-  exePath: TFolderOrFileOrMultipleFiles;
-  saves: TFolderOrFileOrMultipleFiles;
-};
-
-ipcMain.handle(
-  "createGame",
-  async (_, { exePath, saves }: TCreateGamePayload) => {
-    if (isGameExist(exePath)) {
-      console.error("GAME ALREADY EXISTS");
-      return false;
-    }
-
-    const id = generateUniqGameId();
-    if (!id) {
-      console.error("Cant generate game id");
-      return false;
-    }
-
-    const name = exePath.files[0].split(".")[0];
-
-    const savePointsFolderName = name + "___" + id;
-    if (FileSystem.isExist(savePointsFolderName)) {
-      console.error("Dir already exist");
-      return false;
-    }
-
-    const newGame: TGame = {
-      id,
-      name,
-      exePath,
-      savePointsFolderName,
-      saves,
-      stats: { allSavesCount: 0, autoSaveCount: 0, manualSaveCount: 0 },
-    };
-    Stores.Settings.set(`games.${id}`, newGame);
-
-    const isSteamGame = exePath.path.includes("steamapps");
-    if (isSteamGame) fillSteamGameInfo(newGame);
-
-    return true;
+ipcMain.handle<IPC.TCreateGame>("createGame", async (_, { exePath, saves }) => {
+  if (isGameExist(exePath)) {
+    console.error("GAME ALREADY EXISTS");
+    return false;
   }
-);
 
-type TEditGamePayload = {
-  game: TGame;
-  exePath: TFolderOrFileOrMultipleFiles;
-  saves: TFolderOrFileOrMultipleFiles;
-};
+  const id = generateUniqGameId();
+  if (!id) {
+    console.error("Cant generate game id");
+    return false;
+  }
 
-ipcMain.handle(
+  const name = exePath.files[0].split(".")[0];
+
+  const savePointsFolderName = `${name}___${id}`;
+  if (FileSystem.isExist(savePointsFolderName)) {
+    console.error("Dir already exist");
+    return false;
+  }
+
+  const newGame: TGame = {
+    id,
+    name,
+    exePath,
+    savePointsFolderName,
+    saves,
+    stats: { allSavesCount: 0, autoSaveCount: 0, manualSaveCount: 0 },
+  };
+  Stores.Settings.set(`games.${id}`, newGame);
+
+  const isSteamGame = exePath.path.includes("steamapps");
+  if (isSteamGame) fillSteamGameInfo(newGame);
+
+  return true;
+});
+
+ipcMain.handle<IPC.TEditGame>(
   "editGame",
-  async (_, { game, exePath, saves }: TEditGamePayload) => {
+  async (_, { game, exePath, saves }) => {
     game.exePath = exePath;
     game.saves = saves;
     Stores.Settings.set(`games.${game.id}`, game);
@@ -86,7 +72,7 @@ ipcMain.handle(
   }
 );
 
-ipcMain.handle("removeGame", async (_, id) => {
+ipcMain.handle<IPC.TRemoveGame>("removeGame", async (_, id) => {
   // @ts-ignore
   Stores.Settings.delete(`games.${id}`);
   return true;

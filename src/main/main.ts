@@ -13,7 +13,6 @@ import { app, nativeTheme, protocol } from "electron";
 import isDev from "electron-is-dev";
 
 import Stores from "./utils/stores";
-import AppUpdater from "./utils/updater";
 import Scheduler from "./utils/scheduler";
 import Shortcuts from "./utils/shortcuts";
 import MainWindow from "./windows/mainWindow";
@@ -121,8 +120,9 @@ class Main {
 
     // Remove this if your app does not use auto updates
     // eslint-disable-next-line
-    new AppUpdater();
+    // new AppUpdater();
   }
 }
 
-const main = new Main();
+// eslint-disable-next-line
+new Main();

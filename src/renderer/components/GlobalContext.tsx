@@ -23,21 +23,21 @@ const GlobalProvider = (props: TProps) => {
     useState<TPersistentStore | null>(null);
 
   const getState = async () => {
-    const persistentStore = await window.electron.getPersistentStore();
-    const settingsState = await window.electron.getSettingsStore();
-    setPersistentStore(persistentStore);
-    setSettingsStore(settingsState);
+    const newPersistentStore = await window.electron.getPersistentStore();
+    const newSettingsState = await window.electron.getSettingsStore();
+    setPersistentStore(newPersistentStore);
+    setSettingsStore(newSettingsState);
   };
 
   useEffect(() => {
     getState();
 
     console.log({ electron: window.electron });
-    window.electron.onStateUpdate((_: any, newStore: any) => {
+    window.electron.onSettingsStoreUpdate((_, newStore) => {
       setSettingsStore(newStore);
     });
 
-    window.electron.onPersistentStoreUpdate((_: any, newStore: any) => {
+    window.electron.onPersistentStoreUpdate((_, newStore) => {
       setPersistentStore(newStore);
     });
   }, []);

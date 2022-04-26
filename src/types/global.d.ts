@@ -1,43 +1,5 @@
-declare namespace IPC {
-  type TGetConfigRes = {
-    RESOURCES_PATH: string;
-    IS_DEV: boolean;
-  };
-
-  type TGetQuotaRes = {
-    totalMB: number;
-    availableMB: number;
-  };
-}
-
-type TElectronApi = {
-  getConfig: () => Promise<IPC.TGetConfigRes>;
-  getQuota: () => Promise<IPC.TGetQuotaRes>;
-
-  revealInFileExplorer: (val: string) => Promise<any>;
-
-  saveGame: (val: string) => Promise<any>;
-  loadSavePoint: (...args: any[]) => Promise<any>;
-  removeSavePoint: (...args: any[]) => Promise<any>;
-
-  createGame: (...args: any[]) => Promise<any>;
-  editGame: (...args: any[]) => Promise<any>;
-  removeGame: (id: string) => Promise<any>;
-
-  analyticsPageView: (...args: any[]) => Promise<any>;
-  openDialog: (...args: any[]) => Promise<any>;
-
-  changeSettings: (...args: any[]) => Promise<any>;
-  getSettingsStore: () => Promise<any>;
-  onStateUpdate: (somfunc: () => null) => any;
-
-  getPersistentStore: () => Promise<any>;
-  changePersistentStore: (...args: any[]) => Promise<any>;
-  onPersistentStoreUpdate: (somfunc: () => null) => any;
-};
-
 interface Window {
-  electron: TElectronApi;
+  electron: IPC.TApi;
 }
 
 type TPersistentStore = {

@@ -9,6 +9,8 @@ module.exports = {
     "@typescript-eslint/no-use-before-define": "off",
     "react/require-default-props": "off",
     "react/jsx-props-no-spreading": "off",
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "no-plusplus": "off",
   },
   parserOptions: {
     ecmaVersion: 2020,

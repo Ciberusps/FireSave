@@ -1,31 +1,10 @@
-const { ipcRenderer, contextBridge } = require("electron");
+import { ipcRenderer, contextBridge } from "electron";
 
-contextBridge.exposeInMainWorld("electron", {
-  ipcRenderer: {
-    myPing() {
-      ipcRenderer.send("ipc-example", "ping");
-    },
-    on(channel, func) {
-      const validChannels = ["ipc-example"];
-      if (validChannels.includes(channel)) {
-        // Deliberately strip event as it includes `sender`
-        ipcRenderer.on(channel, (event, ...args) => func(...args));
-      }
-    },
-    once(channel, func) {
-      const validChannels = ["ipc-example"];
-      if (validChannels.includes(channel)) {
-        // Deliberately strip event as it includes `sender`
-        ipcRenderer.once(channel, (event, ...args) => func(...args));
-      }
-    },
-  },
+const api: IPC.TApi = {
+  getQuota: async () => ipcRenderer.invoke("getQuota"),
+  getConfig: async () => ipcRenderer.invoke("getConfig"),
 
-  getQuota: () => ipcRenderer.invoke("getQuota"),
-
-  getConfig: () => ipcRenderer.invoke("getConfig"),
-
-  revealInFileExplorer: (val) =>
+  revealInFileExplorer: async (val) =>
     ipcRenderer.invoke("revealInFileExplorer", val),
 
   saveGame: async (val) => ipcRenderer.invoke("saveGame", val),
@@ -38,31 +17,20 @@ contextBridge.exposeInMainWorld("electron", {
   editGame: (...args) => ipcRenderer.invoke("editGame", ...args),
   removeGame: (...args) => ipcRenderer.invoke("removeGame", ...args),
 
-  analyticsPageView: (...args) =>
+  analyticsPageView: async (...args) =>
     ipcRenderer.invoke("analyticsPageView", ...args),
-  openDialog: (...args) => ipcRenderer.invoke("openDialog", ...args),
+  openDialog: async (...args) => ipcRenderer.invoke("openDialog", ...args),
 
   getSettingsStore: async () => ipcRenderer.invoke("getSettingsStore"),
   changeSettings: (...args) => ipcRenderer.invoke("changeSettings", ...args),
-  onStateUpdate: (somfunc = () => null) =>
-    ipcRenderer.on("stateUpdate", somfunc),
+  onSettingsStoreUpdate: (...args) =>
+    ipcRenderer.on("settingsStoreUpdate", ...args),
 
   getPersistentStore: async () => ipcRenderer.invoke("getPersistentStore"),
-  changePersistentStore: (...args) =>
+  changePersistentStore: async (...args) =>
     ipcRenderer.invoke("changePersistentStore", ...args),
-  onPersistentStoreUpdate: (somfunc = () => null) =>
-    ipcRenderer.on("persistentStoreUpdate", somfunc),
+  onPersistentStoreUpdate: (...args) =>
+    ipcRenderer.on("persistentStoreUpdate", ...args),
+};
 
-  // TODO: stores
-  // store: {
-  //   get(val) {
-  //     return ipcRenderer.sendSync('electron-store-get', val);
-  //   },
-  //   set(property, val) {
-  //     ipcRenderer.send('electron-store-set', property, val);
-  //   },
-  //   // Other method you want to add like has(), reset(), etc.
-  // },
-  // Any other methods you want to expose in the window object.
-  // ...
-});
+contextBridge.exposeInMainWorld("electron", api);

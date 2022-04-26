@@ -20,7 +20,7 @@ class MainWindow extends BrowserWindow {
     });
 
     Stores.Settings.onDidAnyChange((newVal) => {
-      this.webContents.send("stateUpdate", newVal);
+      this.webContents.send("settingsStoreUpdate", newVal);
     });
 
     this.on("ready-to-show", this.onReadyToShow.bind(this));
