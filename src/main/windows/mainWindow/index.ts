@@ -1,6 +1,6 @@
 import { BrowserWindow, shell } from "electron";
 
-import Stores from "../../utils/stores";
+import Stores from "../../stores";
 import AppTray from "../../utils/tray";
 import MenuBuilder from "./menu";
 import { START_MINIMIZED } from "../../utils/config";
@@ -16,11 +16,13 @@ class MainWindow extends BrowserWindow {
     AppTray.init(this);
 
     Stores.Persistent.onDidAnyChange((newVal) => {
-      this.webContents.send("persistentStoreUpdate", newVal);
+      this.webContents.send("onPersistentStoreUpdate", newVal);
     });
-
     Stores.Settings.onDidAnyChange((newVal) => {
-      this.webContents.send("settingsStoreUpdate", newVal);
+      this.webContents.send("onSettingsStoreUpdate", newVal);
+    });
+    Stores.Games.onDidAnyChange((newVal) => {
+      this.webContents.send("onGamesStoreUpdate", newVal);
     });
 
     this.on("ready-to-show", this.onReadyToShow.bind(this));

@@ -13,23 +13,26 @@ type TProps = {
 const Game = (props: TProps) => {
   const { game, className } = props;
 
-  const savePoints = game.savePoints && Object.values(game.savePoints);
-  const lastSaveDate =
-    savePoints && new Date(savePoints[savePoints?.length - 1].date);
+  // const savePoints = game.savePoints && Object.values(game.savePoints);
+  // const lastSaveDate =
+  //   savePoints && new Date(savePoints[savePoints?.length - 1].date);
 
   return (
     <Link to={`/games/${game.id}`}>
-      <Container className={className}>
-        <Img width="100%" height={215} src={game?.steamInfo?.header_image} />
+      <Container className={className} isPlayingNow={game.isPlaingNow}>
+        {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
+
+        <Img width="100%" height={215} src={game?.imageUrl} />
+
         <Description>
-          <GameName>{game?.steamInfo?.name || game.name}</GameName>
+          <GameName>{game?.steam?.storeInfo?.name || game.name}</GameName>
           <div>
             <Stats game={game} />
-            <LastSave>
+            {/* <LastSave>
               {lastSaveDate
                 ? `last save ${formatDistance(lastSaveDate, new Date())} ago`
                 : "no saves yet"}
-            </LastSave>
+            </LastSave> */}
           </div>
         </Description>
       </Container>
@@ -37,7 +40,12 @@ const Game = (props: TProps) => {
   );
 };
 
-const Container = styled.div`
+type TContainer = {
+  isPlayingNow?: boolean;
+};
+
+const Container = styled.div<TContainer>`
+  flex: 1;
   display: flex;
   flex-direction: column;
   width: 460px;
@@ -48,6 +56,9 @@ const Container = styled.div`
   overflow: hidden;
   cursor: pointer;
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.25));
+  box-shadow: 0px 4px 20px
+    ${({ theme, isPlayingNow }) =>
+      isPlayingNow ? theme.purple : "rgba(0, 0, 0, 0.25)"};
 `;
 
 const Img = styled(Image)`
@@ -74,6 +85,12 @@ const LastSave = styled.div`
   line-height: 19px;
   color: ${({ theme }) => theme.dark};
   margin-top: 5px;
+`;
+
+const RunningIcon = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 5px;
 `;
 
 export default Game;

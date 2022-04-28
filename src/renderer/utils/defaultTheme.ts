@@ -1,6 +1,6 @@
 import { DefaultTheme } from "styled-components";
 
-const myTheme: DefaultTheme = {
+const defaultTheme: DefaultTheme = {
   background: "#0d0d0e",
   borderRadius: "4px",
   dark: "#888888",
@@ -9,6 +9,7 @@ const myTheme: DefaultTheme = {
   purple: "#7B61FF",
   purpleHovered: "#3c2d85",
   white: "#FFF",
+  steamIsPlaying: "#9ce338",
   feedback: {
     info: "#7B61FF",
     warning: "orange",
@@ -17,4 +18,4 @@ const myTheme: DefaultTheme = {
   },
 };
 
-export { myTheme };
+export default defaultTheme;

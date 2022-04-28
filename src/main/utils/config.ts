@@ -11,3 +11,15 @@ export const RESOURCES_PATH = app.isPackaged
   : path.join(__dirname, "../../../assets");
 
 export const STEAM_APP_ID = 1904150;
+
+export const DEFAULT_STORES_PATH = path.join(
+  app.getPath("userData"),
+  "FireSave_Data"
+);
+
+export const APP_VERSION =
+  NODE_ENV === "development"
+    ? process.env.npm_package_version
+    : app.getVersion();
+
+export const PLATFORM = process.platform;

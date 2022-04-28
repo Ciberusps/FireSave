@@ -1,55 +1,25 @@
-import { useCallback, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Game from "../components/Game";
 import Button from "../components/Button";
 import Layout from "../components/Layout";
-import GlobalContext from "../components/GlobalContext";
+import { useGamesStore } from "../utils/stores";
 
 const IndexPage = () => {
-  const { settingsStore: state } = useContext(GlobalContext);
-  const [quota, setQuota] = useState({});
+  const games = useGamesStore((state) => Object.values(state.games));
 
-  const games = state?.games && Object.values(state?.games);
-  console.log({ games });
-  console.log({ quota });
-
-  const getQuota = useCallback(async () => {
-    setQuota(await window.electron.getQuota());
-  }, [setQuota]);
-
-  useEffect(() => {
-    getQuota();
-  }, [getQuota]);
+  console.log({
+    games: games.map((g) => ({ id: g.id, isPlayingNow: g.isPlaingNow })),
+  });
 
   return (
     <Layout>
       <Header>
         <h1>Games</h1>
 
-        <div>{JSON.stringify(quota, null, 2)}</div>
-
-        <Button
-          icon="add"
-          to="/games/new/settings"
-          // href="/games/[id]/settings" as="/games/new/settings"
-        >
+        <Button icon="add" to="/games/new/settings">
           Add game
         </Button>
-
-        {/* <Button href="/games/[id]/settings" as="/games/new/settings">
-          Add game
-        </Button>
-
-        <Button href="/games/[id]/settings" isDisabled={true}>
-          Add game
-        </Button>
-
-        <Button href="/games/[id]/settings" isLoading={true}>
-          Add game
-        </Button>
-
-        <Button icon="add" href="/games/[id]/settings" /> */}
       </Header>
 
       <Games>

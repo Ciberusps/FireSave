@@ -1,8 +1,29 @@
 import { ipcRenderer, contextBridge } from "electron";
 
+const storesApi: IPC.TStoresApi = {
+  getPersistentStore: async () => ipcRenderer.invoke("getPersistentStore"),
+  changePersistentStore: async (...args) =>
+    ipcRenderer.invoke("changePersistentStore", ...args),
+  onPersistentStoreUpdate: (...args) =>
+    ipcRenderer.on("onPersistentStoreUpdate", ...args),
+
+  getSettingsStore: async () => ipcRenderer.invoke("getSettingsStore"),
+  changeSettings: (...args) => ipcRenderer.invoke("changeSettings", ...args),
+  onSettingsStoreUpdate: (...args) =>
+    ipcRenderer.on("onSettingsStoreUpdate", ...args),
+
+  getGamesStore: async () => ipcRenderer.invoke("getGamesStore"),
+  changeGamesStore: (...args) =>
+    ipcRenderer.invoke("changeGamesStore", ...args),
+  onGamesStoreUpdate: (...args) =>
+    ipcRenderer.on("onGamesStoreUpdate", ...args),
+};
+
 const api: IPC.TApi = {
   getQuota: async () => ipcRenderer.invoke("getQuota"),
   getConfig: async () => ipcRenderer.invoke("getConfig"),
+
+  test: async () => ipcRenderer.invoke("test"),
 
   revealInFileExplorer: async (val) =>
     ipcRenderer.invoke("revealInFileExplorer", val),
@@ -21,16 +42,7 @@ const api: IPC.TApi = {
     ipcRenderer.invoke("analyticsPageView", ...args),
   openDialog: async (...args) => ipcRenderer.invoke("openDialog", ...args),
 
-  getSettingsStore: async () => ipcRenderer.invoke("getSettingsStore"),
-  changeSettings: (...args) => ipcRenderer.invoke("changeSettings", ...args),
-  onSettingsStoreUpdate: (...args) =>
-    ipcRenderer.on("settingsStoreUpdate", ...args),
-
-  getPersistentStore: async () => ipcRenderer.invoke("getPersistentStore"),
-  changePersistentStore: async (...args) =>
-    ipcRenderer.invoke("changePersistentStore", ...args),
-  onPersistentStoreUpdate: (...args) =>
-    ipcRenderer.on("persistentStoreUpdate", ...args),
+  ...storesApi,
 };
 
 contextBridge.exposeInMainWorld("electron", api);
