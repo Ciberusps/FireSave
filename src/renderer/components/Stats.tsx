@@ -9,9 +9,9 @@ const Stats = (props: TProps) => {
   const { game, className } = props;
   return (
     <Container className={className}>
-      <Stat>{game.stats.allSavesCount} saves</Stat>
-      <Stat>{game.stats.autoSaveCount} autosaves</Stat>
-      <Stat>{game.stats.manualSaveCount} manual saves</Stat>
+      <Stat>{game.savesStats.total} saves</Stat>
+      <Stat>{game.savesStats.auto} autosaves</Stat>
+      <Stat>{game.savesStats.manual} manual saves</Stat>
     </Container>
   );
 };

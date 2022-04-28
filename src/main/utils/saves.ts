@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import findProcess from "find-process";
+// @ts-ignore
 import faker from "faker";
 // screenshot-desktop dont work without asarUnpack
 // @ts-ignore
@@ -8,14 +9,15 @@ import screenshot from "screenshot-desktop";
 import { format } from "date-fns";
 import { nanoid } from "nanoid";
 
-import Stores from "./stores";
+import Stores from "../stores";
 import FileSystem from "./fileSystem";
+import Games from "./games";
 
 const isGameRunning = async (game: TGame) => {
-  console.log("Is game running", game.exePath);
+  console.log("Is game running", game.gamePath);
   try {
-    if (!game?.exePath) return false;
-    const processName = game.exePath.files[0];
+    if (!game?.gamePath) return false;
+    const processName = game.gamePath.files[0];
     console.log("Is game running processName", processName);
     const list = await findProcess("name", processName);
     console.log("list", list);
@@ -100,9 +102,9 @@ const save = async (
     const gameInfo = getGameInfo(game);
 
     // TODO: game.save -> game.fileOrFolderForSave
-    if (game.saves?.files.length === 1) {
-      const file = game.saves.files[0];
-      const savePath = path.join(game.saves.path, file);
+    if (game.saveFilesOrFolder?.files.length === 1) {
+      const file = game.saveFilesOrFolder.files[0];
+      const savePath = path.join(game.saveFilesOrFolder.path, file);
       const saveFileName = getFileNameForNextSave(file);
       const saveFileRelativePath = path.join(
         gameInfo.savePointsPath,
@@ -207,13 +209,26 @@ const tryAutoSave = async () => {
   });
 };
 
-const saveRunningGames = () => {
-  Object.entries(Stores.Settings.store.games).map(async ([key, game]) => {
-    const isRunning = await isGameRunning(game);
-    if (isRunning) {
-      save(game, "manualsave");
-    }
-  });
+// const checkRunningGames = async () => {
+
+// }
+
+const saveRunningGames = async () => {
+  console.log("Try save running games");
+
+  await Games.updateRunningGames();
+
+  // Object.entries(Stores.Settings.store.games).map(async ([key, game]) => {
+  //   const isRunning = await isGameRunning(game);
+  //   if (isRunning) {
+  //     save(game, "manualsave");
+  //   }
+  // });
+
+  try {
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const Saves = {

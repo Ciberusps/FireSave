@@ -1,20 +1,11 @@
-import Stores from "./stores";
+import Stores from "../stores";
+import Games from "./games";
 import Saves from "./saves";
 
-// let autoSavesTask: ScheduledTask | null = null;
+const RUNNING_GAME_CHECK_INTERVAL = 60 * 1000; // 1 min
+
 let autoSavesTask: NodeJS.Timer | null = null;
-
-// const getCronExpression = (minutes: number): string | null => {
-//   let result = `* ${minutes} * * * *`;
-//   if (minutes === 60) result = `* 0 * * * *`;
-
-//   const isValid = cron.validate(result);
-//   if (isValid) {
-//     return result;
-//   } else {
-//     return null;
-//   }
-// };
+let runningGamesCheckTask: NodeJS.Timer | null = null;
 
 const foolCheck = () => {
   const mins = Stores.Settings.store.autoSaveMinutes;
@@ -27,22 +18,12 @@ const runAutoSaves = () => {
   try {
     if (autoSavesTask) {
       console.log("DESTROY");
-      // autoSavesTask.destroy();
       clearInterval(autoSavesTask);
     }
 
     if (Stores.Settings.store.isAutoSaveOn) {
       foolCheck();
       console.info("AutoSaves enabled, start or restart scheduler");
-
-      // const cronExpression = getCronExpression(Store.store.autoSaveMinutes);
-      // if (!cronExpression) throw new Error("Failed to parse cron expression");
-
-      // console.log(cronExpression);
-
-      // autoSavesTask = cron.schedule(cronExpression, () => {
-      //   console.log("running a task every minute");
-      // });
 
       autoSavesTask = setInterval(() => {
         console.log("running a task every minute");
@@ -57,8 +38,23 @@ const runAutoSaves = () => {
   }
 };
 
+const runRunningGamesCheck = () => {
+  if (runningGamesCheckTask) {
+    clearInterval(runningGamesCheckTask);
+  }
+
+  runningGamesCheckTask = setInterval(() => {
+    Games.updateRunningGames();
+  }, RUNNING_GAME_CHECK_INTERVAL);
+};
+
+const start = () => {
+  runAutoSaves();
+  runRunningGamesCheck();
+};
+
 const Scheduler = {
-  runAutoSaves,
+  start,
 };
 
 export default Scheduler;

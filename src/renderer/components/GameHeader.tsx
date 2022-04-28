@@ -12,8 +12,8 @@ type TProps = {
 const GameHeader = (props: TProps) => {
   const { game } = props;
 
-  const name = game.steamInfo?.name || game.name;
-  const imgSrc = game.steamInfo?.header_image;
+  const name = game?.name || "Unknown game";
+  const imgSrc = game.imageUrl;
 
   const onSave = async () => {
     const newExePath = await window.electron.saveGame(game.id);

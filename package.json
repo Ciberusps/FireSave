@@ -216,7 +216,7 @@
     "ts-jest": "^27.1.2",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
-    "typescript": "^4.5.4",
+    "typescript": "^4.6.4",
     "url-loader": "^4.1.1",
     "webpack": "^5.65.0",
     "webpack-bundle-analyzer": "^4.5.0",
@@ -225,6 +225,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@ciberus/find-steam-app": "^3.0.0",
     "axios": "^0.25.0",
     "date-fns": "^2.28.0",
     "electron-debug": "^3.2.0",
@@ -237,6 +238,7 @@
     "glob": "^7.2.0",
     "history": "^5.2.0",
     "nanoid": "^3.2.0",
+    "node-wmi": "^0.0.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-helmet": "^6.1.0",
@@ -246,7 +248,8 @@
     "react-toastify": "^8.1.1",
     "screenshot-desktop": "^1.12.7",
     "simple-vdf": "^1.1.1",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "zustand": "^3.7.2"
   },
   "engines": {
     "npm": "~14.18.3"

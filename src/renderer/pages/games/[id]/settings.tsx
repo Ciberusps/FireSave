@@ -8,9 +8,9 @@ import Layout from "../../../components/Layout";
 import Button from "../../../components/Button";
 import FileInput from "../../../components/FileInput";
 import FormBlock from "../../../components/FormBlock";
-import GlobalContext from "../../../components/GlobalContext";
 
 import Toaster from "../../../utils/toaster";
+import { useSettingsStore } from "../../../utils/stores";
 
 type TGameForm = {
   exePath: string;
@@ -18,7 +18,7 @@ type TGameForm = {
 };
 
 const GameSettingsPage = () => {
-  const { settingsStore: state } = useContext(GlobalContext);
+  // const [settingsStore] = useGamesStore();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
@@ -45,7 +45,10 @@ const GameSettingsPage = () => {
 
       const isSuccess = isEditing
         ? window.electron.editGame({ game, exePath, saves })
-        : window.electron.createGame({ exePath, saves });
+        : window.electron.createGame({
+            gamePath: exePath,
+            saveFilesOrFolder: saves,
+          });
       if (isSuccess) {
         Toaster.add({
           intent: "success",

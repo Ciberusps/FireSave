@@ -12,6 +12,7 @@ declare module "styled-components" {
     purple: string;
     purpleHovered: string;
     white: string;
+    steamIsPlaying: string;
     feedback: {
       info: string;
       warning: string;

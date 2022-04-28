@@ -12,94 +12,66 @@ declare global {
       availableMB: number;
     };
 
-    type TSettings = {
-      isAutoSaveOn: boolean;
-      autoSaveMinutes: number;
-    };
-
     type TOpenDialogRes = {
       path: string;
       files: string[] | null;
     } | null;
 
     type TCreateGamePayload = {
-      exePath: TFolderOrFileOrMultipleFiles;
-      saves: TFolderOrFileOrMultipleFiles;
+      gamePath: TFolderOrFiles;
+      saveFilesOrFolder: TFolderOrFiles;
     };
 
     type TEditGamePayload = {
       game: TGame;
-      exePath: TFolderOrFileOrMultipleFiles;
-      saves: TFolderOrFileOrMultipleFiles;
+      exePath: TFolderOrFiles;
+      saves: TFolderOrFiles;
     };
 
-    type TGetConfig = () => Promise<TGetConfigRes>;
-    type TGetQuota = () => Promise<TGetQuotaRes>;
-
-    type TRevealInFileExplorer = (val: string) => Promise<void>;
-
-    type TSaveGame = (gameId: string) => Promise<void>;
-    type TLoadSavePoint = (
-      gameId: string,
-      savePointId: string
-    ) => Promise<boolean>;
-    type TRemoveSavePoint = (
-      gameId: string,
-      savePointId: string
-    ) => Promise<void>;
-
-    type TCreateGame = (payload: TCreateGamePayload) => Promise<boolean>;
-    type TEditGame = (payload: TEditGamePayload) => Promise<boolean>;
-    type TRemoveGame = (id: string) => Promise<boolean>;
-
-    type TAnalyticsPageView = (url: string) => Promise<void>;
-    type TOpenDialog = (options: OpenDialogOptions) => Promise<TOpenDialogRes>;
-
-    type TChangeSettings = (newSettings: TSettings) => Promise<boolean>;
-
-    type TGetSettingsStore = () => Promise<TSettingsStore>;
-    type TOnSettingsStoreUpdate = (
-      event: (
-        event: Electron.IpcRendererEvent,
-        newStore: TSettingsStore
-      ) => void
+    type TGetStore<T> = () => Promise<T>;
+    type TChangeStore<T> = (newStore: T) => Promise<boolean>;
+    type TOnUpdateStore<T> = (
+      event: (event: Electron.IpcRendererEvent, newStore: T) => void
     ) => void;
 
-    type TGetPersistentStore = () => Promise<TPersistentStore>;
-    type TChangePersistentStore = (
-      newSettings: TPersistentStore
-    ) => Promise<boolean>;
-    type TOnPersistentStoreUpdate = (
-      event: (
-        event: Electron.IpcRendererEvent,
-        newStore: TPersistentStore
-      ) => void
-    ) => void;
+    type TStoresApi = {
+      getPersistentStore: TGetStore<TPersistentStore>;
+      changePersistentStore: TChangeStore<TPersistentStore>;
+      onPersistentStoreUpdate: TOnUpdateStore<TPersistentStore>;
 
-    type TApi = {
-      getConfig: TGetConfig;
-      getQuota: TGetQuota;
+      getSettingsStore: TGetStore<TSettingsStore>;
+      changeSettings: TChangeStore<TSettingsStore>;
+      onSettingsStoreUpdate: TOnUpdateStore<TSettingsStore>;
 
-      revealInFileExplorer: TRevealInFileExplorer;
-
-      saveGame: TSaveGame;
-      loadSavePoint: TLoadSavePoint;
-      removeSavePoint: TRemoveSavePoint;
-
-      createGame: TCreateGame;
-      editGame: TEditGame;
-      removeGame: TRemoveGame;
-
-      analyticsPageView: TAnalyticsPageView;
-      openDialog: TOpenDialog;
-
-      changeSettings: TChangeSettings;
-      getSettingsStore: TGetSettingsStore;
-      onSettingsStoreUpdate: TOnSettingsStoreUpdate;
-
-      getPersistentStore: TGetPersistentStore;
-      changePersistentStore: TChangePersistentStore;
-      onPersistentStoreUpdate: TOnPersistentStoreUpdate;
+      getGamesStore: TGetStore<TGamesStore>;
+      changeGamesStore: TChangeStore<TGamesStore>;
+      onGamesStoreUpdate: TOnUpdateStore<TGamesStore>;
     };
+
+    type TGamesApi = {
+      createGame: (payload: TCreateGamePayload) => Promise<boolean>;
+      editGame: (payload: TEditGamePayload) => Promise<boolean>;
+      removeGame: (id: string) => Promise<boolean>;
+    };
+
+    type TSavePointsApi = {
+      saveGame: (gameId: string) => Promise<void>;
+      loadSavePoint: (gameId: string, savePointId: string) => Promise<boolean>;
+      removeSavePoint: (gameId: string, savePointId: string) => Promise<void>;
+    };
+
+    type TApi = TStoresApi &
+      TGamesApi &
+      TSavePointsApi & {
+        getConfig: () => Promise<TGetConfigRes>;
+        getQuota: () => Promise<TGetQuotaRes>;
+
+        test: () => void;
+
+        revealInFileExplorer: (val: string) => Promise<void>;
+
+        analyticsPageView: (url: string) => Promise<void>;
+        openDialog: (options: OpenDialogOptions) => Promise<TOpenDialogRes>;
+      };
   }
 }

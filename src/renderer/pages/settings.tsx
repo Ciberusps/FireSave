@@ -9,7 +9,7 @@ import FileInput from "../components/FileInput";
 import FormBlock from "../components/FormBlock";
 import ToggleInput from "../components/ToggleInput";
 import NumberInput from "../components/NumberInput";
-import GlobalContext from "../components/GlobalContext";
+import { usePersistentStore, useSettingsStore } from "../utils/stores";
 
 type TSettingsForm = {
   isAutoSaveOn: boolean;
@@ -18,7 +18,9 @@ type TSettingsForm = {
 };
 
 const SettingsPage = () => {
-  const { settingsStore, persistentStore } = useContext(GlobalContext);
+  // const { settingsStore, persistentStore } = useContext(GlobalContext);
+  const settingsStore = useSettingsStore();
+  const persistentStore = usePersistentStore();
 
   const defaultValues: TSettingsForm = {
     isAutoSaveOn: settingsStore?.isAutoSaveOn,

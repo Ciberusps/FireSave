@@ -9,7 +9,10 @@ ReturnType<T>;
 
 const ipcMain = {
   ..._ipcMain,
-  handle: <T>(eventName: keyof IPC.TApi, handler: THandler<T>) => {
+  handle: <T extends keyof IPC.TApi>(
+    eventName: T,
+    handler: THandler<IPC.TApi[T]>
+  ) => {
     // @ts-ignore
     _ipcMain.handle(eventName, handler);
   },

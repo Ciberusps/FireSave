@@ -11,6 +11,14 @@ module.exports = {
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/ban-ts-comment": "warn",
     "no-plusplus": "off",
+    "no-restricted-syntax": [
+      "off",
+      "ForInStatement",
+      "LabeledStatement",
+      "WithStatement",
+    ],
+    "prefer-destructuring": "off",
+    "import/no-named-as-default-member": "off",
   },
   parserOptions: {
     ecmaVersion: 2020,

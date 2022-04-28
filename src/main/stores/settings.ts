@@ -1,18 +1,13 @@
-import path from "path";
-import { app } from "electron";
 import ElectronStore from "electron-store";
 
-const settingsStorePath = path.join(app.getPath("userData"), "FireSave_Data");
+import persistentStore from "./persistent";
 
-// persistent store in app folder config.json
-const persistentStore = new ElectronStore<TPersistentStore>({
-  defaults: {
-    // TODO: rename settingsStorePath
-    settingsStorePath,
-  },
-});
+import { APP_VERSION } from "../utils/config";
 
 const settingsStore = new ElectronStore<TSettingsStore>({
+  // TODO: wait for pr https://github.com/sindresorhus/electron-store/pull/225
+  // @ts-ignore
+  projectVersion: APP_VERSION,
   // TODO: should be app folder, not %appdata%
   cwd: persistentStore.store.settingsStorePath,
   name: "settings",
@@ -30,13 +25,16 @@ const settingsStore = new ElectronStore<TSettingsStore>({
     autoSaveMinutes: 15,
     saveShortcut: "F5",
     version: "unknown",
-    games: {},
+    runtimeValues: {
+      isLoadingApp: true,
+    },
+  },
+
+  migrations: {
+    // "1.0.0": (settings) => {
+    //   console.log("MIGRATION RUNNED");
+    // },
   },
 });
 
-const Stores = {
-  Persistent: persistentStore,
-  Settings: settingsStore,
-};
-
-export default Stores;
+export default settingsStore;
