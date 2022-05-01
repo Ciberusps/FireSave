@@ -50,7 +50,7 @@ const SavePoint = (props: TProps) => {
           <Name title={savePoint.id}>{name}</Name>
           <Type>
             {savePoint?.type === "manualsave" ? "Manual save" : "Autosave"}{" "}
-            {savePoint.typeNumber && " - " + savePoint.typeNumber}
+            {savePoint.saveNumberByType && " - " + savePoint.saveNumberByType}
           </Type>
         </Description>
         <DateText>{formatedDate}</DateText>

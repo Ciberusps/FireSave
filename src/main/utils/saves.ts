@@ -1,8 +1,6 @@
 import fs from "fs";
 import path from "path";
-import findProcess from "find-process";
-// @ts-ignore
-import faker from "faker";
+import faker from "@faker-js/faker";
 // screenshot-desktop dont work without asarUnpack
 // @ts-ignore
 import screenshot from "screenshot-desktop";
@@ -12,36 +10,17 @@ import { nanoid } from "nanoid";
 import Stores from "../stores";
 import FileSystem from "./fileSystem";
 import Games from "./games";
-
-const isGameRunning = async (game: TGame) => {
-  console.log("Is game running", game.gamePath);
-  try {
-    if (!game?.gamePath) return false;
-    const processName = game.gamePath.files[0];
-    console.log("Is game running processName", processName);
-    const list = await findProcess("name", processName);
-    console.log("list", list);
-    if (list?.length) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-};
+import { PLATFORM } from "./config";
 
 // TODO: should throw error
 const getFileNameForNextSave = (file: string): string => {
   if (file.includes(".")) {
     const res = file.split(".");
-    res[0] = res[0] + "_" + format(new Date(), "____HH-mm-ss__dd_MM_yyyy");
+    res[0] = `${res[0]}_${format(new Date(), "____HH-mm-ss__dd_MM_yyyy")}`;
     return res.join(".");
-  } else {
-    console.log("ERROR ");
-    return "";
   }
+  console.log("ERROR ");
+  return "";
 };
 
 type TGetGameInfoRes = {
@@ -70,18 +49,18 @@ const countSavePointStats = (
   type: TSavePointType
 ): TCountStatsRes => {
   let typeNumber = 0;
-  const statsPath = `games.${game.id}.stats`;
-  const curStats = game.stats;
-  Stores.Settings.set(`${statsPath}.allSavesCount`, curStats.allSavesCount + 1);
+  const statsPath = `games.${game.id}.savesStats`;
+  const curStats = game.savesStats;
+  Stores.Games.set(`${statsPath}.total`, curStats.total + 1);
   if (type === "manualsave") {
-    typeNumber = curStats.manualSaveCount + 1;
-    Stores.Settings.set(`${statsPath}.manualSaveCount`, typeNumber);
+    typeNumber = curStats.manual + 1;
+    Stores.Games.set(`${statsPath}.manual`, typeNumber);
   } else {
-    typeNumber = curStats.autoSaveCount + 1;
-    Stores.Settings.set(`${statsPath}.autoSaveCount`, typeNumber);
+    typeNumber = curStats.auto + 1;
+    Stores.Games.set(`${statsPath}.auto`, typeNumber);
   }
 
-  return { number: curStats.allSavesCount, typeNumber };
+  return { number: curStats.total, typeNumber };
 };
 
 const getSavePointPaths = (game: TGame, savePoint: TSavePoint) => {
@@ -102,9 +81,12 @@ const save = async (
     const gameInfo = getGameInfo(game);
 
     // TODO: game.save -> game.fileOrFolderForSave
-    if (game.saveFilesOrFolder?.files.length === 1) {
-      const file = game.saveFilesOrFolder.files[0];
-      const savePath = path.join(game.saveFilesOrFolder.path, file);
+    if (game.saveFilesOrFolder?.[PLATFORM]?.files.length === 1) {
+      const file = game.saveFilesOrFolder?.[PLATFORM]?.files[0];
+      const savePath = path.join(
+        game.saveFilesOrFolder?.[PLATFORM]?.path,
+        file
+      );
       const saveFileName = getFileNameForNextSave(file);
       const saveFileRelativePath = path.join(
         gameInfo.savePointsPath,
@@ -126,24 +108,24 @@ const save = async (
         date: new Date().toISOString(),
         path: saveFileName,
         type,
-        number: savePointStats.number,
-        typeNumber: savePointStats.typeNumber,
+        saveNumber: savePointStats.number,
+        saveNumberByType: savePointStats.typeNumber,
         tags: [type],
       };
 
-      Stores.Settings.set(pathInStore, savePointData);
+      Stores.Games.set(pathInStore, savePointData);
 
       const labels = [game.name, type];
       // before_load - when game not opened
       if (options?.isBeforeLoad) labels.push("before_load");
 
-      const screenshotFileName = saveFileName.split(".")[0] + ".jpg";
+      const screenshotFileName = `${saveFileName.split(".")[0]}.jpg`;
       const screenshotFilePath = path.join(
         gameInfo.screenshotsPath,
         screenshotFileName
       );
       await screenshot({ filename: screenshotFilePath, format: "jpg" });
-      Stores.Settings.set(pathInStore + ".screenshot", screenshotFileName);
+      Stores.Games.set(`${pathInStore}.screenshot`, screenshotFileName);
     } else {
       throw new Error("Need support for many files");
     }
@@ -155,15 +137,21 @@ const save = async (
 
 const load = async (gameId: string, savePointId: string) => {
   try {
-    const game = Stores.Settings.store.games[gameId];
-    const savePoint = game.savePoints?.[savePointId];
+    const game = Stores.Games.store.games[gameId];
+    const gameSavePoints = Stores.Games.store.savePoints[gameId];
+    const savePoint = gameSavePoints?.[savePointId];
+    if (!game) throw new Error("Game not found");
     if (!savePoint) throw new Error("SavePoint not found");
 
     await save(game, "manualsave", { isBeforeLoad: true });
 
-    if (game.saves?.files.length === 1) {
-      const file = game.saves.files[0];
-      const savePath = path.join(game.saves.path, file);
+    if (game.saveFilesOrFolder?.[PLATFORM]?.files.length === 1) {
+      const file = game.saveFilesOrFolder?.[PLATFORM]?.files[0];
+      if (!file) throw new Error("Save file not found");
+      const savePath = path.join(
+        game.saveFilesOrFolder?.[PLATFORM]?.path,
+        file
+      );
 
       const { saveDataPath } = getSavePointPaths(game, savePoint);
 
@@ -183,7 +171,7 @@ const load = async (gameId: string, savePointId: string) => {
 
 const remove = async (gameId: string, savePointId: string) => {
   try {
-    const game = Stores.Settings.store.games[gameId];
+    const game = Stores.Games.store.games[gameId];
     const savePoint = game.savePoints?.[savePointId];
     if (!savePoint) throw new Error("SavePoint not found");
 
@@ -193,42 +181,32 @@ const remove = async (gameId: string, savePointId: string) => {
     FileSystem.removeFile(saveDataPath);
 
     // @ts-ignore
-    Stores.Settings.delete(`games.${gameId}.savePoints.${savePoint.id}`);
+    Stores.Games.delete(`games.${gameId}.savePoints.${savePoint.id}`);
   } catch (err) {
     console.error(err);
   }
 };
 
 const tryAutoSave = async () => {
-  Object.values(Stores.Settings.store.games).forEach(async (game) => {
-    const isRunning = await isGameRunning(game);
-    if (!isRunning) return;
+  console.log("Try autosave running games");
+  await Games.updateRunningGames();
 
-    save(game, "autosave");
-    console.log("Process running, game", game.exePath);
+  Object.values(Stores.Games.store.games).forEach((game) => {
+    if (game.isPlaingNow) {
+      save(game, "autosave");
+    }
   });
 };
 
-// const checkRunningGames = async () => {
-
-// }
-
 const saveRunningGames = async () => {
   console.log("Try save running games");
-
   await Games.updateRunningGames();
 
-  // Object.entries(Stores.Settings.store.games).map(async ([key, game]) => {
-  //   const isRunning = await isGameRunning(game);
-  //   if (isRunning) {
-  //     save(game, "manualsave");
-  //   }
-  // });
-
-  try {
-  } catch (err) {
-    console.error(err);
-  }
+  Object.values(Stores.Games.store.games).forEach((game) => {
+    if (game.isPlaingNow) {
+      save(game, "autosave");
+    }
+  });
 };
 
 const Saves = {

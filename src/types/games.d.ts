@@ -49,4 +49,26 @@ declare global {
 
     //
   };
+
+  // TODO: rename "manual" | "auto"
+  type TSavePointType = "manualsave" | "autosave";
+
+  type TSavePoint = {
+    id: string;
+
+    // generated
+    name: string;
+    date: string;
+
+    // should be folder not path
+    // saves can be file(s) or folder, use folder for every save
+    path: string;
+
+    type?: TSavePointType;
+    saveNumber?: number;
+    saveNumberByType?: number;
+
+    tags?: string[];
+    screenshot?: string;
+  };
 }

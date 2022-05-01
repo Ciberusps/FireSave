@@ -4,6 +4,8 @@ import { formatDistance } from "date-fns";
 import Link from "./Link";
 import Stats from "./Stats";
 import Image from "./Image";
+import Icon from "./Icon";
+import Tooltip from "./Tooltip";
 
 type TProps = {
   game: TGame;
@@ -18,9 +20,19 @@ const Game = (props: TProps) => {
   //   savePoints && new Date(savePoints[savePoints?.length - 1].date);
 
   return (
-    <Link to={`/games/${game.id}`}>
+    <Link
+      to={game.isValid ? `/games/${game.id}` : `/games/${game.id}/settings`}
+    >
       <Container className={className} isPlayingNow={game.isPlaingNow}>
         {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
+
+        {!game.isValid && (
+          <Tooltip text="Setup required">
+            <IsValidIcon>
+              <Icon size="small" icon="warning" color="black" />
+            </IsValidIcon>
+          </Tooltip>
+        )}
 
         <Img width="100%" height={215} src={game?.imageUrl} />
 
@@ -91,6 +103,19 @@ const RunningIcon = styled.div`
   position: absolute;
   top: 5px;
   right: 5px;
+`;
+
+const IsValidIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background: #e0bf00;
+  border-radius: 30px;
 `;
 
 export default Game;

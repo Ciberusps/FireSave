@@ -68,7 +68,9 @@ export const check = (props: any) => (
   </svg>
 );
 
-export const visuallyHidden = (props: any) => <svg viewBox="0 0 20 20" {...props} />;
+export const visuallyHidden = (props: any) => (
+  <svg viewBox="0 0 20 20" {...props} />
+);
 
 export const help = (props: any) => (
   <svg viewBox="0 0 24 24" {...props}>
@@ -84,6 +86,32 @@ export const leftArrow = (props: any) => (
     <path
       fill={props.fill}
       d="M21.6666 11.9166H8.48242l6.05588-6.05579-1.5384-1.5275L4.33325 13l8.66665 8.6666 1.5275-1.5275-6.04498-6.0558H21.6666v-2.1667z"
+    />
+  </svg>
+);
+
+export const warning = (props: any) => (
+  <svg
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M265.505 78.264c-4.207-7.382-14.803-7.382-19.01 0L50.172 422.804c-4.196 7.364 1.126 16.469 9.505 16.469h392.646c8.379 0 13.701-9.105 9.505-16.469L265.505 78.264Zm-54.313-20.192c19.808-34.763 69.808-34.763 89.616 0l196.323 344.54C516.765 437.069 491.975 480 452.323 480H59.677c-39.652 0-64.442-42.931-44.808-77.388l196.323-344.54Z"
+      fill={props.fill}
+    />
+    <path
+      d="M280.391 378.182c0 13.496-10.92 24.436-24.391 24.436-13.471 0-24.391-10.94-24.391-24.436s10.92-24.437 24.391-24.437c13.471 0 24.391 10.941 24.391 24.437Z"
+      fill={props.fill}
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M256 174.545c13.471 0 24.391 10.941 24.391 24.437v105.891c0 13.496-10.92 24.436-24.391 24.436-13.471 0-24.391-10.94-24.391-24.436V198.982c0-13.496 10.92-24.437 24.391-24.437Z"
+      fill={props.fill}
     />
   </svg>
 );

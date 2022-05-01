@@ -44,18 +44,3 @@ type TFolderOrFiles = TPlatformSpecific<{
 }>;
 
 type TPlatformSpecific<T> = Partial<{ [key in NodeJS.Platform]: T }>;
-
-// TODO: rename "manual" | "auto"
-type TSavePointType = "manualsave" | "autosave";
-
-type TSavePoint = {
-  id: string;
-  name: string;
-  date: string;
-  path: string;
-  type?: TSavePointType;
-  number?: number;
-  typeNumber?: number;
-  tags?: string[];
-  screenshot?: string;
-};
