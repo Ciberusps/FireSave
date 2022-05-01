@@ -1,10 +1,7 @@
-import isDev from "electron-is-dev";
-
 import Stores from "../stores";
 import Scheduler from "../utils/scheduler";
 import SteamworksSDK from "../utils/steamworksSDK";
 import ipcMain from "../utils/ipcMain";
-import { RESOURCES_PATH } from "../utils/config";
 import "./game";
 import "./saves";
 import "./fileSystem";
@@ -17,13 +14,6 @@ ipcMain.handle("getSettingsStore", async () => {
 });
 ipcMain.handle("getGamesStore", async () => {
   return Stores.Games.store;
-});
-
-ipcMain.handle("getConfig", async () => {
-  return {
-    RESOURCES_PATH,
-    IS_DEV: isDev,
-  };
 });
 
 ipcMain.handle("getQuota", async () => {

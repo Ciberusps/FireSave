@@ -12,7 +12,6 @@ import path from "path";
 
 import { app, nativeTheme, protocol } from "electron";
 import isDev from "electron-is-dev";
-import { findSteam } from "@ciberus/find-steam-app";
 
 import Stores from "./stores";
 import Scheduler from "./utils/scheduler";
@@ -21,7 +20,7 @@ import MainWindow from "./windows/mainWindow";
 import SteamworksSDK from "./utils/steamworksSDK";
 import Games from "./utils/games";
 import { getAssetPath } from "./utils";
-import { APP_VERSION } from "./utils/config";
+import { PLATFORM, RESOURCES_PATH, APP_VERSION } from "./utils/config";
 import "./handlers";
 
 const isDevelopment =
@@ -79,13 +78,18 @@ class Main {
     if (this.mainWindow === null) this.createWindow();
   }
 
-  onReady() {
+  async onReady() {
     SteamworksSDK.init();
 
     Stores.Settings.set("version", APP_VERSION);
     Stores.Settings.set("runtimeValues.isLoadingApp", true);
-
-    this.loadApp();
+    Stores.Settings.set("envs", {
+      PLATFORM,
+      RESOURCES_PATH,
+      IS_DEV: isDev,
+    });
+    await Games.fillSteamGames();
+    Stores.Settings.set("runtimeValues.isLoadingApp", false);
 
     protocol.registerFileProtocol("file", (request, callback) => {
       const pathname = request.url.replace("file:///", "");
@@ -95,23 +99,7 @@ class Main {
     Scheduler.start();
     nativeTheme.themeSource = "dark";
 
-    findSteam()
-      .then((steam) => console.log("steam here", steam))
-      .catch(() => {});
-
-    console.log("fajsdfkl", SteamworksSDK.getAppInstallDir());
-
     this.createWindow();
-  }
-
-  async loadApp() {
-    await this.detectSteamGames();
-
-    // Stores.Settings.set("runtimeValues.isLoadingApp", false);
-  }
-
-  async detectSteamGames() {
-    await Games.fillSteamGames();
   }
 
   onMainWindowClose() {

@@ -21,7 +21,6 @@ const storesApi: IPC.TStoresApi = {
 
 const api: IPC.TApi = {
   getQuota: async () => ipcRenderer.invoke("getQuota"),
-  getConfig: async () => ipcRenderer.invoke("getConfig"),
 
   test: async () => ipcRenderer.invoke("test"),
 

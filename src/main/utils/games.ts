@@ -179,8 +179,6 @@ const fillSteamGames = async () => {
         }
       }
     }
-
-    Stores.Settings.set("runtimeValues.isLoadingApp", false);
   } catch (err) {
     console.log(err);
   }

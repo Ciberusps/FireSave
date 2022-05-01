@@ -28,6 +28,11 @@ const settingsStore = new ElectronStore<TSettingsStore>({
     runtimeValues: {
       isLoadingApp: true,
     },
+    envs: {
+      IS_DEV: false,
+      PLATFORM: process.platform,
+      RESOURCES_PATH: "",
+    },
   },
 
   migrations: {

@@ -20,6 +20,12 @@ export const useSettingsStore = create<TSettingsStore>(() => ({
   runtimeValues: {
     isLoadingApp: true,
   },
+  // TODO: возможно все таки это плохая идея ENV'ы так долго грузить
+  envs: {
+    PLATFORM: "",
+    RESOURCES_PATH: "",
+    IS_DEV: false,
+  },
 }));
 
 export const useGamesStore = create<TGamesStore>(() => ({

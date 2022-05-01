@@ -2,11 +2,6 @@ import { OpenDialogOptions } from "electron";
 
 declare global {
   namespace IPC {
-    type TGetConfigRes = {
-      RESOURCES_PATH: string;
-      IS_DEV: boolean;
-    };
-
     type TGetQuotaRes = {
       totalMB: number;
       availableMB: number;
@@ -63,7 +58,6 @@ declare global {
     type TApi = TStoresApi &
       TGamesApi &
       TSavePointsApi & {
-        getConfig: () => Promise<TGetConfigRes>;
         getQuota: () => Promise<TGetQuotaRes>;
 
         test: () => void;

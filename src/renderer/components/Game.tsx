@@ -7,6 +7,8 @@ import Image from "./Image";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 
+import { useSettingsStore } from "../utils/stores";
+
 type TProps = {
   game: TGame;
   className?: string;
@@ -14,7 +16,9 @@ type TProps = {
 
 const Game = (props: TProps) => {
   const { game, className } = props;
+  const envs = useSettingsStore((state) => state.envs);
 
+  console.log({ envs });
   // const savePoints = game.savePoints && Object.values(game.savePoints);
   // const lastSaveDate =
   //   savePoints && new Date(savePoints[savePoints?.length - 1].date);
@@ -116,6 +120,7 @@ const IsValidIcon = styled.div`
   height: 30px;
   background: #e0bf00;
   border-radius: 30px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.75);
 `;
 
 export default Game;

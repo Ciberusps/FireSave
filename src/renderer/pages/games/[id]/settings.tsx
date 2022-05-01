@@ -10,25 +10,28 @@ import FileInput from "../../../components/FileInput";
 import FormBlock from "../../../components/FormBlock";
 
 import Toaster from "../../../utils/toaster";
-import { useSettingsStore } from "../../../utils/stores";
+import { useGamesStore, useSettingsStore } from "../../../utils/stores";
 
 type TGameForm = {
-  exePath: string;
+  // exePath: string;
   saves: string;
 };
 
 const GameSettingsPage = () => {
-  // const [settingsStore] = useGamesStore();
+  const games = useGamesStore((state) => state.games);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const isEditing = id !== "new";
-  const game = id && state?.games?.[id];
-  const name = game?.steamInfo?.name || game?.name;
+  const game = id ? games[id] : undefined;
 
   const defaultValues: TGameForm = {
-    exePath: JSON.stringify(game?.exePath || { path: undefined }),
-    saves: JSON.stringify(game?.saves || { path: undefined }),
+    // exePath: JSON.stringify(game?.exePath || { path: undefined }),
+    // TODO: перепридумать FileInput, должен ли он в таком же виде оставаться
+    // нужно ли platform брать из стора мб в config запихать
+    saves: JSON.stringify(
+      game?.saveFilesOrFolder?.[platform]?.path || { path: undefined }
+    ),
   };
 
   const { handleSubmit, control } = useForm<TGameForm>({
@@ -65,9 +68,11 @@ const GameSettingsPage = () => {
     }
   };
 
+  if (!game) return null;
+
   return (
     <Layout>
-      <Header>{isEditing ? name : "Add game"}</Header>
+      <Header>{isEditing ? game?.name : "Add game"}</Header>
 
       <FormBlock onSubmit={handleSubmit(onSubmit)}>
         {/* <Description>
@@ -76,7 +81,7 @@ const GameSettingsPage = () => {
           - search by game name on PCGamingWiki
           <br />- find "Save game data location"
         </Description> */}
-
+        {/*
         <FileInput
           control={control}
           name="exePath"
@@ -85,7 +90,7 @@ const GameSettingsPage = () => {
           properties={["openFile"]}
           filters={[{ name: "All Files", extensions: ["exe"] }]}
           // onClick={onChooseExe}
-        />
+        /> */}
 
         <FileInput
           control={control}
