@@ -17,9 +17,6 @@ export const DEFAULT_STORES_PATH = path.join(
   "FireSave_Data"
 );
 
-export const APP_VERSION =
-  NODE_ENV === "development"
-    ? process.env.npm_package_version
-    : app.getVersion();
+export const APP_VERSION = app.getVersion();
 
 export const PLATFORM = process.platform;
