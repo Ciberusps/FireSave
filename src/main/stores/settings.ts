@@ -2,12 +2,7 @@ import ElectronStore from "electron-store";
 
 import persistentStore from "./persistent";
 
-import { APP_VERSION } from "../utils/config";
-
 const settingsStore = new ElectronStore<TSettingsStore>({
-  // TODO: wait for pr https://github.com/sindresorhus/electron-store/pull/225
-  // @ts-ignore
-  projectVersion: APP_VERSION,
   // TODO: should be app folder, not %appdata%
   cwd: persistentStore.store.settingsStorePath,
   name: "settings",
