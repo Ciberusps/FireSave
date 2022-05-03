@@ -11,7 +11,7 @@ type TProps = {
   isDisabled?: boolean;
 };
 
-const ToggleInput = forwardRef<HTMLInputElement, TProps>((props, ref) => {
+const ToggleInput = (props: TProps, ref: any) => {
   const { name, label, description, isDisabled } = props;
   const theme = useContext(ThemeContext);
 
@@ -29,7 +29,9 @@ const ToggleInput = forwardRef<HTMLInputElement, TProps>((props, ref) => {
       </Label>
     </InputWrapper>
   );
-});
+};
+
+export default forwardRef<HTMLInputElement, TProps>(ToggleInput);
 
 const InputIcon = styled(Icon)`
   visibility: hidden;
@@ -73,5 +75,3 @@ const Input = styled.input`
 `;
 
 const Label = styled.label``;
-
-export default ToggleInput;

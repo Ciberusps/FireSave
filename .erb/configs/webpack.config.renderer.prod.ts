@@ -5,11 +5,10 @@
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
-import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import { merge } from "webpack-merge";
 import TerserPlugin from "terser-webpack-plugin";
+
 import baseConfig from "./webpack.config.base";
 import webpackPaths from "./webpack.paths";
 import checkNodeEnv from "../scripts/check-node-env";
@@ -45,27 +44,6 @@ const configuration: webpack.Configuration = {
 
   module: {
     rules: [
-      {
-        test: /\.s?(a|c)ss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: "css-loader",
-            options: {
-              modules: true,
-              sourceMap: true,
-              importLoaders: 1,
-            },
-          },
-          "sass-loader",
-        ],
-        include: /\.module\.s?(c|a)ss$/,
-      },
-      {
-        test: /\.s?(a|c)ss$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
-        exclude: /\.module\.s?(c|a)ss$/,
-      },
       // Fonts
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
@@ -85,7 +63,6 @@ const configuration: webpack.Configuration = {
       new TerserPlugin({
         parallel: true,
       }),
-      new CssMinimizerPlugin(),
     ],
   },
 
@@ -102,10 +79,6 @@ const configuration: webpack.Configuration = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: "production",
       DEBUG_PROD: false,
-    }),
-
-    new MiniCssExtractPlugin({
-      filename: "style.css",
     }),
 
     new BundleAnalyzerPlugin({
