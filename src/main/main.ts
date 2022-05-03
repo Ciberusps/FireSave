@@ -21,7 +21,7 @@ import { getAssetPath } from "./utils";
 import { PLATFORM, RESOURCES_PATH, APP_VERSION } from "./utils/config";
 import "./handlers";
 
-const isDevelopment =
+const isDebug =
   process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true";
 
 class Main {
@@ -59,7 +59,7 @@ class Main {
       sourceMapSupport.install();
     }
 
-    if (isDevelopment) {
+    if (isDebug) {
       require("electron-debug")();
     }
 
@@ -114,7 +114,7 @@ class Main {
   }
 
   async createWindow() {
-    if (isDevelopment) {
+    if (isDebug) {
       await Main.installExtensions();
     }
 
