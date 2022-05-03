@@ -1,4 +1,5 @@
 import { BrowserWindow, shell } from "electron";
+import isDev from "electron-is-dev";
 
 import Stores from "../../stores";
 import AppTray from "../../utils/tray";
@@ -59,7 +60,7 @@ class MainWindow extends BrowserWindow {
   }
 
   onClose(event: Electron.Event) {
-    if (!AppTray.getIsQuiting()) {
+    if (!AppTray.getIsQuiting() && !isDev) {
       event.preventDefault();
       this.hide();
     }
