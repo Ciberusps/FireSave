@@ -64,6 +64,16 @@ TODO:
 
 If u found game that doesn't work or malfunction u can open new [issue](https://github.com/Ciberusps/FireSave/issues)
 
+if you see stuff like this just `npm i` again
+
+```
+App threw an error during load
+Error: The module '\\?\F:\FireSave\release\app\node_modules\greenworks\lib\greenworks-win64.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 99. This version of Node.js requires
+NODE_MODULE_VERSION 103. Please try re-compiling or re-installing
+```
+
 ## Support
 
 You can boost up my motivation/development speed via DonationAlerts - https://www.donationalerts.com/r/ciberusps
@@ -101,4 +111,4 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 
 ## Based
 
-Based on Electron React Boilerplate - https://github.com/electron-react-boilerplate/electron-react-boilerplate
+Based on [Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate) - last commit [#cfd04f5](https://github.com/electron-react-boilerplate/electron-react-boilerplate/commit/cfd04f5375ea5b43ec1c735c078eaaa4fe8cc074)

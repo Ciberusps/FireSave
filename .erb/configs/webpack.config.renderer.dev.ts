@@ -1,10 +1,11 @@
+import "webpack-dev-server";
 import path from "path";
 import fs from "fs";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import chalk from "chalk";
 import { merge } from "webpack-merge";
-import { spawn, execSync } from "child_process";
+import { execSync, spawn } from "child_process";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import type { Configuration as DevServerConfiguration } from "webpack-dev-server";
 
