@@ -19,6 +19,7 @@ type TGameForm = {
 
 const GameSettingsPage = () => {
   const games = useGamesStore((state) => state.games);
+  const PLATFORM = useSettingsStore((state) => state.envs.PLATFORM);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
@@ -30,7 +31,7 @@ const GameSettingsPage = () => {
     // TODO: перепридумать FileInput, должен ли он в таком же виде оставаться
     // нужно ли platform брать из стора мб в config запихать
     saves: JSON.stringify(
-      game?.saveFilesOrFolder?.[platform]?.path || { path: undefined }
+      game?.saveFilesOrFolder?.[PLATFORM]?.path || { path: undefined }
     ),
   };
 

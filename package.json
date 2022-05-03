@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.3.19",
+  "version": "0.3.20",
   "description": "Saves manager",
   "main": "./src/main/main.ts",
   "scripts": {

@@ -43,9 +43,11 @@ type TGamesStore = {
   };
 };
 
-type TFolderOrFiles = TPlatformSpecific<{
+type TFolderOrFilesRaw = {
   path: string;
   files: string[];
-}>;
+};
+
+type TFolderOrFiles = TPlatformSpecific<TFolderOrFilesRaw>;
 
 type TPlatformSpecific<T> = Partial<{ [key in NodeJS.Platform]: T }>;

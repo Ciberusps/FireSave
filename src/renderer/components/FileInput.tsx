@@ -5,11 +5,6 @@ import { Controller, Control } from "react-hook-form";
 import Button from "./Button";
 import InputWrapper from "./InputWrapper";
 
-export type TFileInputValue = {
-  path: string;
-  files: string[];
-};
-
 type TProp = "openFile" | "openDirectory" | "multiSelections";
 
 type TProps = {
@@ -38,7 +33,7 @@ const FileInput = (props: TProps) => {
         name={name}
         control={control}
         render={({ onChange, onBlur, value, ref }) => {
-          const parsedValue: TFileInputValue | undefined = useMemo(
+          const parsedValue: TFolderOrFilesRaw | undefined = useMemo(
             () => (value ? JSON.parse(value) : undefined),
             [value]
           );
