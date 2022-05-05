@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.3.21",
+  "version": "0.3.22",
   "description": "Saves manager",
   "main": "./src/main/main.ts",
   "scripts": {
@@ -49,7 +49,8 @@
     "files": [
       "dist",
       "node_modules",
-      "package.json"
+      "package.json",
+      "!node_modules/greenworks/deps/**/*"
     ],
     "extraFiles": [
       "steam_appid.txt"
