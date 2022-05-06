@@ -9,7 +9,7 @@ type TProps = {
   min: number;
   max: number;
   description: string;
-  control: Control;
+  control: Control<any>;
   isDisabled?: boolean;
 };
 
@@ -17,25 +17,29 @@ const NumberInput = (props: TProps) => {
   const { control, label, name, min, max, description, isDisabled } = props;
 
   return (
-    <InputWrapper label={label} description={description} isDisabled={isDisabled}>
+    <InputWrapper
+      label={label}
+      description={description}
+      isDisabled={isDisabled}
+    >
       <Controller
         name={name}
         control={control}
-        render={({ onChange, onBlur, value, ref }) => (
+        render={({ field }) => (
           <Input
-            ref={ref}
+            ref={field.ref}
             type="number"
             min={min}
             max={max}
-            onBlur={onBlur}
+            onBlur={field.onBlur}
             onChange={(e) => {
               e.preventDefault();
               let newVal = Number(e.target.value.slice(0, 2));
               if (newVal <= 0) newVal = 1;
               e.target.value = String(newVal);
-              onChange(newVal);
+              field.onChange(newVal);
             }}
-            value={value}
+            value={field.value}
           />
         )}
       />

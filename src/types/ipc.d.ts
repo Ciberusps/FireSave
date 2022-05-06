@@ -24,7 +24,7 @@ declare global {
     };
 
     type TGetStore<T> = () => Promise<T>;
-    type TChangeStore<T> = (newStore: T) => Promise<boolean>;
+    type TChangeStore<T> = (newStore: Partial<T>) => Promise<boolean>;
     type TOnUpdateStore<T> = (
       event: (event: Electron.IpcRendererEvent, newStore: T) => void
     ) => void;

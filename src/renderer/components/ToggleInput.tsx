@@ -12,7 +12,7 @@ type TProps = {
 };
 
 const ToggleInput = (props: TProps, ref: any) => {
-  const { name, label, description, isDisabled } = props;
+  const { name, label, description, isDisabled, ...restProps } = props;
   const theme = useContext(ThemeContext);
 
   return (
@@ -22,7 +22,7 @@ const ToggleInput = (props: TProps, ref: any) => {
       isDisabled={isDisabled}
     >
       <Label>
-        <Input ref={ref} name={name} type="checkbox" />
+        <Input ref={ref} name={name} type="checkbox" {...restProps} />
         <FakeInput isDisabled={isDisabled}>
           <InputIcon icon="check" size="small" color={theme.purple} />
         </FakeInput>

@@ -1,46 +1,31 @@
-import { useContext } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 
 import Link from "../components/Link";
 import Button from "../components/Button";
 import Layout from "../components/Layout";
-import FileInput from "../components/FileInput";
 import FormBlock from "../components/FormBlock";
 import ToggleInput from "../components/ToggleInput";
 import NumberInput from "../components/NumberInput";
-import { usePersistentStore, useSettingsStore } from "../utils/stores";
+import { useSettingsStore } from "../utils/stores";
 
 type TSettingsForm = {
   isAutoSaveOn: boolean;
   autoSaveMinutes: number;
-  settingsStorePath: string;
 };
 
 const SettingsPage = () => {
-  // const { settingsStore, persistentStore } = useContext(GlobalContext);
   const settingsStore = useSettingsStore();
-  const persistentStore = usePersistentStore();
-
-  const defaultValues: TSettingsForm = {
-    isAutoSaveOn: settingsStore?.isAutoSaveOn,
-    autoSaveMinutes: settingsStore?.autoSaveMinutes,
-    settingsStorePath: JSON.stringify({
-      path: persistentStore?.settingsStorePath,
-    }),
-  };
 
   const { register, handleSubmit, control } = useForm<TSettingsForm>({
-    defaultValues,
+    defaultValues: {
+      isAutoSaveOn: settingsStore.isAutoSaveOn,
+      autoSaveMinutes: settingsStore.autoSaveMinutes,
+    },
   });
 
   const onSubmit = (data: TSettingsForm) => {
-    const { settingsStorePath, ...restData } = data;
-    const parsedSettingsStorePath = JSON.parse(settingsStorePath).path;
-    window.electron.changeSettings(restData);
-    window.electron.changePersistentStore({
-      settingsStorePath: parsedSettingsStorePath,
-    });
+    window.electron.changeSettings(data);
   };
 
   if (!settingsStore) return null;
@@ -51,10 +36,9 @@ const SettingsPage = () => {
 
       <MainSettingsBlock onSubmit={handleSubmit(onSubmit)}>
         <ToggleInput
-          ref={register}
-          name="isAutoSaveOn"
           label="Autosaves"
           description="Makes autosaves when game runned"
+          {...register("isAutoSaveOn")}
         />
 
         <NumberInput
@@ -64,15 +48,6 @@ const SettingsPage = () => {
           name="autoSaveMinutes"
           label="Autosaves interval"
           description="Interval in minutes between autosaves"
-        />
-
-        <FileInput
-          control={control}
-          name="settingsStorePath"
-          label="Store folder"
-          description="CANNOT BE CHANGED(for now). Folder for saves, screenshots and config."
-          properties={["openDirectory"]}
-          isDisabled
         />
 
         <CtaButtons>
