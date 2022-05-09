@@ -1,47 +1,51 @@
 import { ipcRenderer, contextBridge } from "electron";
 
+const defaultInvokeFunction = (key: keyof IPC.TApi) => {
+  return async (...args: any) => ipcRenderer.invoke(key, ...args);
+};
+
+const defaultOnFunction = (key: keyof IPC.TApi) => {
+  // @ts-ignore
+  return (...args: any) => ipcRenderer.on(key, ...args);
+};
+
 const storesApi: IPC.TStoresApi = {
-  getPersistentStore: async () => ipcRenderer.invoke("getPersistentStore"),
-  changePersistentStore: async (...args) =>
-    ipcRenderer.invoke("changePersistentStore", ...args),
-  onPersistentStoreUpdate: (...args) =>
-    ipcRenderer.on("onPersistentStoreUpdate", ...args),
+  getPersistentStore: defaultInvokeFunction("getPersistentStore"),
+  changePersistentStore: defaultInvokeFunction("changePersistentStore"),
+  onPersistentStoreUpdate: defaultOnFunction("onPersistentStoreUpdate"),
 
-  getSettingsStore: async () => ipcRenderer.invoke("getSettingsStore"),
-  changeSettings: (...args) => ipcRenderer.invoke("changeSettings", ...args),
-  onSettingsStoreUpdate: (...args) =>
-    ipcRenderer.on("onSettingsStoreUpdate", ...args),
+  getSettingsStore: defaultInvokeFunction("getSettingsStore"),
+  changeSettings: defaultInvokeFunction("changeSettings"),
+  onSettingsStoreUpdate: defaultOnFunction("onSettingsStoreUpdate"),
 
-  getGamesStore: async () => ipcRenderer.invoke("getGamesStore"),
-  changeGamesStore: (...args) =>
-    ipcRenderer.invoke("changeGamesStore", ...args),
-  onGamesStoreUpdate: (...args) =>
-    ipcRenderer.on("onGamesStoreUpdate", ...args),
+  getGamesStore: defaultInvokeFunction("getGamesStore"),
+  changeGamesStore: defaultInvokeFunction("changeGamesStore"),
+  onGamesStoreUpdate: defaultOnFunction("onGamesStoreUpdate"),
+};
+
+const gamesApi: IPC.TGamesApi = {
+  createGame: defaultInvokeFunction("createGame"),
+  editGame: defaultInvokeFunction("editGame"),
+  removeGame: defaultInvokeFunction("removeGame"),
+};
+
+const savePontsApi: IPC.TSavesApi = {
+  saveGame: defaultInvokeFunction("saveGame"),
+  loadSavePoint: defaultInvokeFunction("loadSavePoint"),
+  removeSavePoint: defaultInvokeFunction("removeSavePoint"),
 };
 
 const api: IPC.TApi = {
-  getQuota: async () => ipcRenderer.invoke("getQuota"),
-
-  test: async () => ipcRenderer.invoke("test"),
-
-  revealInFileExplorer: async (val) =>
-    ipcRenderer.invoke("revealInFileExplorer", val),
-
-  saveGame: async (val) => ipcRenderer.invoke("saveGame", val),
-  loadSavePoint: async (...args) =>
-    ipcRenderer.invoke("loadSavePoint", ...args),
-  removeSavePoint: async (...args) =>
-    ipcRenderer.invoke("removeSavePoint", ...args),
-
-  createGame: (...args) => ipcRenderer.invoke("createGame", ...args),
-  editGame: (...args) => ipcRenderer.invoke("editGame", ...args),
-  removeGame: (...args) => ipcRenderer.invoke("removeGame", ...args),
-
-  analyticsPageView: async (...args) =>
-    ipcRenderer.invoke("analyticsPageView", ...args),
-  openDialog: async (...args) => ipcRenderer.invoke("openDialog", ...args),
+  getQuota: defaultInvokeFunction("getQuota"),
+  test: defaultInvokeFunction("test"),
+  getGlobby: defaultInvokeFunction("getGlobby"),
+  revealInFileExplorer: defaultInvokeFunction("revealInFileExplorer"),
+  analyticsPageView: defaultInvokeFunction("analyticsPageView"),
+  openDialog: defaultInvokeFunction("openDialog"),
 
   ...storesApi,
+  ...gamesApi,
+  ...savePontsApi,
 };
 
 contextBridge.exposeInMainWorld("electron", api);

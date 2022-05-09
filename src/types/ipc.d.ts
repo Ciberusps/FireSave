@@ -7,11 +7,6 @@ declare global {
       availableMB: number;
     };
 
-    type TOpenDialogRes = {
-      path: string;
-      files: string[] | null;
-    } | null;
-
     type TCreateGamePayload = {
       gamePath: TFolderOrFiles;
       saveFilesOrFolder: TFolderOrFiles;
@@ -21,6 +16,12 @@ declare global {
       game: TGame;
       exePath: TFolderOrFiles;
       saves: TFolderOrFiles;
+    };
+
+    type TGetGlobbyOptions = {
+      path: string;
+      includeList: string[];
+      excludeList: string[];
     };
 
     type TGetStore<T> = () => Promise<T>;
@@ -49,7 +50,7 @@ declare global {
       removeGame: (id: string) => Promise<boolean>;
     };
 
-    type TSavePointsApi = {
+    type TSavesApi = {
       saveGame: (gameId: string) => Promise<void>;
       loadSavePoint: (gameId: string, savePointId: string) => Promise<boolean>;
       removeSavePoint: (gameId: string, savePointId: string) => Promise<void>;
@@ -57,15 +58,24 @@ declare global {
 
     type TApi = TStoresApi &
       TGamesApi &
-      TSavePointsApi & {
+      TSavesApi & {
         getQuota: () => Promise<TGetQuotaRes>;
 
         test: () => void;
 
+        getGlobby: (options: TGetGlobbyOptions) => Promise<any>;
+
         revealInFileExplorer: (val: string) => Promise<void>;
 
         analyticsPageView: (url: string) => Promise<void>;
-        openDialog: (options: OpenDialogOptions) => Promise<TOpenDialogRes>;
+        openDialog: (
+          options: OpenDialogOptions
+        ) => Promise<TFolderOrFilesRaw | null>;
       };
+
+    type THandler<T extends keyof IPC.TApi = keyof IPC.TApi> = (
+      event: Electron.IpcMainInvokeEvent,
+      ...args: Parameters<IPC.TApi[T]>
+    ) => ReturnType<IPC.TApi[T]>;
   }
 }

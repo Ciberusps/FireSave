@@ -2,7 +2,6 @@ import { findSteam, ISteamApp } from "@ciberus/find-steam-app";
 import { nanoid } from "nanoid";
 
 import SteamAPI from "./steamAPI";
-import ipcMain from "./ipcMain";
 import Processes from "./processes";
 
 import Stores from "../stores";
@@ -90,7 +89,7 @@ const createSteamGame = async (
   const id = generateUniqGameId();
   if (!id) {
     // TODO: error handling
-    ipcMain.emit("error", "Cant generate game id");
+    // ipcMain.emit("error", "Cant generate game id");
     return;
   }
 

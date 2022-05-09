@@ -1,41 +1,67 @@
+import { ipcMain } from "electron";
+import globby from "globby";
+
+import SavesHandlers, { TSavesHandlers } from "./saves";
+import GamesHandlers, { TGamesHandlers } from "./game";
+import FileSystemHandlers, { TFileSystemHandlers } from "./fileSystem";
+
 import Stores from "../stores";
 import Scheduler from "../utils/scheduler";
-import SteamworksSDK from "../utils/steamworksSDK";
-import ipcMain from "../utils/ipcMain";
-import "./game";
-import "./saves";
-import "./fileSystem";
 
-ipcMain.handle("getPersistentStore", async () => {
-  return Stores.Persistent.store;
-});
-ipcMain.handle("getSettingsStore", async () => {
-  return Stores.Settings.store;
-});
-ipcMain.handle("getGamesStore", async () => {
-  return Stores.Games.store;
-});
+type TCommonHandlers = {
+  getPersistentStore: IPC.THandler<"getPersistentStore">;
+  getSettingsStore: IPC.THandler<"getSettingsStore">;
+  getGamesStore: IPC.THandler<"getGamesStore">;
+  test: IPC.THandler<"test">;
 
-ipcMain.handle("getQuota", async () => {
-  const cloudQuota = await SteamworksSDK.getCloudQuota();
-  return {
-    totalMB: cloudQuota.totalBytes / 1000 / 1000,
-    availableMB: cloudQuota.availableBytes / 1000 / 1000,
-    test: 323,
-    fqvwef: "fqvwef",
-  };
-});
+  changeSettings: IPC.THandler<"changeSettings">;
+  changePersistentStore: IPC.THandler<"changePersistentStore">;
+  getGlobby: IPC.THandler<"getGlobby">;
+};
 
-ipcMain.handle("changeSettings", async (_, newSettings) => {
-  Stores.Settings.set("isAutoSaveOn", newSettings.isAutoSaveOn);
-  Stores.Settings.set("autoSaveMinutes", newSettings.autoSaveMinutes);
-  Scheduler.start();
-  return true;
-});
+const commonHandlers: TCommonHandlers = {
+  getPersistentStore: async () => Stores.Persistent.store,
+  getSettingsStore: async () => Stores.Settings.store,
+  getGamesStore: async () => Stores.Games.store,
+  //
+  test: async () => {},
+  changeSettings: async (_, newSettings) => {
+    Stores.Settings.set("isAutoSaveOn", newSettings.isAutoSaveOn);
+    Stores.Settings.set("autoSaveMinutes", newSettings.autoSaveMinutes);
+    Scheduler.start();
+    return true;
+  },
+  changePersistentStore: async (_, newSettings) => {
+    Stores.Persistent.set("settingsStorePath", newSettings.settingsStorePath);
+    return true;
+  },
+  getGlobby: async (_, { path, includeList, excludeList }) => {
+    console.log({ path, includeList, excludeList });
+    return globby(
+      [...includeList, ...excludeList.map((exclude) => `!${exclude}`)],
+      {
+        cwd: path,
+        // onlyFiles: false,
+        markDirectories: true,
+        // objectMode: true
+      }
+    );
+  },
+};
 
-ipcMain.handle("changePersistentStore", async (_, newSettings) => {
-  Stores.Persistent.set("settingsStorePath", newSettings.settingsStorePath);
-  return true;
-});
+type THandlersList = TCommonHandlers &
+  TSavesHandlers &
+  TGamesHandlers &
+  TFileSystemHandlers;
 
-ipcMain.handle("test", async () => {});
+const handlers: THandlersList = {
+  ...SavesHandlers,
+  ...GamesHandlers,
+  ...FileSystemHandlers,
+  ...commonHandlers,
+};
+
+Object.entries(handlers).forEach(([eventName, handler]) => {
+  // @ts-ignore
+  ipcMain.handle(eventName, handler);
+});
