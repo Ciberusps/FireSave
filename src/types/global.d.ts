@@ -25,7 +25,7 @@ type TSettingsStore = {
     isLoadingApp: boolean;
   };
   envs: {
-    PLATFORM: string;
+    PLATFORM: NodeJS.Platform;
     RESOURCES_PATH: string;
     IS_DEV: boolean;
   };

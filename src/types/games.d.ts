@@ -47,11 +47,17 @@ declare global {
     // путь до сейва игра, может быть папкой или набором файлов
     saveFilesOrFolder?: TFolderOrFiles;
 
-    //
+    savesConfig?: TPlatformSpecific<TSavesConfig>;
   };
 
-  // TODO: rename "manual" | "auto"
-  type TSavePointType = "manualsave" | "autosave";
+  type TSavesConfig = {
+    saveFolder: TFolderOrFiles; // only folder
+    saveFullFolder: boolean; // includeAllFilesInFolder: boolean;
+    includeList: string[]; // files or file types
+    excludeList: string[];
+  };
+
+  type TSavePointType = "manual" | "auto";
 
   type TSavePoint = {
     id: string;

@@ -142,7 +142,7 @@ const Container = styled.button<TContainer>`
   ${({ disabled }) =>
     disabled &&
     css`
-      background: ${({ theme }) => theme.white};
+      opacity: 0.5;
       color: ${({ theme }) => theme.white};
       cursor: not-allowed;
 

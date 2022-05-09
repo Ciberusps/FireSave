@@ -52,7 +52,7 @@ const countSavePointStats = (
   const statsPath = `games.${game.id}.savesStats`;
   const curStats = game.savesStats;
   Stores.Games.set(`${statsPath}.total`, curStats.total + 1);
-  if (type === "manualsave") {
+  if (type === "manual") {
     typeNumber = curStats.manual + 1;
     Stores.Games.set(`${statsPath}.manual`, typeNumber);
   } else {
@@ -143,7 +143,7 @@ const load = async (gameId: string, savePointId: string) => {
     if (!game) throw new Error("Game not found");
     if (!savePoint) throw new Error("SavePoint not found");
 
-    await save(game, "manualsave", { isBeforeLoad: true });
+    await save(game, "manual", { isBeforeLoad: true });
 
     if (game.saveFilesOrFolder?.[PLATFORM]?.files.length === 1) {
       const file = game.saveFilesOrFolder?.[PLATFORM]?.files[0];
@@ -193,7 +193,7 @@ const tryAutoSave = async () => {
 
   Object.values(Stores.Games.store.games).forEach((game) => {
     if (game.isPlaingNow) {
-      save(game, "autosave");
+      save(game, "auto");
     }
   });
 };
@@ -204,7 +204,7 @@ const saveRunningGames = async () => {
 
   Object.values(Stores.Games.store.games).forEach((game) => {
     if (game.isPlaingNow) {
-      save(game, "autosave");
+      save(game, "auto");
     }
   });
 };

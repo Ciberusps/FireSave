@@ -1,27 +1,34 @@
-import { useMemo } from "react";
+import { useCallback } from "react";
 import styled from "styled-components";
-import { Controller, Control } from "react-hook-form";
+import { Controller, Control, FieldValues, FieldPath } from "react-hook-form";
 
 import Button from "./Button";
 import InputWrapper from "./InputWrapper";
+import RevealInFileExplorerButton from "./RevealInFileExplorerButton";
+
+type TTransform = {
+  input: (value: TFolderOrFilesRaw) => string;
+};
 
 type TProp = "openFile" | "openDirectory" | "multiSelections";
 
-type TProps = {
-  control: Control;
+type TProps<T> = {
+  control: Control<T>;
   label: string;
-  name: string;
+  name: FieldPath<T>;
   description: string | React.ReactNode;
   properties: TProp[];
   filters?: { name: string; extensions: string[] }[];
   isDisabled?: boolean;
 };
 
-const FileInput = (props: TProps) => {
+const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
   const { control, properties, filters, label, name, description, isDisabled } =
     props;
 
-  // return null;
+  const transform: TTransform = {
+    input: (value) => JSON.stringify(value),
+  };
 
   return (
     <InputWrapper
@@ -32,56 +39,47 @@ const FileInput = (props: TProps) => {
       <Controller
         name={name}
         control={control}
-        render={({ onChange, onBlur, value, ref }) => {
-          const parsedValue: TFolderOrFilesRaw | undefined = useMemo(
-            () => (value ? JSON.parse(value) : undefined),
-            [value]
-          );
+        render={({ field }) => {
+          const onChooseClick = useCallback(async () => {
+            const newVal = await window.electron.openDialog({
+              properties,
+              filters,
+              defaultPath: field.value?.path,
+            });
+            if (newVal) {
+              console.log(newVal);
+              field.onChange(newVal);
+            } else {
+              //TODO: error
+            }
+          }, []);
 
           return (
             <>
               <Top>
-                <Path>{parsedValue?.path ? parsedValue.path : "..."}</Path>
+                <Path>{field.value?.path || "..."}</Path>
 
-                <Button
-                  size="small"
-                  onClick={async () => {
-                    const newVal = await window.electron.openDialog({
-                      properties,
-                      filters,
-                      defaultPath: parsedValue?.path,
-                    });
-                    if (newVal) {
-                      console.log(newVal);
-                      onChange(JSON.stringify(newVal));
-                    } else {
-                      //TODO: error
-                    }
-                  }}
-                >
+                <Button size="small" onClick={onChooseClick}>
                   Choose
                 </Button>
 
-                <Button
-                  icon="openInNew"
-                  size="small"
-                  title="Reveal in expolorer"
-                  onClick={() => window.electron.revealInFileExplorer(value)}
+                <RevealInFileExplorerButton
+                  path={field.value?.path}
+                  isDisabled={!field.value?.path}
                 />
 
                 <Input
-                  ref={ref}
-                  type="string"
-                  onBlur={onBlur}
-                  value={value}
-                  onChange={onChange}
+                  ref={field.ref}
+                  type="text"
+                  onBlur={field.onBlur}
+                  value={transform.input(field.value)}
                 />
               </Top>
 
-              {parsedValue?.files && (
+              {field.value?.files && (
                 <Files>
                   <FilesHeader>Files:</FilesHeader>
-                  {parsedValue.files.map((file) => (
+                  {field.value?.files.map((file) => (
                     <File key={file}>{file}</File>
                   ))}
                 </Files>
@@ -153,4 +151,4 @@ const File = styled.div`
   font-size: 14px;
 `;
 
-export default FileInput;
+export default FolderOrFilesInput;

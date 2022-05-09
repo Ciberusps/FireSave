@@ -1,9 +1,12 @@
 import { createGlobalStyle } from "styled-components";
+// @ts-ignore
+import checkBoxStyles from "react-checkbox-tree/lib/react-checkbox-tree.css";
 
 import Fonts from "../utils/fonts";
 
 const GlobalStyles = createGlobalStyle`
   ${Fonts}
+  ${checkBoxStyles}
 
   body * {
     box-sizing: border-box;
@@ -84,6 +87,16 @@ const GlobalStyles = createGlobalStyle`
   .Toastify__toast.Toastify__toast--warning {
     background: ${({ theme }) => theme.feedback.warning};
     border-color: ${({ theme }) => theme.feedback.warning};
+  }
+
+  .rct-node-icon * {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .rct-text {
+    height: 2.25rem;
+    font-size: 18px;
   }
 `;
 
