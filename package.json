@@ -25,7 +25,8 @@
     "steamworks-sdk:download": "node ./scripts/steamworksSdkDownload.js",
     "steamworks-sdk:zip": "rm -rf steamworks_sdk.zip && node ./scripts/steamworksSdkZip.js",
     "steamworks-sdk:unzip": "node ./scripts/steamworksSdkUnZip.js",
-    "docs:scrap-greenworks": "node ./scripts/scrapGreensworksDocs.js"
+    "docs:scrap-greenworks": "node ./scripts/scrapGreensworksDocs.js",
+    "check:steam-licenses": "npx license-checker > steam-licenses.json --exclude MIT,ISC,Apache-2.0,BSD-3-Clause,WTFPL,CC-BY-4.0,0BSD,Python-2.0,Zlib,BSD-2-Clause,Unlicense"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
