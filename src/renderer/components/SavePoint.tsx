@@ -1,11 +1,12 @@
-import React from "react";
 import styled from "styled-components";
 import { format, formatDistance } from "date-fns";
 
 import Text from "./Text";
 import Image from "./Image";
 import Button from "./Button";
+
 import Toaster from "../utils/toaster";
+import { joinAndNormalize } from "../utils/common";
 
 const height = 170;
 const maxImgWidth = (height * 16) / 9;
@@ -40,12 +41,13 @@ const SavePoint = (props: TProps) => {
     format(date, "dd.MM.yyyy, HH:mm") + " - " + distance + " ago";
   const screenshotPath =
     savePoint?.screenshotFileName &&
-    "file://" +
-      gamePath +
-      "/" +
-      "screenshots" +
-      "/" +
-      savePoint?.screenshotFileName;
+    joinAndNormalize(
+      "file://",
+      gamePath + `__${game.id}`,
+      savePoint.folderName,
+      "__screenshots",
+      savePoint?.screenshotFileName
+    );
 
   return (
     <Container className={className}>
@@ -54,7 +56,7 @@ const SavePoint = (props: TProps) => {
         <Description>
           <Name title={savePoint.id}>{name}</Name>
           <Type>
-            {savePoint?.type === "manualsave" ? "Manual save" : "Autosave"}{" "}
+            {savePoint?.type === "manual" ? "Manual save" : "Autosave"}{" "}
             {savePoint.saveNumberByType && " - " + savePoint.saveNumberByType}
           </Type>
         </Description>

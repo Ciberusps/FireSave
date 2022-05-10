@@ -121,7 +121,7 @@ const makeSave = async (
       saveNumberByType: savePointStats.typeNumber,
       tags,
     };
-    Stores.Games.set(`savePoints.${newSaveId}`, savePointData);
+    Stores.Games.set(`savePoints.${gameId}.${newSaveId}`, savePointData);
 
     const screenshotFolderPath = joinAndNormalize(
       newSaveFolder,
@@ -138,7 +138,7 @@ const makeSave = async (
     await screenshot({ filename: screenshotFilePath, format: "jpg" });
 
     Stores.Games.set(
-      `savePoints.${newSaveId}.screenshotFileName`,
+      `savePoints.${gameId}.${newSaveId}.screenshotFileName`,
       screenshotFileName
     );
   } catch (err) {
