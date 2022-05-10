@@ -22,7 +22,7 @@ export const useSettingsStore = create<TSettingsStore>(() => ({
   },
   // TODO: возможно все таки это плохая идея ENV'ы так долго грузить
   envs: {
-    PLATFORM: "",
+    PLATFORM: "win32",
     RESOURCES_PATH: "",
     IS_DEV: false,
   },

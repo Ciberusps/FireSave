@@ -47,11 +47,15 @@ declare global {
     savesConfig?: TPlatformSpecific<TSaveConfig>;
   };
 
+  type TSaveConfigType = "simple" | "advanced";
+
   type TSaveConfig = {
+    type: TSaveConfigType;
     saveFolder: TFolderOrFilesRaw; // only folder
     saveFullFolder: boolean; // includeAllFilesInFolder: boolean;
     includeList: string[]; // files or file types
     excludeList: string[];
+    source?: "pcGamingWiki";
   };
 
   type TSavePointType = "manual" | "auto";

@@ -31,12 +31,13 @@ const ListInput = (props: TProps) => {
           ? "Necessary only if 'Save full folder' turned off"
           : !list?.length && "No files"}
 
-        {list?.map((file) => (
-          <Item key={file}>
-            <RemoveButton icon={faClose} onClick={onClickRemove([file])} />
-            {file}
-          </Item>
-        ))}
+        {!showIncludesNotRequired &&
+          list?.map((file) => (
+            <Item key={file}>
+              <RemoveButton icon={faClose} onClick={onClickRemove([file])} />
+              {file}
+            </Item>
+          ))}
       </List>
 
       <input style={{ display: "none" }} type="text" {...inputProps} />

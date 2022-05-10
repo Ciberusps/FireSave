@@ -1,10 +1,10 @@
-import { forwardRef, useContext } from "react";
+import { forwardRef, InputHTMLAttributes, useContext } from "react";
 import styled, { ThemeContext } from "styled-components";
 
 import Icon from "./Icon";
 import InputWrapper from "./InputWrapper";
 
-type TProps = {
+type TProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string;
   label: string;
   description: string;
