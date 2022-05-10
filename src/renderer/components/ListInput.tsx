@@ -4,15 +4,17 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type TProps = {
-  title: string;
-  isDisabled: boolean;
+  type: "include" | "exclude";
   inputProps: any;
   list: string[];
+  saveFullFolder: boolean;
   onClickRemove: (key: string) => void;
 };
 
 const ListInput = (props: TProps) => {
-  const { title, inputProps, list, onClickRemove } = props;
+  const { type, inputProps, list, saveFullFolder, onClickRemove } = props;
+
+  const showIncludesNotRequired = type === "include" && saveFullFolder;
 
   const _onClickRemove = useCallback(
     (key: string) => () => onClickRemove(key),
@@ -21,10 +23,14 @@ const ListInput = (props: TProps) => {
 
   return (
     <Content>
-      <h3>{title}</h3>
+      <h3>{type === "include" ? "Include list" : "Exclude list"}</h3>
 
       <List>
-        {!list?.length && "No files"}
+        {showIncludesNotRequired ? (
+          <div>Include list only required if "Save full folder" turned off</div>
+        ) : (
+          !list?.length && "No files"
+        )}
         {list?.map((file) => (
           <Item key={file}>
             <RemoveButton icon={faClose} onClick={_onClickRemove(file)} />

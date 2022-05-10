@@ -37,12 +37,9 @@ import ActivityIndicator from "renderer/components/ActivityIndicator";
 import Toaster from "../../../utils/toaster";
 import { useGamesStore, useSettingsStore } from "../../../utils/stores";
 import { globToNodes, TNode } from "renderer/utils/globTree";
+import IncludeExcludeActions from "renderer/components/IncludeExcludeActions";
 
 const folderColor = "#ffd970";
-
-type TTransform = {
-  input: (value: TFolderOrFilesRaw) => string;
-};
 
 type TGameForm = {
   // exePath: string;
@@ -65,7 +62,7 @@ const GameSettingsPage = () => {
   const [isLoadingFolderContent, setIsLoadingFolderContent] = useState(false);
 
   const [resultContentTree, setResultContentTree] = useState<TNode[]>([]);
-  const [resultCheckedNodes, setResultCheckedNodes] = useState<string[]>([]);
+  // const [resultCheckedNodes, setResultCheckedNodes] = useState<string[]>([]);
   const [resultExpandedNodes, setResultExpandedNodes] = useState<string[]>([]);
   const [isLoadingResultContent, setIsLoadingResultContent] = useState(false);
 
@@ -185,15 +182,15 @@ const GameSettingsPage = () => {
     setIsLoadingResultContent,
   ]);
 
-  const onClickInclude = () => {
-    const newList = [...new Set([...folderCheckedNodes, ...includeListWatch])];
+  const onClickInclude = (keys: string[]) => () => {
+    const newList = [...new Set([...keys, ...includeListWatch])];
     setValue("saveConfig.includeList", newList);
     setFolderCheckedNodes([]);
   };
 
-  const onClickExclude = () => {
+  const onClickExclude = (keys: string[]) => () => {
     console.log({ folderCheckedNodes });
-    const newList = [...new Set([...folderCheckedNodes, ...excludeListWatch])];
+    const newList = [...new Set([...keys, ...excludeListWatch])];
     setValue("saveConfig.excludeList", newList);
     setFolderCheckedNodes([]);
   };
@@ -264,15 +261,15 @@ const GameSettingsPage = () => {
 
   if (!game) return null;
 
-  console.log({
-    // saveFolderWatch,
-    // saveFullFolderWatch,
-    // includeListWatch,
-    // excludeListWatch,
-    // saveConfigSaveFolder,
-    // checked: folderCheckedNodes,
-    // expanded: folderExpandedNodes,
-  });
+  // console.log({
+  //   // saveFolderWatch,
+  //   // saveFullFolderWatch,
+  //   // includeListWatch,
+  //   // excludeListWatch,
+  //   // saveConfigSaveFolder,
+  //   // checked: folderCheckedNodes,
+  //   // expanded: folderExpandedNodes,
+  // });
 
   return (
     <Layout>
@@ -362,8 +359,10 @@ const GameSettingsPage = () => {
                   expanded={folderExpandedNodes}
                   checkModel="all"
                   // noCascade={false}
+                  expandOnClick={true}
                   noCascade={true}
                   showExpandAll={true}
+                  onClick={() => {}}
                   onCheck={setFolderCheckedNodes}
                   onExpand={setFolderExpandedNodes}
                 />
@@ -380,11 +379,11 @@ const GameSettingsPage = () => {
                 <CheckboxTree
                   nodes={resultContentTree}
                   icons={icons}
-                  checked={resultCheckedNodes}
+                  // checked={resultCheckedNodes}
                   expanded={resultExpandedNodes}
                   disabled={true}
                   showExpandAll={true}
-                  onCheck={setResultCheckedNodes}
+                  // onCheck={setResultCheckedNodes}
                   onExpand={setResultExpandedNodes}
                 />
               )}
@@ -392,25 +391,25 @@ const GameSettingsPage = () => {
           </TreesContainer>
         )}
 
-        <div style={{ display: "flex" }}>
-          {!saveFullFolderWatch && (
-            <Button onClick={onClickInclude}>include</Button>
-          )}
-          <Button onClick={onClickExclude}>exclude</Button>
-        </div>
+        <IncludeExcludeActions
+          checkedNodes={folderCheckedNodes}
+          saveFullFolder={saveFullFolderWatch}
+          onClickInclude={onClickInclude}
+          onClickExclude={onClickExclude}
+        />
 
         <Lists>
           <ListInput
-            title="Include list"
-            isDisabled={false}
+            type="include"
+            saveFullFolder={saveFullFolderWatch}
             list={includeListWatch}
             inputProps={register("saveConfig.includeList")}
             onClickRemove={onClickRemoveInclude}
           />
 
           <ListInput
-            title="Exclude list"
-            isDisabled={false}
+            type="exclude"
+            saveFullFolder={saveFullFolderWatch}
             list={excludeListWatch}
             inputProps={register("saveConfig.excludeList")}
             onClickRemove={onClickRemoveExclude}
@@ -450,41 +449,22 @@ const CtaButtons = styled.div`
   }
 `;
 
-const CheckboxTreeStyled = styled.div`
-  background: rgba(0, 0, 0, 0.25);
-  padding: 25px;
-  border-radius: 10px;
-`;
-
 const TreesContainer = styled.div`
   display: flex;
   margin: -10px;
+`;
 
-  > * {
-    flex: 1;
-    margin: 10px;
-  }
+const CheckboxTreeStyled = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.25);
+  margin: 10px;
+  padding: 25px;
+  border-radius: 10px;
 `;
 
 const Lists = styled.div`
   display: flex;
   margin: -10px;
-`;
-
-const ListContent = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin: 10px;
-`;
-
-const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  background: rgba(0, 0, 0, 0.25);
-  padding: 10px;
-
-  > * {
-    margin-bottom: 10px;
-  }
 `;

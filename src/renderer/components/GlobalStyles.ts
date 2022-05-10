@@ -98,6 +98,10 @@ const GlobalStyles = createGlobalStyle`
     height: 2.25rem;
     font-size: 18px;
   }
+
+  &::selection {
+    background: ${({ theme }) => theme.purple};
+  }
 `;
 
 export default GlobalStyles;

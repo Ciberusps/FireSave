@@ -31,7 +31,7 @@ const globToTree = (globs: string[]): any => {
 
 const globToNodeRecursive = (tree: any, glob: string): void => {
   const parts = glob.split("/");
-  console.log({ parts, glob });
+  // console.log({ parts, glob });
 
   let part = parts[0];
   let current = tree;
@@ -78,7 +78,7 @@ const globToNodeRecursive = (tree: any, glob: string): void => {
 const globToNodes = (globs: string[]): TNode[] => {
   const tree: TNode[] = [];
 
-  console.log({ globs });
+  // console.log({ globs });
   for (const glob of globs) {
     globToNodeRecursive(tree, glob);
   }
