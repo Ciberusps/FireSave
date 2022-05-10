@@ -16,12 +16,7 @@ const GameHeader = (props: TProps) => {
   const imgSrc = game.imageUrl;
 
   const onSave = async () => {
-    const newExePath = await window.electron.saveGame(game.id);
-    // TODO: handle error
-    if (newExePath) {
-      console.log("Game Saved", newExePath);
-      //   setExePath(newExePath);
-    }
+    await window.electron.makeSave(game.id);
   };
 
   return (

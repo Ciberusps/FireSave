@@ -203,6 +203,7 @@ const GameSettingsPage = () => {
       }
 
       window.electron.editGame(game.id, {
+        isValid: true,
         savesConfig: { [PLATFORM]: data.saveConfig },
       });
     } catch (err) {

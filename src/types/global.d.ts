@@ -38,7 +38,7 @@ type TGamesStore = {
 
   savePoints: {
     [gameId: string]: {
-      [savePointId: string]: TSavePoint;
+      [savePointId: string]: TSave;
     };
   };
 };

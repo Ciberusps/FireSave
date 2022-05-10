@@ -217,9 +217,11 @@
     "react-lazyload": "^3.2.0",
     "react-router-dom": "^6.2.1",
     "react-toastify": "^8.1.1",
+    "recursive-copy": "^2.0.14",
     "screenshot-desktop": "^1.12.7",
     "simple-vdf": "^1.1.1",
     "styled-components": "^5.3.3",
+    "upath": "^2.0.1",
     "zustand": "^3.7.2"
   },
   "engines": {

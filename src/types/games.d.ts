@@ -58,24 +58,23 @@ declare global {
     source?: "pcGamingWiki";
   };
 
-  type TSavePointType = "manual" | "auto";
+  type TSaveType = "manual" | "auto";
 
-  type TSavePoint = {
+  type TSave = {
     id: string;
 
     // generated
     name: string;
     date: string;
 
-    // should be folder not path
-    // saves can be file(s) or folder, use folder for every save
-    path: string;
+    folderName: string;
 
-    type?: TSavePointType;
-    saveNumber?: number;
-    saveNumberByType?: number;
+    type: TSaveType;
+    saveNumber: number;
+    saveNumberByType: number;
 
-    tags?: string[];
-    screenshot?: string;
+    tags: string[];
+
+    screenshotFileName?: string;
   };
 }

@@ -1,25 +1,24 @@
 import SteamworksSDK from "../utils/steamworksSDK";
 
 import Saves from "../utils/saves";
-import Stores from "../stores";
 
 type TSavesHandlers = {
-  saveGame: IPC.THandler<"saveGame">;
-  loadSavePoint: IPC.THandler<"loadSavePoint">;
-  removeSavePoint: IPC.THandler<"removeSavePoint">;
+  makeSave: IPC.THandler<"makeSave">;
+  loadSave: IPC.THandler<"loadSave">;
+  removeSave: IPC.THandler<"removeSave">;
   getQuota: IPC.THandler<"getQuota">;
 };
 
 const SavesHandlers: TSavesHandlers = {
-  saveGame: async (_, gameId) => {
+  makeSave: async (_, gameId) => {
     // TODO: dont create screenshot if game not runned
-    Saves.save(Stores.Games.store.games[gameId], "manual");
+    Saves.makeSave(gameId, "manual");
   },
-  loadSavePoint: async (_, gameId, savePointId) => {
-    return Saves.load(gameId, savePointId);
+  loadSave: async (_, gameId, savePointId) => {
+    return Saves.loadSave(gameId, savePointId);
   },
-  removeSavePoint: async (_, gameId, savePointId) => {
-    Saves.remove(gameId, savePointId);
+  removeSave: async (_, gameId, savePointId) => {
+    Saves.removeSave(gameId, savePointId);
   },
   getQuota: async () => {
     const cloudQuota = await SteamworksSDK.getCloudQuota();

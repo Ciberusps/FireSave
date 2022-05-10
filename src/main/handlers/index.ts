@@ -1,5 +1,4 @@
 import { ipcMain } from "electron";
-import globby from "globby";
 
 import SavesHandlers, { TSavesHandlers } from "./saves";
 import GamesHandlers, { TGamesHandlers } from "./game";
@@ -7,6 +6,7 @@ import FileSystemHandlers, { TFileSystemHandlers } from "./fileSystem";
 
 import Stores from "../stores";
 import Scheduler from "../utils/scheduler";
+import { getGlobby } from "../utils";
 
 type TCommonHandlers = {
   getPersistentStore: IPC.THandler<"getPersistentStore">;
@@ -35,18 +35,7 @@ const commonHandlers: TCommonHandlers = {
     Stores.Persistent.set("settingsStorePath", newSettings.settingsStorePath);
     return true;
   },
-  getGlobby: async (_, { path, includeList, excludeList }) => {
-    console.log({ path, includeList, excludeList });
-    return globby(
-      [...includeList, ...excludeList.map((exclude) => `!${exclude}`)],
-      {
-        cwd: path,
-        // onlyFiles: false,
-        markDirectories: true,
-        // objectMode: true
-      }
-    );
-  },
+  getGlobby: async (_, options) => getGlobby(options),
 };
 
 type THandlersList = TCommonHandlers &

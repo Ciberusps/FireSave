@@ -1,7 +1,11 @@
 import { dialog, shell } from "electron";
 
 import FileSystem from "../utils/fileSystem";
-import { getFileNameWithExtension, getFilePath } from "../utils";
+import {
+  getFileNameWithExtension,
+  getFilePath,
+  joinAndNormalize,
+} from "../utils";
 
 type TFileSystemHandlers = {
   openDialog: IPC.THandler<"openDialog">;
@@ -14,7 +18,7 @@ const FileSystemHandlers: TFileSystemHandlers = {
     const filesOrDirs = dialog.showOpenDialogSync(options);
     if (!filesOrDirs) return null;
     console.log(filesOrDirs);
-    const fileOrDir = filesOrDirs[0];
+    const fileOrDir = joinAndNormalize(filesOrDirs[0]);
     const isDirectory = FileSystem.isDir(fileOrDir);
     const path = isDirectory ? fileOrDir : getFilePath(fileOrDir);
     const files = isDirectory

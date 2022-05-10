@@ -18,6 +18,7 @@ declare global {
       path: string;
       includeList: string[];
       excludeList: string[];
+      isAbsolutePaths?: boolean;
     };
 
     type TGetStore<T> = () => Promise<T>;
@@ -47,9 +48,9 @@ declare global {
     };
 
     type TSavesApi = {
-      saveGame: (gameId: string) => Promise<void>;
-      loadSavePoint: (gameId: string, savePointId: string) => Promise<boolean>;
-      removeSavePoint: (gameId: string, savePointId: string) => Promise<void>;
+      makeSave: (gameId: string) => Promise<void>;
+      loadSave: (gameId: string, saveId: string) => Promise<boolean>;
+      removeSave: (gameId: string, saveId: string) => Promise<void>;
     };
 
     type TApi = TStoresApi &

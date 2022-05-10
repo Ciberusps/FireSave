@@ -1,6 +1,6 @@
-import fs from "fs";
 import path from "path";
 import faker from "@faker-js/faker";
+import copy from "recursive-copy";
 // screenshot-desktop dont work without asarUnpack
 // @ts-ignore
 import screenshot from "screenshot-desktop";
@@ -11,43 +11,37 @@ import Stores from "../stores";
 import FileSystem from "./fileSystem";
 import Games from "./games";
 import { PLATFORM } from "./config";
+import { getGlobby, joinAndNormalize } from ".";
+
+const SCREENSHOTS_FOLDER_NAME = "__screenshots";
 
 // TODO: should throw error
-const getFileNameForNextSave = (file: string): string => {
-  if (file.includes(".")) {
-    const res = file.split(".");
-    res[0] = `${res[0]}_${format(new Date(), "____HH-mm-ss__dd_MM_yyyy")}`;
+const getFolderNameForNextSave = (folderName: string): string => {
+  if (folderName.includes(".")) {
+    const res = folderName.split(".");
+    res[0] = `${res[0]}_${format(new Date(), "__HH-mm-ss__dd_MM_yyyy")}`;
     return res.join(".");
   }
   console.log("ERROR ");
   return "";
 };
 
-type TGetGameInfoRes = {
-  savePointsPath: string;
-  screenshotsPath: string;
-};
-const getGameInfo = (game: TGame): TGetGameInfoRes => {
-  const savePointsPath = path.join(
+const getOrCreateSavesFolder = (game: TGame): string => {
+  const savesFolderPath = `${joinAndNormalize(
     Stores.Persistent.store.settingsStorePath,
-    game.savePointsFolderName
-  );
-  const screenshotsPath = path.join(savePointsPath, "screenshots");
+    `${game.savePointsFolderName}__${game.id}`
+  )}`;
 
-  FileSystem.createDir(savePointsPath);
-  FileSystem.createDir(screenshotsPath);
+  FileSystem.createDir(savesFolderPath);
 
-  return { savePointsPath, screenshotsPath };
+  return savesFolderPath;
 };
 
 type TCountStatsRes = {
   number: number;
   typeNumber: number;
 };
-const countSavePointStats = (
-  game: TGame,
-  type: TSavePointType
-): TCountStatsRes => {
+const countSavePointStats = (game: TGame, type: TSaveType): TCountStatsRes => {
   let typeNumber = 0;
   const statsPath = `games.${game.id}.savesStats`;
   const curStats = game.savesStats;
@@ -63,79 +57,98 @@ const countSavePointStats = (
   return { number: curStats.total, typeNumber };
 };
 
-const getSavePointPaths = (game: TGame, savePoint: TSavePoint) => {
-  const gameInfo = getGameInfo(game);
+const getSavePointPaths = (game: TGame, savePoint: TSave) => {
+  const gameInfo = getOrCreateSavesFolder(game);
   const screenshotPath =
-    savePoint.screenshot &&
-    path.join(gameInfo.screenshotsPath, savePoint.screenshot);
-  const saveDataPath = path.join(gameInfo.savePointsPath, savePoint.path);
+    savePoint.screenshotFileName &&
+    path.join(gameInfo.screenshotsFolderPath, savePoint.screenshotFileName);
+  const saveDataPath = path.join(gameInfo.savesFolderPath, savePoint.path);
   return { screenshotPath, saveDataPath };
 };
 
-const save = async (
-  game: TGame,
-  type: TSavePointType,
+const makeSave = async (
+  gameId: string,
+  type: TSaveType,
+  // TODO: rename isBeforeLoad
   options?: { isBeforeLoad: boolean }
 ) => {
   try {
-    const gameInfo = getGameInfo(game);
+    const game = Stores.Games.store.games?.[gameId];
+    const savesFolder = getOrCreateSavesFolder(game);
+    if (!game) throw new Error("Game not found");
+    if (!game.isValid) throw new Error("Game is not valid");
 
     // TODO: game.save -> game.fileOrFolderForSave
-    if (game.saveFilesOrFolder?.[PLATFORM]?.files.length === 1) {
-      const file = game.saveFilesOrFolder?.[PLATFORM]?.files[0];
-      const savePath = path.join(
-        game.saveFilesOrFolder?.[PLATFORM]?.path,
-        file
-      );
-      const saveFileName = getFileNameForNextSave(file);
-      const saveFileRelativePath = path.join(
-        gameInfo.savePointsPath,
-        getFileNameForNextSave(file)
-      );
+    const savesConfig = game.savesConfig?.[PLATFORM];
+    if (!savesConfig) throw new Error("Saves config not found");
 
-      if (!savePath) return;
+    const saveConfigFolderPath = savesConfig.saveFolder.path;
+    if (!saveConfigFolderPath) throw new Error("Save config folder not found");
 
-      fs.copyFileSync(savePath, saveFileRelativePath);
+    const newSaveId = nanoid();
+    const newSaveFolderName = joinAndNormalize(
+      newSaveId + format(new Date(), "__HH-mm-ss__dd_MM_yyyy")
+    );
+    const newSaveFolder = joinAndNormalize(savesFolder, newSaveFolderName);
+    // FileSystem.createDir(newSaveFolder);
+    console.log({
+      gameFolders: savesFolder,
+      // filesToSave,
+      newSaveFolder,
+    });
 
-      const savePointId = nanoid();
-      const pathInStore = `games.${game.id}.savePoints.${savePointId}`;
+    await copy(saveConfigFolderPath, newSaveFolder, {
+      filter: [
+        ...(savesConfig.saveFullFolder ? ["**/*"] : []),
+        ...savesConfig.includeList,
+        ...savesConfig.excludeList.map((exclude) => `!${exclude}`),
+      ],
+    });
 
-      const savePointStats = countSavePointStats(game, type);
+    const savePointStats = countSavePointStats(game, type);
 
-      const savePointData: TSavePoint = {
-        id: savePointId,
-        name: faker.random.words(2),
-        date: new Date().toISOString(),
-        path: saveFileName,
-        type,
-        saveNumber: savePointStats.number,
-        saveNumberByType: savePointStats.typeNumber,
-        tags: [type],
-      };
+    const tags: string[] = [type];
+    // before_load - when game not opened
+    if (options?.isBeforeLoad) tags.push("before_load");
 
-      Stores.Games.set(pathInStore, savePointData);
+    const savePointData: TSave = {
+      id: newSaveId,
+      name: faker.random.words(2),
+      date: new Date().toISOString(),
+      folderName: newSaveFolderName,
+      type,
+      saveNumber: savePointStats.number,
+      saveNumberByType: savePointStats.typeNumber,
+      tags,
+    };
+    Stores.Games.set(`savePoints.${newSaveId}`, savePointData);
 
-      const labels = [game.name, type];
-      // before_load - when game not opened
-      if (options?.isBeforeLoad) labels.push("before_load");
+    const screenshotFolderPath = joinAndNormalize(
+      newSaveFolder,
+      SCREENSHOTS_FOLDER_NAME
+    );
+    const screenshotFileName = `screenshot.jpg`;
+    const screenshotFilePath = joinAndNormalize(
+      screenshotFolderPath,
+      screenshotFileName
+    );
+    FileSystem.createDir(screenshotFolderPath);
 
-      const screenshotFileName = `${saveFileName.split(".")[0]}.jpg`;
-      const screenshotFilePath = path.join(
-        gameInfo.screenshotsPath,
-        screenshotFileName
-      );
-      await screenshot({ filename: screenshotFilePath, format: "jpg" });
-      Stores.Games.set(`${pathInStore}.screenshot`, screenshotFileName);
-    } else {
-      throw new Error("Need support for many files");
-    }
+    console.log({ screenshotFolderPath, screenshotFilePath });
+    await screenshot({ filename: screenshotFilePath, format: "jpg" });
+
+    Stores.Games.set(
+      `savePoints.${newSaveId}.screenshotFileName`,
+      screenshotFileName
+    );
   } catch (err) {
     // TODO: send logs
     console.error(err);
   }
 };
 
-const load = async (gameId: string, savePointId: string) => {
+const loadSave = async (gameId: string, savePointId: string) => {
+  // TODO: copy save without `!${SCREENSHOTS_FOLDER_NAME}`
   try {
     const game = Stores.Games.store.games[gameId];
     const gameSavePoints = Stores.Games.store.savePoints[gameId];
@@ -143,7 +156,7 @@ const load = async (gameId: string, savePointId: string) => {
     if (!game) throw new Error("Game not found");
     if (!savePoint) throw new Error("SavePoint not found");
 
-    await save(game, "manual", { isBeforeLoad: true });
+    await makeSave(game, "manual", { isBeforeLoad: true });
 
     if (game.saveFilesOrFolder?.[PLATFORM]?.files.length === 1) {
       const file = game.saveFilesOrFolder?.[PLATFORM]?.files[0];
@@ -169,7 +182,7 @@ const load = async (gameId: string, savePointId: string) => {
   }
 };
 
-const remove = async (gameId: string, savePointId: string) => {
+const removeSave = async (gameId: string, savePointId: string) => {
   try {
     const game = Stores.Games.store.games[gameId];
     const savePoint = game.savePoints?.[savePointId];
@@ -193,7 +206,7 @@ const tryAutoSave = async () => {
 
   Object.values(Stores.Games.store.games).forEach((game) => {
     if (game.isPlaingNow) {
-      save(game, "auto");
+      makeSave(game, "auto");
     }
   });
 };
@@ -204,16 +217,16 @@ const saveRunningGames = async () => {
 
   Object.values(Stores.Games.store.games).forEach((game) => {
     if (game.isPlaingNow) {
-      save(game, "auto");
+      makeSave(game, "auto");
     }
   });
 };
 
 const Saves = {
   tryAutoSave,
-  save,
-  load,
-  remove,
+  makeSave,
+  loadSave,
+  removeSave,
   saveRunningGames,
 };
 
