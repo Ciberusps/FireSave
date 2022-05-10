@@ -73,10 +73,11 @@ const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
                   type="text"
                   onBlur={field.onBlur}
                   value={transform.input(field.value)}
+                  onChange={() => {}}
                 />
               </Top>
 
-              {field.value?.files && (
+              {field.value?.files?.length > 0 && (
                 <Files>
                   <FilesHeader>Files:</FilesHeader>
                   {field.value?.files.map((file) => (

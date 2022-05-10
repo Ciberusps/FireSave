@@ -26,96 +26,126 @@ const IncludeExcludeActions = (props: TProps) => {
       includeButtons: [],
       excludeButtons: [],
     };
-    const parsedFiles = checkedNodes.map((key) => parsePath(key));
-    console.log({ parsedFiles });
-    if (!parsedFiles.length) return result;
 
     result.excludeButtons.push(
-      <ButtonStyled size="small" onClick={onClickExclude(checkedNodes)}>
+      <ButtonStyled onClick={onClickExclude(checkedNodes)}>
         {/* Exclude file(s)/folder(s) */}
         {/* Exclude only files/folders */}
-        Exclude
+        Exclude file/folder
       </ButtonStyled>
     );
-    result.excludeButtons.push(<div>or</div>);
-
     if (!saveFullFolder) {
       result.includeButtons.push(
-        <ButtonStyled size="small" onClick={onClickInclude(checkedNodes)}>
-          Include
+        <ButtonStyled onClick={onClickInclude(checkedNodes)}>
+          Include file/folder
         </ButtonStyled>
       );
-      result.includeButtons.push(<div>or</div>);
     }
 
+    const parsedFiles = checkedNodes.map((key) => parsePath(key));
+    // console.log({ parsedFiles });
+    if (!parsedFiles.length) return result;
+
     const filesWithExt = parsedFiles.filter((p) => !!p.ext);
-    if (filesWithExt.length > 0) {
-      const groupedByDir = groupBy(filesWithExt, "dir");
-      Object.keys(groupedByDir).forEach((dir) => {
-        const files = groupedByDir[dir];
-        const groupedByExtension = groupBy(files, "ext");
-        Object.entries(groupedByExtension).forEach(([, val]) => {
-          const dirName = val[0].dir ? val[0].dir + "/" : "";
-          const fileExt = val[0].ext ?? "";
-          const excludeFolderKey = `${dirName}*${fileExt}`;
-          const excludeAllKey = `${dirName}**/*${fileExt}`;
-          console.log({ excludeKey: excludeFolderKey });
+    if (!filesWithExt.length) return result;
 
-          const excludeFolderText = (
-            <>
-              <ExcludePath>*{fileExt}</ExcludePath> in{" "}
-              <ExcludePath>{dirName}</ExcludePath>
-            </>
-          );
+    const groupedByDir = groupBy(filesWithExt, "dir");
 
-          const excludeAllText = (
-            <>
-              Exclude <ExcludePath>*{fileExt}</ExcludePath> in{" "}
-              <ExcludePath>{dirName}</ExcludePath>
-              <span>and all folders below</span>
-            </>
-          );
+    const OrTextEl = <OrText>or use pattern</OrText>;
 
-          result.excludeButtons.push(
+    result.excludeButtons.push(OrTextEl);
+    !saveFullFolder && result.includeButtons.push(OrTextEl);
+
+    Object.keys(groupedByDir).forEach((dir) => {
+      const files = groupedByDir[dir];
+      const groupedByExtension = groupBy(files, "ext");
+      Object.entries(groupedByExtension).forEach(([, val]) => {
+        const dirName = val[0].dir ? val[0].dir + "/" : "";
+        const fileExt = val[0].ext ?? "";
+        const dirNameText = dirName.length ? dirName : "/";
+
+        const onlyInFolderKey = `${dirName}*${fileExt}`;
+        const inFolderAndAllFoldersBelowKey = `${dirName}**/*${fileExt}`;
+        const allByFileTypeKey = `**/*${fileExt}`;
+
+        const excludeFolderText = (
+          <>
+            <TextHighlight>*{fileExt}</TextHighlight> in{" "}
+            <TextHighlight>{dirNameText}</TextHighlight>
+          </>
+        );
+        const excludeAllText = (
+          <>
+            <TextHighlight>*{fileExt}</TextHighlight> in{" "}
+            <TextHighlight>{dirNameText}</TextHighlight>
+            <span>and all folders below</span>
+          </>
+        );
+        const excludeAllByFileTypeText = (
+          <>
+            <TextHighlight> *{fileExt}</TextHighlight>
+            <span>everywhere</span>
+          </>
+        );
+
+        result.excludeButtons.push(
+          <div key={result.excludeButtons.length}>
             <ButtonStyled
               size="small"
-              onClick={onClickExclude([excludeFolderKey])}
+              title={`Exclude '${onlyInFolderKey}'`}
+              onClick={onClickExclude([onlyInFolderKey])}
             >
               Exclude {excludeFolderText}
             </ButtonStyled>
-          );
-          result.excludeButtons.push(
             <ButtonStyled
               size="small"
-              onClick={onClickExclude([excludeAllKey])}
+              title={`Exclude '${inFolderAndAllFoldersBelowKey}'`}
+              onClick={onClickExclude([inFolderAndAllFoldersBelowKey])}
             >
               Exclude {excludeAllText}
             </ButtonStyled>
-          );
+            <ButtonStyled
+              size="small"
+              title={`Exclude '${allByFileTypeKey}'`}
+              onClick={onClickExclude([allByFileTypeKey])}
+            >
+              Exclude {excludeAllByFileTypeText}
+            </ButtonStyled>
+          </div>
+        );
 
-          if (!saveFullFolder) {
-            result.includeButtons.push(
+        if (!saveFullFolder) {
+          result.includeButtons.push(
+            <div key={result.includeButtons.length}>
               <ButtonStyled
                 size="small"
-                onClick={onClickExclude([excludeFolderKey])}
+                title={`Include '${onlyInFolderKey}'`}
+                onClick={onClickInclude([onlyInFolderKey])}
               >
                 Include {excludeFolderText}
               </ButtonStyled>
-            );
-            result.includeButtons.push(
+
               <ButtonStyled
                 size="small"
-                onClick={onClickExclude([excludeAllKey])}
+                title={`Include '${inFolderAndAllFoldersBelowKey}'`}
+                onClick={onClickInclude([inFolderAndAllFoldersBelowKey])}
               >
                 Include {excludeAllText}
               </ButtonStyled>
-            );
-          }
-        });
-      });
 
-      console.log({ groupedByDir });
-    }
+              <ButtonStyled
+                size="small"
+                title={`Include '${allByFileTypeKey}'`}
+                onClick={onClickInclude([allByFileTypeKey])}
+              >
+                Include {excludeAllByFileTypeText}
+              </ButtonStyled>
+            </div>
+          );
+        }
+      });
+    });
+
     return result;
   }, [checkedNodes, saveFullFolder]);
 
@@ -124,10 +154,15 @@ const IncludeExcludeActions = (props: TProps) => {
   }
 
   return (
-    <Container>
-      <Buttons>{includeButtons.map((button) => button)}</Buttons>
-      <Buttons>{excludeButtons.map((button) => button)}</Buttons>
-    </Container>
+    <>
+      {Boolean(includeButtons.length) && (
+        <Buttons>{includeButtons.map((button) => button)}</Buttons>
+      )}
+
+      {Boolean(excludeButtons.length) && (
+        <Buttons>{excludeButtons.map((button) => button)}</Buttons>
+      )}
+    </>
   );
 };
 
@@ -153,12 +188,12 @@ const Buttons = styled.div`
 `;
 
 const ButtonStyled = styled(Button)`
-  margin: 10px;
+  margin: 5px;
   margin-top: 5px;
   margin-bottom: 5px;
 `;
 
-const ExcludePath = styled.span`
+const TextHighlight = styled.span`
   background: rgba(0, 0, 0, 0.3);
   padding: 4px;
   margin-left: 6px;
@@ -169,4 +204,9 @@ const ExcludePath = styled.span`
   // fontSize: 12,
   // paddingRight: 6,
   // paddingLeft: 6,
+`;
+
+const OrText = styled.div`
+  margin-right: 15px;
+  margin-left: 15px;
 `;

@@ -8,8 +8,8 @@ import {
   faFile,
   faFolder,
   faFolderOpen,
-  //   faMinusSquare,
-  //   faPlusSquare,
+  faMinusSquare,
+  faPlusSquare,
   //   faSquare,
 } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -19,8 +19,8 @@ import {
   // faFile,
   // faFolder,
   // faFolderOpen,
-  faMinusSquare,
-  faPlusSquare,
+  // faMinusSquare,
+  // faPlusSquare,
   faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import CheckboxTree from "react-checkbox-tree";
@@ -31,24 +31,27 @@ import Button from "../../../components/Button";
 import FormBlock from "../../../components/FormBlock";
 import ListInput from "renderer/components/ListInput";
 import ToggleInput from "renderer/components/ToggleInput";
+import LoadingBlock from "renderer/components/LoadingBlock";
 import FolderOrFilesInput from "../../../components/FolderOrFilesInput";
-import ActivityIndicator from "renderer/components/ActivityIndicator";
+import IncludeExcludeActions from "renderer/components/IncludeExcludeActions";
 
 import Toaster from "../../../utils/toaster";
-import { useGamesStore, useSettingsStore } from "../../../utils/stores";
 import { globToNodes, TNode } from "renderer/utils/globTree";
-import IncludeExcludeActions from "renderer/components/IncludeExcludeActions";
+import { useGamesStore, useSettingsStore } from "../../../utils/stores";
 
 const folderColor = "#ffd970";
 
 type TGameForm = {
   // exePath: string;
   // saves: string;
-  saveConfig: TSavesConfig & {
+  saveConfig: TSaveConfig & {
     saveFolder: TFolderOrFilesRaw;
   };
 };
 
+// TODO: globby size
+// TODO: prefill from pcGamingWiki
+// TODO: simple/custom config
 const GameSettingsPage = () => {
   const games = useGamesStore((state) => state.games);
   const PLATFORM = useSettingsStore((state) => state.envs.PLATFORM);
@@ -62,8 +65,6 @@ const GameSettingsPage = () => {
   const [isLoadingFolderContent, setIsLoadingFolderContent] = useState(false);
 
   const [resultContentTree, setResultContentTree] = useState<TNode[]>([]);
-  // const [resultCheckedNodes, setResultCheckedNodes] = useState<string[]>([]);
-  const [resultExpandedNodes, setResultExpandedNodes] = useState<string[]>([]);
   const [isLoadingResultContent, setIsLoadingResultContent] = useState(false);
 
   const isEditing = id !== "new";
@@ -71,7 +72,7 @@ const GameSettingsPage = () => {
 
   const icons = useMemo(
     () => ({
-      check: <FontAwesomeIcon icon={faCheckSquare} />,
+      check: <FontAwesomeIcon icon={faCheckSquare} color={theme.purple} />,
       uncheck: <FontAwesomeIcon icon={faSquare} />,
       halfCheck: <FontAwesomeIcon icon={faCheckSquare} />,
       expandClose: <FontAwesomeIcon icon={faChevronRight} />,
@@ -90,7 +91,8 @@ const GameSettingsPage = () => {
       defaultValues: {
         saveConfig: {
           saveFolder: {
-            path: "C:\\Users\\Ciber\\AppData\\LocalLow\\Team Cherry\\Hollow Knight",
+            // path: "C:\\Users\\Ciber\\AppData\\LocalLow\\Team Cherry\\Hollow Knight",
+            path: "",
           },
           saveFullFolder: true,
           includeList: [],
@@ -110,44 +112,9 @@ const GameSettingsPage = () => {
   const saveFullFolderWatch = watch("saveConfig.saveFullFolder", true);
   const includeListWatch = watch("saveConfig.includeList", []);
   const excludeListWatch = watch("saveConfig.excludeList", []);
-  // "saveConfig.includeList",
-  // "saveConfig.excludeList",
-
-  const getContentTree = useCallback(
-    async (
-      path: string,
-      includeList: string[] = [],
-      excludeList: string[] = [],
-      setLoading: (loading: boolean) => void
-    ): Promise<TNode[] | undefined> => {
-      try {
-        setLoading(true);
-        let globbyRes = await window.electron.getGlobby({
-          path,
-          includeList,
-          excludeList,
-        });
-        // console.log({ globbyRes });
-        const newTree = globToNodes(globbyRes);
-        // console.log({ newTree });
-        return newTree;
-      } catch (err) {
-        console.error(err);
-        // @ts-ignore
-        Toaster.add({ intent: "error", message: err });
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
 
   const updateFormValues = useCallback(async () => {
     const path = saveFolderWatch?.path;
-    const saveFullFolder = saveFullFolderWatch;
-    const includeList = includeListWatch;
-    const excludeList = excludeListWatch;
-
     if (!path) return;
 
     const newFolderContentTree = await getContentTree(
@@ -163,8 +130,8 @@ const GameSettingsPage = () => {
 
     const newResultContentTree = await getContentTree(
       path,
-      [...(saveFullFolder ? ["**/*"] : []), ...includeList],
-      excludeList,
+      [...(saveFullFolderWatch ? ["**/*"] : []), ...includeListWatch],
+      excludeListWatch,
       setIsLoadingResultContent
     );
     console.log({ newResultContentTree });
@@ -182,32 +149,42 @@ const GameSettingsPage = () => {
     setIsLoadingResultContent,
   ]);
 
-  const onClickInclude = (keys: string[]) => () => {
-    const newList = [...new Set([...keys, ...includeListWatch])];
-    setValue("saveConfig.includeList", newList);
-    setFolderCheckedNodes([]);
-  };
+  const onClickInclude = useCallback(
+    (keys: string[]) => () => {
+      const newList = [...new Set([...keys, ...includeListWatch])];
+      setValue("saveConfig.includeList", newList);
+      setFolderCheckedNodes([]);
+    },
+    [includeListWatch, setValue, setFolderCheckedNodes]
+  );
+  const onClickExclude = useCallback(
+    (keys: string[]) => () => {
+      // console.log({ folderCheckedNodes });
+      const newList = [...new Set([...keys, ...excludeListWatch])];
+      setValue("saveConfig.excludeList", newList);
+      setFolderCheckedNodes([]);
+    },
+    [excludeListWatch, setValue, setFolderCheckedNodes]
+  );
 
-  const onClickExclude = (keys: string[]) => () => {
-    console.log({ folderCheckedNodes });
-    const newList = [...new Set([...keys, ...excludeListWatch])];
-    setValue("saveConfig.excludeList", newList);
-    setFolderCheckedNodes([]);
-  };
-
-  const onClickRemoveInclude = (key: string) => {
-    const newList = [
-      ...new Set([...includeListWatch.filter((k) => k !== key)]),
-    ];
-    setValue("saveConfig.includeList", newList);
-  };
-
-  const onClickRemoveExclude = (key: string) => {
-    const newList = [
-      ...new Set([...excludeListWatch.filter((k) => k !== key)]),
-    ];
-    setValue("saveConfig.excludeList", newList);
-  };
+  const onClickRemoveInclude = useCallback(
+    (keys: string[]) => () => {
+      const newList = [
+        ...new Set([...includeListWatch.filter((k) => !keys.includes(k))]),
+      ];
+      setValue("saveConfig.includeList", newList);
+    },
+    [includeListWatch, setValue]
+  );
+  const onClickRemoveExclude = useCallback(
+    (keys: string[]) => () => {
+      const newList = [
+        ...new Set([...excludeListWatch.filter((k) => !keys.includes(k))]),
+      ];
+      setValue("saveConfig.excludeList", newList);
+    },
+    [excludeListWatch, setValue]
+  );
 
   useEffect(() => {
     console.log("updateFormValues");
@@ -221,6 +198,17 @@ const GameSettingsPage = () => {
 
   const onSubmit = async (data: TGameForm) => {
     console.log("NEW DATA", data);
+    if (!game) return;
+    try {
+      window.electron.editGame(game.id, {
+        savesConfig: { [PLATFORM]: data.saveConfig },
+      });
+    } catch (err) {
+      Toaster.add({
+        intent: "error",
+        content: "Something went wrong" + JSON.stringify(err),
+      });
+    }
 
     // if (data.saveConfig.saveFolder?.path) {
     //   const res = await window.electron.getGlobby({
@@ -262,7 +250,7 @@ const GameSettingsPage = () => {
   if (!game) return null;
 
   // console.log({
-  //   // saveFolderWatch,
+  //   saveFolderWatch,
   //   // saveFullFolderWatch,
   //   // includeListWatch,
   //   // excludeListWatch,
@@ -270,6 +258,7 @@ const GameSettingsPage = () => {
   //   // checked: folderCheckedNodes,
   //   // expanded: folderExpandedNodes,
   // });
+  console.log({ resultContentTree, folderCheckedNodes });
 
   return (
     <Layout>
@@ -346,12 +335,10 @@ const GameSettingsPage = () => {
         {saveFolderWatch && (
           <TreesContainer>
             <CheckboxTreeStyled>
-              <div>All files</div>
+              <div>Files</div>
               <br />
 
-              {isLoadingFolderContent ? (
-                <ActivityIndicator />
-              ) : (
+              <LoadingBlock isLoading={isLoadingFolderContent}>
                 <CheckboxTree
                   nodes={folderContentTree}
                   icons={icons}
@@ -366,27 +353,25 @@ const GameSettingsPage = () => {
                   onCheck={setFolderCheckedNodes}
                   onExpand={setFolderExpandedNodes}
                 />
-              )}
+              </LoadingBlock>
             </CheckboxTreeStyled>
 
             <CheckboxTreeStyled>
               <div>Result - files that will be saved</div>
               <br />
 
-              {isLoadingResultContent ? (
-                <ActivityIndicator />
-              ) : (
+              <LoadingBlock isLoading={isLoadingResultContent}>
                 <CheckboxTree
                   nodes={resultContentTree}
                   icons={icons}
-                  // checked={resultCheckedNodes}
-                  expanded={resultExpandedNodes}
+                  checked={folderCheckedNodes}
+                  expanded={folderExpandedNodes}
+                  checkModel="all"
                   disabled={true}
-                  showExpandAll={true}
-                  // onCheck={setResultCheckedNodes}
-                  onExpand={setResultExpandedNodes}
+                  expandOnClick={true}
+                  noCascade={true}
                 />
-              )}
+              </LoadingBlock>
             </CheckboxTreeStyled>
           </TreesContainer>
         )}
@@ -418,13 +403,37 @@ const GameSettingsPage = () => {
 
         <CtaButtons>
           <Button type="submit">Save</Button>
-          {/* {isEditing && <Button onClick={onRemove}>Remove game</Button>} */}
         </CtaButtons>
       </FormBlock>
-
-      {/* <button onClick={() => {}}>test</button> */}
     </Layout>
   );
+};
+
+const getContentTree = async (
+  path: string,
+  includeList: string[] = [],
+  excludeList: string[] = [],
+  setLoading: (loading: boolean) => void
+): Promise<TNode[] | undefined> => {
+  try {
+    setLoading(true);
+    let globbyRes = await window.electron.getGlobby({
+      path,
+      includeList,
+      excludeList,
+    });
+    console.log({ globbyRes });
+    const newTree = globToNodes(globbyRes);
+    console.log({ newTree });
+    return newTree;
+  } catch (err) {
+    console.error(err);
+    // @ts-ignore
+    Toaster.add({ intent: "error", message: err });
+    return;
+  } finally {
+    setLoading(false);
+  }
 };
 
 export default GameSettingsPage;

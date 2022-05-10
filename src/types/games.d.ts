@@ -42,16 +42,13 @@ declare global {
     name?: string;
 
     // мне прям путь до exeшника неособо нужен
-    gamePath?: TFolderOrFiles;
+    gamePath?: TFolderOrFilesPlatformSpecific;
 
-    // путь до сейва игра, может быть папкой или набором файлов
-    saveFilesOrFolder?: TFolderOrFiles;
-
-    savesConfig?: TPlatformSpecific<TSavesConfig>;
+    savesConfig?: TPlatformSpecific<TSaveConfig>;
   };
 
-  type TSavesConfig = {
-    saveFolder: TFolderOrFiles; // only folder
+  type TSaveConfig = {
+    saveFolder: TFolderOrFilesRaw; // only folder
     saveFullFolder: boolean; // includeAllFilesInFolder: boolean;
     includeList: string[]; // files or file types
     excludeList: string[];

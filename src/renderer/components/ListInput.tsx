@@ -1,14 +1,15 @@
 import { faClose } from "@fortawesome/free-solid-svg-icons";
-import { useCallback } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import Button from "./Button";
 
 type TProps = {
   type: "include" | "exclude";
   inputProps: any;
   list: string[];
   saveFullFolder: boolean;
-  onClickRemove: (key: string) => void;
+  onClickRemove: (keys: string[]) => () => void;
 };
 
 const ListInput = (props: TProps) => {
@@ -16,24 +17,23 @@ const ListInput = (props: TProps) => {
 
   const showIncludesNotRequired = type === "include" && saveFullFolder;
 
-  const _onClickRemove = useCallback(
-    (key: string) => () => onClickRemove(key),
-    [onClickRemove]
-  );
-
   return (
     <Content>
-      <h3>{type === "include" ? "Include list" : "Exclude list"}</h3>
+      <HeaderContainer>
+        <Header>{type === "include" ? "Include list" : "Exclude list"}</Header>
+        <Button size="small" onClick={onClickRemove([...list])}>
+          remove all
+        </Button>
+      </HeaderContainer>
 
       <List>
-        {showIncludesNotRequired ? (
-          <div>Include list only required if "Save full folder" turned off</div>
-        ) : (
-          !list?.length && "No files"
-        )}
+        {showIncludesNotRequired
+          ? "Necessary only if 'Save full folder' turned off"
+          : !list?.length && "No files"}
+
         {list?.map((file) => (
           <Item key={file}>
-            <RemoveButton icon={faClose} onClick={_onClickRemove(file)} />
+            <RemoveButton icon={faClose} onClick={onClickRemove([file])} />
             {file}
           </Item>
         ))}
@@ -53,9 +53,24 @@ const Content = styled.div`
   margin: 10px;
 `;
 
+const HeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0px;
+  margin-bottom: 10px;
+`;
+
+const Header = styled.h4`
+  flex: 1;
+  margin: 0;
+`;
+
 const List = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
+  /* justify-content: center; */
   background: rgba(0, 0, 0, 0.25);
   padding: 10px;
 `;

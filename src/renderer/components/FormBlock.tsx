@@ -23,7 +23,7 @@ const Container = styled.form`
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.25);
 
   > * {
-    padding-top: 20px;
+    padding-top: 10px;
     padding-bottom: 20px;
 
     &:not(:first-child) {

@@ -78,8 +78,9 @@ const globToNodeRecursive = (tree: any, glob: string): void => {
 const globToNodes = (globs: string[]): TNode[] => {
   const tree: TNode[] = [];
 
-  // console.log({ globs });
-  for (const glob of globs) {
+  const globsSorted = globs.sort((a, b) => b.length - a.length);
+  // console.log({ globsSorted });
+  for (const glob of globsSorted) {
     globToNodeRecursive(tree, glob);
   }
 

@@ -12,15 +12,21 @@ const GamesHandlers: TGamesHandlers = {
   // createGame: async (_, { gamePath, saveFilesOrFolder }) => {
   //   return Games.create({ gamePath, saveFilesOrFolder });
   // },
-  editGame: async (_, { game, exePath, saves }) => {
-    game.gamePath = exePath;
-    game.saveFilesOrFolder = saves;
-    Stores.Settings.set(`games.${game.id}`, game);
+  editGame: async (_, gameId, payload) => {
+    console.log("TRY SAVE");
+    const game = Stores.Games.store.games[gameId];
+    if (!game) return false;
+    Stores.Games.set(`games.${gameId}`, {
+      ...game,
+      ...payload,
+      // isValid
+    });
+    console.log("GAME SAVED");
     return true;
   },
   removeGame: async (_, id) => {
     // @ts-ignore
-    Stores.Settings.delete(`games.${id}`);
+    Stores.Games.delete(`games.${id}`);
     return true;
   },
 };

@@ -12,4 +12,6 @@ const ActivityIndicator = (props: TProps) => {
 
 export default ActivityIndicator;
 
-const Container = styled.div``;
+const Container = styled.div`
+  color: ${({ theme }) => theme.purple};
+`;

@@ -8,15 +8,11 @@ declare global {
     };
 
     type TCreateGamePayload = {
-      gamePath: TFolderOrFiles;
-      saveFilesOrFolder: TFolderOrFiles;
+      gamePath: TFolderOrFilesPlatformSpecific;
+      saveFilesOrFolder: TFolderOrFilesPlatformSpecific;
     };
 
-    type TEditGamePayload = {
-      game: TGame;
-      exePath: TFolderOrFiles;
-      saves: TFolderOrFiles;
-    };
+    type TEditGamePayload = Partial<TGame>;
 
     type TGetGlobbyOptions = {
       path: string;
@@ -46,7 +42,7 @@ declare global {
 
     type TGamesApi = {
       createGame: (payload: TCreateGamePayload) => Promise<boolean>;
-      editGame: (payload: TEditGamePayload) => Promise<boolean>;
+      editGame: (gameId: string, payload: TEditGamePayload) => Promise<boolean>;
       removeGame: (id: string) => Promise<boolean>;
     };
 

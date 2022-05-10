@@ -48,6 +48,6 @@ type TFolderOrFilesRaw = {
   files: string[];
 };
 
-type TFolderOrFiles = TPlatformSpecific<TFolderOrFilesRaw>;
+type TFolderOrFilesPlatformSpecific = TPlatformSpecific<TFolderOrFilesRaw>;
 
 type TPlatformSpecific<T> = Partial<{ [key in NodeJS.Platform]: T }>;
