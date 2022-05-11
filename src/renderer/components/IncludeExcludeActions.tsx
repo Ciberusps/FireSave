@@ -147,7 +147,7 @@ const IncludeExcludeActions = (props: TProps) => {
     });
 
     return result;
-  }, [checkedNodes, saveFullFolder]);
+  }, [checkedNodes, saveFullFolder, onClickInclude, onClickExclude]);
 
   if (checkedNodes.length === 0) {
     return <div>Select files/folders to include/exclude</div>;
@@ -167,18 +167,6 @@ const IncludeExcludeActions = (props: TProps) => {
 };
 
 export default IncludeExcludeActions;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  > {
-    &:not(:first-child) {
-      margin-top: 10px;
-    }
-  }
-`;
 
 const Buttons = styled.div`
   display: flex;

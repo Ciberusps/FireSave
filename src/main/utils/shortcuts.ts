@@ -2,6 +2,7 @@ import { globalShortcut } from "electron";
 
 import Saves from "./saves";
 
+// @ts-ignore
 const registerSaveKey = (key: string) => {
   // TODO: check what games run and save
   const ret = globalShortcut.register("F5", () => {

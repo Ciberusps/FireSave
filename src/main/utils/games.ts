@@ -22,65 +22,6 @@ const generateUniqGameId = (limit = 10): string | null => {
   return result;
 };
 
-// TODO: reimplement
-// const isGameExist = (exePath: TFolderOrFiles): boolean => {
-//   let result = false;
-//   const allGames = Stores.Settings.get("games");
-//   // TODO: add check by steam info?
-//   result = Boolean(Object.values(allGames).find((g) => g.exePath === exePath));
-//   // @ts-ignore
-//   console.log("isGameExist", result);
-//   return result;
-// };
-
-// // const fillSteamGameInfo = (game: TGame, steamApp: ISteamApp): void => {};
-
-// const create = async (options: TCreateGameOptions): Promise<boolean> => {
-//   throw new Error("not implemented");
-//   const { gamePath, saveFilesOrFolder } = options;
-
-//   if (isGameExist(gamePath)) {
-//     console.error("GAME ALREADY EXISTS");
-//     return false;
-//   }
-
-//   const id = generateUniqGameId();
-
-//   const name = gamePath.files[0].split(".")[0];
-
-//   let savePointsFolderName: string | undefined;
-//   if (steamApp) {
-//     savePointsFolderName = steamApp;
-//   } else {
-//     savePointsFolderName = `${name}___${id}`;
-//   }
-//   if (FileSystem.isExist(savePointsFolderName)) {
-//     console.error("Dir already exist");
-//     return false;
-//   }
-
-//   const newGame: TGame = {
-//     id,
-//     name,
-//     isValid: false,
-//     gamePath,
-//     savePointsFolderName,
-//     saveFilesOrFolder: saves,
-//     savesStats: { total: 0, auto: 0, manual: 0 },
-//   };
-//   Stores.Settings.set(`games.${id}`, newGame);
-
-//   // TODO: filling steam game info still required?
-//   // const isSteamGame = exePath.path.includes("steamapps");
-//   // if (isSteamGame) fillSteamGameInfo(newGame);
-
-//   return true;
-// };
-
-type TCreateGameOptions = Pick<TGame, "gamePath" | "saveFilesOrFolder"> & {
-  steamApp?: ISteamApp;
-};
-
 const createSteamGame = async (
   steamApp: ISteamApp,
   storeInfo?: TSteamAppStoreInfo

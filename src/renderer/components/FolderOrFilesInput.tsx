@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import styled from "styled-components";
 import { Controller, Control, FieldValues, FieldPath } from "react-hook-form";
 
@@ -10,20 +9,18 @@ type TTransform = {
   input: (value: TFolderOrFilesRaw) => string;
 };
 
-type TProp = "openFile" | "openDirectory" | "multiSelections";
-
 type TProps<T> = {
   control: Control<T>;
   label: string;
   name: FieldPath<T>;
   description: string | React.ReactNode;
-  properties: TProp[];
+  property: "openFile" | "openDirectory" | "multiSelections";
   filters?: { name: string; extensions: string[] }[];
   isDisabled?: boolean;
 };
 
 const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
-  const { control, properties, filters, label, name, description, isDisabled } =
+  const { control, property, filters, label, name, description, isDisabled } =
     props;
 
   const transform: TTransform = {
@@ -40,9 +37,9 @@ const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
         name={name}
         control={control}
         render={({ field }) => {
-          const onChooseClick = useCallback(async () => {
+          const onChooseClick = async () => {
             const newVal = await window.electron.openDialog({
-              properties,
+              properties: [property],
               filters,
               defaultPath: field.value?.path,
             });
@@ -52,7 +49,7 @@ const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
             } else {
               //TODO: error
             }
-          }, []);
+          };
 
           return (
             <>
@@ -80,7 +77,7 @@ const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
               {field.value?.files?.length > 0 && (
                 <Files>
                   <FilesHeader>Files:</FilesHeader>
-                  {field.value?.files.map((file) => (
+                  {field.value?.files?.map((file: string) => (
                     <File key={file}>{file}</File>
                   ))}
                 </Files>

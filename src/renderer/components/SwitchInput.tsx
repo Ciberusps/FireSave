@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import styled from "styled-components";
 import { Controller, Control, FieldValues, FieldPath } from "react-hook-form";
 
@@ -39,18 +38,15 @@ const SwitchInput = <T extends FieldValues>(props: TProps<T>) => {
         name={name}
         control={control}
         render={({ field }) => {
-          const onChooseClick = useCallback(async (val: string) => {
-            field.onChange(val);
-          }, []);
-
           return (
             <>
               <Top>
                 {values.map((property) => (
                   <SwitchButton
+                    key={property.value}
                     size="small"
                     isSelected={field.value === property.value}
-                    onClick={() => onChooseClick(property.value)}
+                    onClick={() => field.onChange(property.value)}
                   >
                     {property.value}
                   </SwitchButton>

@@ -12,18 +12,17 @@ const GamePage = () => {
   const settingsStorePath = usePersistentStore(
     (state) => state.settingsStorePath
   );
-  if (!id) return null;
-  const game = useGamesStore((state) => state.games[id]);
-  const saves = useGamesStore((state) => state.savePoints[id]);
+  const game = useGamesStore((state) => id && state.games[id]);
+  const saves = useGamesStore((state) => id && state.savePoints[id]);
   if (!game) return <div>error</div>;
 
-  const savePoints = saves && Object.values(saves);
+  const savePoints = (saves && Object.values(saves)) || [];
+  if (!savePoints) return <div>error</div>;
+
   const gamePath = joinAndNormalize(
     settingsStorePath,
     game.savePointsFolderName
   );
-
-  console.log({ gamePath, savePoints });
 
   return (
     <Layout contentStyles={{ padding: 0 }}>

@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-// @ts-ignore
 import checkBoxStyles from "react-checkbox-tree/lib/react-checkbox-tree.css";
 
 import Fonts from "../utils/fonts";

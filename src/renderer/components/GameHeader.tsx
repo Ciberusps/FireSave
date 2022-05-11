@@ -24,7 +24,8 @@ const GameHeader = (props: TProps) => {
       <Info>
         <BackArrow to="/" icon="leftArrow" />
 
-        <Image width={150} height={70} src={imgSrc} />
+        <Image width={150} height={70} src={imgSrc} alt={`Game ${name}`} />
+
         <Description>
           <Name>{name}</Name>
           <Stats game={game} />

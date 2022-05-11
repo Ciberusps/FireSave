@@ -1,7 +1,7 @@
 export type TNode = {
   value: string;
   label: string;
-  children: TNode[];
+  children?: TNode[];
   disabled?: boolean;
 };
 
@@ -29,18 +29,18 @@ const globToTree = (globs: string[]): any => {
   return tree;
 };
 
-const globToNodeRecursive = (tree: any, glob: string): void => {
+const globToNodeRecursive = (tree: TNode[], glob: string): void => {
   const parts = glob.split("/");
   // console.log({ parts, glob });
 
   let part = parts[0];
-  let current = tree;
+  let current: TNode;
 
-  const currentCandidate = current.find((n) => n.value === part);
+  const currentCandidate = tree.find((n) => n.value === part);
   // console.log({ currentCandidate });
   if (!currentCandidate) {
-    tree.push({ value: part, label: part });
-    current = current.find((n) => n.value === part);
+    current = { value: part, label: part };
+    tree.push(current);
   } else {
     current = currentCandidate;
   }
@@ -52,7 +52,7 @@ const globToNodeRecursive = (tree: any, glob: string): void => {
     // console.log({ glob, partsPath });
     const newChild = { value: partsPath, label: part };
 
-    if (!current.children?.length) {
+    if (!current?.children?.length) {
       // console.log(
       //   "create children",
       //   !current.children?.length,
@@ -60,19 +60,18 @@ const globToNodeRecursive = (tree: any, glob: string): void => {
       // );
       current.children = [];
       current.children.push(newChild);
-      current = current.children.find((c) => c.value === partsPath);
+      current = newChild;
     } else {
-      const exist = current.children.find((c) => c.value === partsPath);
-      if (exist) {
-        current = exist;
+      const existNode = current.children.find((c) => c.value === partsPath);
+      if (existNode) {
+        current = existNode;
       } else {
         current.children.push(newChild);
-        current = current.children.find((c) => c.value === partsPath);
+        // current = current.children.find((c) => c.value === partsPath);
+        current = newChild;
       }
     }
   }
-
-  current.path = glob;
 };
 
 const globToNodes = (globs: string[]): TNode[] => {

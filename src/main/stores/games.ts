@@ -11,7 +11,7 @@ const gamesStore = new ElectronStore<TGamesStore>({
     savePoints: {},
   },
   migrations: {
-    "1.0.0": (settings) => {
+    "1.0.0": () => {
       console.log("MIGRATION RUNNED");
     },
     "0.3.23": (store) => {
