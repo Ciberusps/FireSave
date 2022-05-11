@@ -44,13 +44,13 @@ declare global {
     // мне прям путь до exeшника неособо нужен
     gamePath?: TFolderOrFilesPlatformSpecific;
 
-    savesConfig?: TPlatformSpecific<TSaveConfig>;
+    savesConfig?: TPlatformSpecific<TSavesConfig>;
   };
 
-  type TSaveConfigType = "simple" | "advanced";
+  type TSavesConfigType = "simple" | "advanced";
 
-  type TSaveConfig = {
-    type: TSaveConfigType;
+  type TSavesConfig = {
+    type: TSavesConfigType;
     saveFolder: TFolderOrFilesRaw; // only folder
     saveFullFolder: boolean; // includeAllFilesInFolder: boolean;
     includeList: string[]; // files or file types
@@ -60,7 +60,7 @@ declare global {
 
   type TSaveType = "manual" | "auto";
 
-  type TSave = {
+  type TSavePoint = {
     id: string;
 
     // generated

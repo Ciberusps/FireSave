@@ -29,10 +29,10 @@ const gamesApi: IPC.TGamesApi = {
   removeGame: defaultInvokeFunction("removeGame"),
 };
 
-const savePontsApi: IPC.TSavesApi = {
-  makeSave: defaultInvokeFunction("makeSave"),
-  loadSave: defaultInvokeFunction("loadSave"),
-  removeSave: defaultInvokeFunction("removeSave"),
+const savePontsApi: IPC.TSavePointsApi = {
+  makeSavePoint: defaultInvokeFunction("makeSavePoint"),
+  loadSavePoint: defaultInvokeFunction("loadSavePoint"),
+  removeSavePoint: defaultInvokeFunction("removeSavePoint"),
 };
 
 const api: IPC.TApi = {

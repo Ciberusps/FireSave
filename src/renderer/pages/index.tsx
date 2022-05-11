@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
-import Game from "../components/Game";
+import GameCard from "../components/GameCard";
 import Button from "../components/Button";
 import Layout from "../components/Layout";
+
 import { useGamesStore } from "../utils/stores";
 
 const IndexPage = () => {
@@ -24,7 +25,7 @@ const IndexPage = () => {
 
       <Games>
         {games?.map((game) => (
-          <Game key={game.id} game={game} />
+          <GameCard key={game.id} game={game} />
         ))}
       </Games>
     </Layout>

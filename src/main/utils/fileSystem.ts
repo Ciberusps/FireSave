@@ -2,9 +2,9 @@ import fs from "fs";
 
 const isExist = (path: string) => fs.existsSync(path);
 
-const removeFile = (path: string) => {
+const removeFileOrFolder = (path: string) => {
   if (isExist(path)) {
-    fs.unlinkSync(path);
+    fs.rmSync(path, { recursive: true, force: true });
   }
 };
 
@@ -19,7 +19,7 @@ const isDir = (path: string) => {
 };
 
 const FileSystem = {
-  removeFile,
+  removeFileOrFolder,
   createDir,
   isDir,
   isExist,

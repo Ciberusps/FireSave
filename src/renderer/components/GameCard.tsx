@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import styled from "styled-components";
 import { formatDistance } from "date-fns";
 
@@ -6,26 +7,33 @@ import Stats from "./Stats";
 import Image from "./Image";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
-import { useGamesStore } from "renderer/utils/stores";
+
+import { useGamesStore } from "../utils/stores";
 
 type TProps = {
   game: TGame;
-  className?: string;
 };
 
-const Game = (props: TProps) => {
-  const { game, className } = props;
+const GameCard = (props: TProps) => {
+  const { game } = props;
 
-  const saves = useGamesStore((state) => state.savePoints[game.id]);
-  const savesPoints = saves && Object.values(saves);
+  const gameSavePoints = useGamesStore((state) => state.savePoints[game.id]);
+  const savePoints = gameSavePoints && Object.values(gameSavePoints);
 
-  const lastSaveDate =
-    savesPoints && new Date(savesPoints[savesPoints?.length - 1].date);
+  const lastSaveDate = useMemo(() => {
+    const lastSave = savePoints && savePoints[savePoints.length - 1];
+    if (lastSave) return new Date(lastSave.date);
+    return undefined;
+  }, [savePoints]);
+
+  const lastSaveDateFormatted = useMemo(
+    () => lastSaveDate && formatDistance(lastSaveDate, new Date()),
+    [lastSaveDate]
+  );
 
   return (
     <Container
       to={game.isValid ? `/games/${game.id}` : `/games/${game.id}/settings`}
-      className={className}
       isPlayingNow={game.isPlaingNow}
     >
       {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
@@ -45,8 +53,8 @@ const Game = (props: TProps) => {
         <div>
           <Stats game={game} />
           <LastSave>
-            {lastSaveDate
-              ? `last save ${formatDistance(lastSaveDate, new Date())} ago`
+            {lastSaveDateFormatted
+              ? `last save ${lastSaveDateFormatted} ago`
               : "no saves yet"}
           </LastSave>
         </div>
@@ -127,4 +135,4 @@ const IsValidIcon = styled.div`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.75);
 `;
 
-export default Game;
+export default GameCard;

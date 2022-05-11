@@ -47,15 +47,15 @@ declare global {
       removeGame: (id: string) => Promise<boolean>;
     };
 
-    type TSavesApi = {
-      makeSave: (gameId: string) => Promise<void>;
-      loadSave: (gameId: string, saveId: string) => Promise<boolean>;
-      removeSave: (gameId: string, saveId: string) => Promise<void>;
+    type TSavePointsApi = {
+      makeSavePoint: (gameId: string) => Promise<void>;
+      loadSavePoint: (gameId: string, savePointId: string) => Promise<boolean>;
+      removeSavePoint: (gameId: string, savePointId: string) => Promise<void>;
     };
 
     type TApi = TStoresApi &
       TGamesApi &
-      TSavesApi & {
+      TSavePointsApi & {
         getQuota: () => Promise<TGetQuotaRes>;
 
         test: () => void;

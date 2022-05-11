@@ -14,15 +14,15 @@ const maxImgWidth = (height * 16) / 9;
 type TProps = {
   game: TGame;
   gamePath: string;
-  savePoint: TSave;
+  savePoint: TSavePoint;
   className?: string;
 };
 
 const SavePoint = (props: TProps) => {
   const { game, gamePath, savePoint, className } = props;
 
-  const onLoadSave = async (savePoint: TSave) => {
-    const isLoaded = await window.electron.loadSave(game.id, savePoint.id);
+  const onLoadSave = async (savePoint: TSavePoint) => {
+    const isLoaded = await window.electron.loadSavePoint(game.id, savePoint.id);
     if (isLoaded) {
       Toaster.add({ content: "Saved & Loaded", intent: "success" });
     } else {
@@ -30,8 +30,8 @@ const SavePoint = (props: TProps) => {
     }
   };
 
-  const onRemoveSave = async (savePoint: TSave) => {
-    await window.electron.removeSave(game.id, savePoint.id);
+  const onRemoveSave = async (savePoint: TSavePoint) => {
+    await window.electron.removeSavePoint(game.id, savePoint.id);
   };
 
   const name = savePoint?.name || savePoint.id;

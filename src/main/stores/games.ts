@@ -17,9 +17,9 @@ const gamesStore = new ElectronStore<TGamesStore>({
     "0.3.23": (store) => {
       const games = store.store.games;
       Object.entries(games).forEach(([, game]) => {
-        const saveConfig = game.savesConfig?.[PLATFORM];
-        if (saveConfig && !saveConfig?.type) {
-          saveConfig.type = "simple";
+        const savesConfig = game.savesConfig?.[PLATFORM];
+        if (savesConfig && !savesConfig?.type) {
+          savesConfig.type = "simple";
         }
       });
       store.set("games", games);

@@ -20,3 +20,5 @@ export const DEFAULT_STORES_PATH = path.join(
 export const APP_VERSION = app.getVersion();
 
 export const PLATFORM = process.platform;
+
+export const SCREENSHOTS_FOLDER_NAME = "__screenshots";

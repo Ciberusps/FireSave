@@ -44,7 +44,7 @@ const folderColor = "#ffd970";
 
 type TGameForm = {
   // exePath: string;
-  saveConfig: TSaveConfig & {
+  savesConfig: TSavesConfig & {
     saveFolder: TFolderOrFilesRaw;
   };
 };
@@ -88,7 +88,7 @@ const GameSettingsPage = () => {
   const { control, watch, handleSubmit, register, setValue } =
     useForm<TGameForm>({
       defaultValues: {
-        saveConfig: {
+        savesConfig: {
           type: "simple",
           saveFolder: {
             path: "",
@@ -101,11 +101,11 @@ const GameSettingsPage = () => {
       },
     });
 
-  const typeWatch = watch("saveConfig.type");
-  const saveFolderWatch = watch("saveConfig.saveFolder");
-  const saveFullFolderWatch = watch("saveConfig.saveFullFolder", true);
-  const includeListWatch = watch("saveConfig.includeList", []);
-  const excludeListWatch = watch("saveConfig.excludeList", []);
+  const typeWatch = watch("savesConfig.type");
+  const saveFolderWatch = watch("savesConfig.saveFolder");
+  const saveFullFolderWatch = watch("savesConfig.saveFullFolder", true);
+  const includeListWatch = watch("savesConfig.includeList", []);
+  const excludeListWatch = watch("savesConfig.excludeList", []);
 
   const updateFormValues = useCallback(async () => {
     const path = saveFolderWatch?.path;
@@ -144,7 +144,7 @@ const GameSettingsPage = () => {
   const onClickInclude = useCallback(
     (keys: string[]) => () => {
       const newList = [...new Set([...keys, ...includeListWatch])];
-      setValue("saveConfig.includeList", newList);
+      setValue("savesConfig.includeList", newList);
       // TODO: probably can unselect only values that were touched
       setFolderCheckedNodes([]);
     },
@@ -154,7 +154,7 @@ const GameSettingsPage = () => {
     (keys: string[]) => () => {
       // console.log({ folderCheckedNodes });
       const newList = [...new Set([...keys, ...excludeListWatch])];
-      setValue("saveConfig.excludeList", newList);
+      setValue("savesConfig.excludeList", newList);
       setFolderCheckedNodes([]);
     },
     [excludeListWatch, setValue, setFolderCheckedNodes]
@@ -165,7 +165,7 @@ const GameSettingsPage = () => {
       const newList = [
         ...new Set([...includeListWatch.filter((k) => !keys.includes(k))]),
       ];
-      setValue("saveConfig.includeList", newList);
+      setValue("savesConfig.includeList", newList);
     },
     [includeListWatch, setValue]
   );
@@ -174,7 +174,7 @@ const GameSettingsPage = () => {
       const newList = [
         ...new Set([...excludeListWatch.filter((k) => !keys.includes(k))]),
       ];
-      setValue("saveConfig.excludeList", newList);
+      setValue("savesConfig.excludeList", newList);
     },
     [excludeListWatch, setValue]
   );
@@ -192,19 +192,19 @@ const GameSettingsPage = () => {
     console.log("NEW DATA", data);
     if (!game) return;
     try {
-      const newSaveConfig: TSaveConfig = data.saveConfig;
-      if (newSaveConfig.type === "simple") {
-        newSaveConfig.includeList = [];
-        newSaveConfig.excludeList = [];
-        newSaveConfig.saveFullFolder = true;
+      const newSavesConfig: TSavesConfig = data.savesConfig;
+      if (newSavesConfig.type === "simple") {
+        newSavesConfig.includeList = [];
+        newSavesConfig.excludeList = [];
+        newSavesConfig.saveFullFolder = true;
       }
-      if (newSaveConfig.saveFullFolder) {
-        newSaveConfig.includeList = [];
+      if (newSavesConfig.saveFullFolder) {
+        newSavesConfig.includeList = [];
       }
 
       window.electron.editGame(game.id, {
         isValid: true,
-        savesConfig: { [PLATFORM]: data.saveConfig },
+        savesConfig: { [PLATFORM]: data.savesConfig },
       });
     } catch (err) {
       Toaster.add({
@@ -221,7 +221,7 @@ const GameSettingsPage = () => {
   //   // saveFullFolderWatch,
   //   // includeListWatch,
   //   // excludeListWatch,
-  //   // saveConfigSaveFolder,
+  //   // savesConfigSaveFolder,
   //   // checked: folderCheckedNodes,
   //   // expanded: folderExpandedNodes,
   // });
@@ -235,7 +235,7 @@ const GameSettingsPage = () => {
       <FormBlock onSubmit={handleSubmit(onSubmit)}>
         <SwitchInput<TGameForm>
           control={control}
-          name="saveConfig.type"
+          name="savesConfig.type"
           values={[{ value: "simple" }, { value: "advanced" }]}
           label="Save config type"
           description="'Simple' easy to setup only folder required but heavier in size, 'Advanced' - select folder and exclude unnecessary files"
@@ -243,7 +243,7 @@ const GameSettingsPage = () => {
 
         <FolderOrFilesInput<TGameForm>
           control={control}
-          name="saveConfig.saveFolder"
+          name="savesConfig.saveFolder"
           label="Saves folder"
           description={
             <Description>
@@ -273,7 +273,7 @@ const GameSettingsPage = () => {
             <ToggleInput
               label="Save full folder"
               description="Save full folder"
-              {...register("saveConfig.saveFullFolder")}
+              {...register("savesConfig.saveFullFolder")}
             />
 
             {!saveFolderWatch && <div>Choose saves folder first</div>}
@@ -333,7 +333,7 @@ const GameSettingsPage = () => {
                 type="include"
                 saveFullFolder={saveFullFolderWatch}
                 list={includeListWatch}
-                inputProps={register("saveConfig.includeList")}
+                inputProps={register("savesConfig.includeList")}
                 onClickRemove={onClickRemoveInclude}
               />
 
@@ -341,7 +341,7 @@ const GameSettingsPage = () => {
                 type="exclude"
                 saveFullFolder={saveFullFolderWatch}
                 list={excludeListWatch}
-                inputProps={register("saveConfig.excludeList")}
+                inputProps={register("savesConfig.excludeList")}
                 onClickRemove={onClickRemoveExclude}
               />
             </Lists>

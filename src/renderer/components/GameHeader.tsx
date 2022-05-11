@@ -16,7 +16,7 @@ const GameHeader = (props: TProps) => {
   const imgSrc = game.imageUrl;
 
   const onSave = async () => {
-    await window.electron.makeSave(game.id);
+    await window.electron.makeSavePoint(game.id);
   };
 
   return (
