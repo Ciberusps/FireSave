@@ -39,6 +39,7 @@ const Header = styled.div`
 
 const Games = styled.div`
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   margin: -10px;
   margin-top: 20px;

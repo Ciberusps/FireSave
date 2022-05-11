@@ -6,8 +6,7 @@ import Stats from "./Stats";
 import Image from "./Image";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
-
-import { useSettingsStore } from "../utils/stores";
+import { useGamesStore } from "renderer/utils/stores";
 
 type TProps = {
   game: TGame;
@@ -16,43 +15,43 @@ type TProps = {
 
 const Game = (props: TProps) => {
   const { game, className } = props;
-  const envs = useSettingsStore((state) => state.envs);
 
-  console.log({ envs });
-  // const savePoints = game.savePoints && Object.values(game.savePoints);
-  // const lastSaveDate =
-  //   savePoints && new Date(savePoints[savePoints?.length - 1].date);
+  const saves = useGamesStore((state) => state.savePoints[game.id]);
+  const savesPoints = saves && Object.values(saves);
+
+  const lastSaveDate =
+    savesPoints && new Date(savesPoints[savesPoints?.length - 1].date);
 
   return (
-    <Link
+    <Container
       to={game.isValid ? `/games/${game.id}` : `/games/${game.id}/settings`}
+      className={className}
+      isPlayingNow={game.isPlaingNow}
     >
-      <Container className={className} isPlayingNow={game.isPlaingNow}>
-        {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
+      {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
 
-        {!game.isValid && (
-          <Tooltip text="Setup required">
-            <IsValidIcon>
-              <Icon size="small" icon="warning" color="black" />
-            </IsValidIcon>
-          </Tooltip>
-        )}
+      {!game.isValid && (
+        <Tooltip text="Setup required">
+          <IsValidIcon>
+            <Icon size="small" icon="warning" color="black" />
+          </IsValidIcon>
+        </Tooltip>
+      )}
 
-        <Img width="100%" height={215} src={game?.imageUrl} />
+      <Img width="100%" height={215} src={game?.imageUrl} />
 
-        <Description>
-          <GameName>{game?.steam?.storeInfo?.name || game.name}</GameName>
-          <div>
-            <Stats game={game} />
-            {/* <LastSave>
-              {lastSaveDate
-                ? `last save ${formatDistance(lastSaveDate, new Date())} ago`
-                : "no saves yet"}
-            </LastSave> */}
-          </div>
-        </Description>
-      </Container>
-    </Link>
+      <Description>
+        <GameName>{game?.steam?.storeInfo?.name || game.name}</GameName>
+        <div>
+          <Stats game={game} />
+          <LastSave>
+            {lastSaveDate
+              ? `last save ${formatDistance(lastSaveDate, new Date())} ago`
+              : "no saves yet"}
+          </LastSave>
+        </div>
+      </Description>
+    </Container>
   );
 };
 
@@ -60,8 +59,7 @@ type TContainer = {
   isPlayingNow?: boolean;
 };
 
-const Container = styled.div<TContainer>`
-  flex: 1;
+const Container = styled(Link)<TContainer>`
   display: flex;
   flex-direction: column;
   width: 460px;
@@ -75,6 +73,12 @@ const Container = styled.div<TContainer>`
   box-shadow: 0px 4px 20px
     ${({ theme, isPlayingNow }) =>
       isPlayingNow ? theme.purple : "rgba(0, 0, 0, 0.25)"};
+
+  &:hover {
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0px 2px 6px ${({ theme }) => theme.purple};
+  }
 `;
 
 const Img = styled(Image)`
