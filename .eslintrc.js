@@ -1,5 +1,6 @@
 module.exports = {
-  extends: ["next", "prettier", "jest", "plugin:react-hooks/recommended"],
+  extends: ["next", "prettier"],
+  plugins: ["jest", "react-hooks"],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",

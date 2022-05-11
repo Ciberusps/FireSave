@@ -23,7 +23,7 @@ type TProps = Partial<LinkProps> & {
   children?: React.ReactNode;
 };
 
-const Button = forwardRef<HTMLButtonElement, TProps>((props, ref) => {
+const Button = (props: TProps, ref: any) => {
   const {
     children,
     size = "normal",
@@ -46,6 +46,7 @@ const Button = forwardRef<HTMLButtonElement, TProps>((props, ref) => {
   const content = (
     <Container
       ref={ref}
+      // @ts-ignore
       type={type}
       role="button"
       size={size}
@@ -76,9 +77,9 @@ const Button = forwardRef<HTMLButtonElement, TProps>((props, ref) => {
   }
 
   return content;
-});
+};
 
-export default Button;
+export default forwardRef<HTMLButtonElement, TProps>(Button);
 
 const height = "48px";
 
