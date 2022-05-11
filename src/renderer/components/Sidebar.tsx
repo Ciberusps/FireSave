@@ -1,9 +1,18 @@
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import styled, { ThemeContext } from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSave, faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
+import {
+  faSave as faSaveSolid,
+  faGear as faGearSolid,
+  faCircleQuestion as faCircleQuestionSolid,
+} from "@fortawesome/free-solid-svg-icons";
 
 import Icon from "./Icon";
 import Link from "./Link";
+
+const iconsSize = 24;
 
 const Sidebar = () => {
   const { pathname } = useLocation();
@@ -16,18 +25,27 @@ const Sidebar = () => {
   return (
     <Container>
       <Tab to="/" isActive={isSavesTabActive}>
-        <Icon icon="save" color={isSavesTabActive ? undefined : theme.dark} />
-      </Tab>
-
-      <Tab to="/settings" isActive={isSettingsTabActive}>
-        <Icon
-          icon="settings"
-          color={isSettingsTabActive ? undefined : theme.dark}
+        <FontAwesomeIcon
+          icon={isSavesTabActive ? faSaveSolid : faSave}
+          color={isSavesTabActive ? undefined : theme.dark}
+          fontSize={iconsSize}
         />
       </Tab>
 
+      <Tab to="/settings" isActive={isSettingsTabActive}>
+        {isSettingsTabActive ? (
+          <FontAwesomeIcon icon={faGearSolid} fontSize={iconsSize} />
+        ) : (
+          <Icon icon="settings" size="medium" color={theme.dark} />
+        )}
+      </Tab>
+
       <Tab to="/about" isActive={isAboutTabActive}>
-        <Icon icon="help" color={isAboutTabActive ? undefined : theme.dark} />
+        <FontAwesomeIcon
+          icon={isAboutTabActive ? faCircleQuestionSolid : faCircleQuestion}
+          color={isAboutTabActive ? undefined : theme.dark}
+          fontSize={iconsSize}
+        />
       </Tab>
 
       <Update
