@@ -2,7 +2,7 @@
 
 Saves manager
 
-<img src="https://cdn.ciberus.gg/final_5.png" width="900">
+![cover](https://user-images.githubusercontent.com/14001879/167883425-0023a3de-a32d-41c7-aa60-551f16883073.jpg)
 
 ## Motivation
 
