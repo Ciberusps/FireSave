@@ -95,10 +95,6 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 - wait for github action release
 - got to github/releases page and release new version
 
-### utils
-
-- bump version `npm run bump:version 0.3.6-beta`
-
 ## Steamworks(greenworks)
 
 - Place steamworks `sdk` from https://partner.steamgames.com/downloads/list to `node_modules/greenworks/deps/steamworks_sdk`
