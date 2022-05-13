@@ -1,5 +1,9 @@
 release
-.erb
+/.erb/dll
+/.erb/img
+/.erb/scripts
+/.erb/mocks
 
+steam-licenses.json
 greenworks-docs
 steamworks_sdk
