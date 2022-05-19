@@ -2,44 +2,67 @@ name: Test
 
 on: [push, pull_request]
 
+env:
+  STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
+  STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
+
 jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-
-    env:
-      STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
-      STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-
+  lint:
+    runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
-
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v3
         with:
           node-version: "16"
           cache: "npm"
-
       - name: Install dependencies
-        run: |
-          npm install
-
+        run: npm install
       - name: Lint
         run: npm run lint
-        continue-on-error: true
 
+  lint-prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm install
       - name: Lint Prettier
         run: npm run lint:prettier
-        continue-on-error: true
 
+  lint-types:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm install
       - name: Lint Types
         run: npm run lint:types
-        continue-on-error: true
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm install
       - name: Test
         run: npm run test
-        continue-on-error: true
