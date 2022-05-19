@@ -1,21 +1,21 @@
 {
   "name": "FireSave",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Saves manager",
   "main": "./src/main/main.ts",
   "scripts": {
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
-    "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
-    "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
+    "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.ts",
+    "build:renderer": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
-    "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
+    "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --config ./electron-builder.json --publish never",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && npm run install:native-deps && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts && opencollective-postinstall",
     "install:native-deps": "cd release/app && npm i --ignore-scripts && cd ../.. && npm run steamworks-sdk:download && npm run steamworks-sdk:unzip",
     "prepare": "husky install",
     "start": "cross-env npm run bump:version $npm_package_version && ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
     "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
-    "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
-    "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
+    "start:preload": "cross-env NODE_ENV=development webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
+    "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:prettier": "cross-var prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md}",
     "lint:types": "tsc --noEmit",
@@ -40,80 +40,6 @@
     "*.{html,md,yml}": [
       "prettier --ignore-path .eslintignore --single-quote --write"
     ]
-  },
-  "build": {
-    "productName": "FireSave",
-    "appId": "gg.ciberus.firesave",
-    "asar": true,
-    "asarUnpack": "**\\*.{node,dll}",
-    "files": [
-      "dist",
-      "node_modules",
-      "package.json",
-      "!node_modules/greenworks/deps/**/*"
-    ],
-    "extraFiles": [
-      "steam_appid.txt"
-    ],
-    "afterSign": ".erb/scripts/notarize.js",
-    "mac": {
-      "target": {
-        "target": "default",
-        "arch": [
-          "arm64",
-          "x64"
-        ]
-      },
-      "type": "distribution",
-      "hardenedRuntime": true,
-      "entitlements": "assets/entitlements.mac.plist",
-      "entitlementsInherit": "assets/entitlements.mac.plist",
-      "gatekeeperAssess": false
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 130,
-          "y": 220
-        },
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "win": {
-      "publish": [
-        "github"
-      ],
-      "target": [
-        "nsis"
-      ],
-      "asarUnpack": [
-        "node_modules/screenshot-desktop/lib/win32"
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "category": "Development"
-    },
-    "directories": {
-      "app": "release/app",
-      "buildResources": "assets",
-      "output": "release/build"
-    },
-    "extraResources": [
-      "./assets/**"
-    ],
-    "publish": {
-      "provider": "github",
-      "owner": "ciberusps",
-      "repo": "FireSave"
-    }
   },
   "repository": {
     "type": "git",
@@ -182,10 +108,10 @@
     "ts-node": "^10.4.0",
     "typescript": "^4.6.4",
     "url-loader": "^4.1.1",
-    "webpack": "^5.65.0",
+    "webpack": "^5.72.1",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.7.1",
+    "webpack-dev-server": "^4.9.0",
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {

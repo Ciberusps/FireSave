@@ -27,6 +27,7 @@ const settingsStore = new ElectronStore<TSettingsStore>({
       IS_DEV: false,
       PLATFORM: process.platform,
       RESOURCES_PATH: "",
+      IS_STEAMWORKS_AVAILABLE: false,
     },
   },
 

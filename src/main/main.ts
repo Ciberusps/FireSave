@@ -77,7 +77,16 @@ class Main {
   }
 
   async onReady() {
-    SteamworksSDK.init();
+    try {
+      const isSteamworksAvailable = SteamworksSDK.init();
+      if (isSteamworksAvailable) {
+        console.log("Steamworks is available");
+        Stores.Settings.set("envs.IS_STEAMWORKS_AVAILABLE", true);
+      }
+    } catch (err) {
+      Stores.Settings.set("envs.IS_STEAMWORKS_AVAILABLE", false);
+      console.log(err);
+    }
 
     Stores.Settings.set("version", APP_VERSION);
     Stores.Settings.set("runtimeValues.isLoadingApp", true);

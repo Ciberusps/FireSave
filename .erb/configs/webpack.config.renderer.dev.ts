@@ -6,6 +6,7 @@ import chalk from "chalk";
 import { merge } from "webpack-merge";
 import { spawn, execSync } from "child_process";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import type { Configuration as DevServerConfiguration } from "webpack-dev-server";
 
 import baseConfig from "./webpack.config.base";
 import webpackPaths from "./webpack.paths";
@@ -37,6 +38,40 @@ if (
   );
   execSync("npm run postinstall");
 }
+
+const devServer: DevServerConfiguration = {
+  port,
+  compress: true,
+  hot: true,
+  headers: { "Access-Control-Allow-Origin": "*" },
+  static: {
+    publicPath: "/",
+  },
+  historyApiFallback: {
+    verbose: true,
+  },
+  setupMiddlewares(middlewares) {
+    console.log("Starting preload.js builder...");
+    const preloadProcess = spawn("npm", ["run", "start:preload"], {
+      shell: true,
+      stdio: "inherit",
+    })
+      .on("close", (code: number) => process.exit(code!))
+      .on("error", (spawnError) => console.error(spawnError));
+
+    console.log("Starting Main Process...");
+    spawn("npm", ["run", "start:main"], {
+      shell: true,
+      stdio: "inherit",
+    })
+      .on("close", (code: number) => {
+        preloadProcess.kill();
+        process.exit(code!);
+      })
+      .on("error", (spawnError) => console.error(spawnError));
+    return middlewares;
+  },
+};
 
 const configuration: webpack.Configuration = {
   devtool: "inline-source-map",
@@ -139,40 +174,7 @@ const configuration: webpack.Configuration = {
     __filename: false,
   },
 
-  // @ts-ignore
-  devServer: {
-    port,
-    compress: true,
-    hot: true,
-    headers: { "Access-Control-Allow-Origin": "*" },
-    static: {
-      publicPath: "/",
-    },
-    historyApiFallback: {
-      verbose: true,
-    },
-    setupMiddlewares(middlewares) {
-      console.log("Starting preload.js builder...");
-      const preloadProcess = spawn("npm", ["run", "start:preload"], {
-        shell: true,
-        stdio: "inherit",
-      })
-        .on("close", (code: number) => process.exit(code!))
-        .on("error", (spawnError) => console.error(spawnError));
-
-      console.log("Starting Main Process...");
-      spawn("npm", ["run", "start:main"], {
-        shell: true,
-        stdio: "inherit",
-      })
-        .on("close", (code: number) => {
-          preloadProcess.kill();
-          process.exit(code!);
-        })
-        .on("error", (spawnError) => console.error(spawnError));
-      return middlewares;
-    },
-  },
+  devServer,
 };
 
 export default merge(baseConfig, configuration);

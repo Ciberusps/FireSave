@@ -28,6 +28,7 @@ type TSettingsStore = {
     PLATFORM: NodeJS.Platform;
     RESOURCES_PATH: string;
     IS_DEV: boolean;
+    IS_STEAMWORKS_AVAILABLE: boolean;
   };
 };
 
