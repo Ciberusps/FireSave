@@ -1,38 +1,52 @@
-# name: Test
+name: Test
 
-# on: [push, pull_request]
+on: [push, pull_request]
 
-# jobs:
-#   release:
-#     runs-on: ${{ matrix.os }}
+env:
+  STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
+  STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
 
-#     env:
-#       STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
-#       STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
 
-#     strategy:
-#       matrix:
-#         os: [windows-latest]
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
 
-#     steps:
-#       - name: Check out Git repository
-#         uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          npm install
 
-#       - name: Install Node.js and NPM
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: "16"
-#           cache: "npm"
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint
+        run: npm run lint
+    needs: prepare
 
-#       - name: Install dependencies
-#         run: |
-#           npm install
+  lint-prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint Prettier
+        run: npm run lint:prettier
+    needs: prepare
 
-#       - name: npm test
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-#         run: |
-#           npm run package
-#           npm run lint
-#           npm exec tsc
-#           npm test
+  lint-types:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint Types
+        run: npm run lint:types
+    needs: prepare
+
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: npm run test
+    needs: prepare
