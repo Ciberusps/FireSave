@@ -2,13 +2,18 @@ name: Test
 
 on: [push, pull_request]
 
-env:
-  STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
-  STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
-
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ${{ matrix.os }}
+
+    env:
+      STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
+      STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
+
+    strategy:
+      matrix:
+        os: [windows-latest]
+
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
@@ -23,30 +28,14 @@ jobs:
         run: |
           npm install
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
       - name: Lint
         run: npm run lint
-    needs: prepare
 
-  lint-prettier:
-    runs-on: ubuntu-latest
-    steps:
       - name: Lint Prettier
         run: npm run lint:prettier
-    needs: prepare
 
-  lint-types:
-    runs-on: ubuntu-latest
-    steps:
       - name: Lint Types
         run: npm run lint:types
-    needs: prepare
 
-  lint-test:
-    runs-on: ubuntu-latest
-    steps:
       - name: Test
         run: npm run test
-    needs: prepare
