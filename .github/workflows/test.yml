@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Check out Git repository
@@ -30,12 +30,16 @@ jobs:
 
       - name: Lint
         run: npm run lint
+        continue-on-error: true
 
       - name: Lint Prettier
         run: npm run lint:prettier
+        continue-on-error: true
 
       - name: Lint Types
         run: npm run lint:types
+        continue-on-error: true
 
       - name: Test
         run: npm run test
+        continue-on-error: true
