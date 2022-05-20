@@ -19,14 +19,17 @@ if (semver.valid(versionArgument)) {
   packageLockJson.version = versionArgument;
   mainPackageJson.version = versionArgument;
 
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+  fs.writeFileSync(
+    packageJsonPath,
+    JSON.stringify(packageJson, null, 2) + "\n"
+  );
   fs.writeFileSync(
     packageLockJsonPath,
-    JSON.stringify(packageLockJson, null, 2)
+    JSON.stringify(packageLockJson, null, 2) + "\n"
   );
   fs.writeFileSync(
     mainPackageJsonPath,
-    JSON.stringify(mainPackageJson, null, 2)
+    JSON.stringify(mainPackageJson, null, 2) + "\n"
   );
 
   process.exit();
