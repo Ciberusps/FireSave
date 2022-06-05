@@ -70,9 +70,8 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 
 ## Setup
 
-- steamworks sdk required!!!
 - copy `.env.example` rename to `.env` and fill
-- make things from "How to update SteamworksSDK" section
+- optionaly make things from "How to update SteamworksSDK" section not required for start
 - `npm i`
 - now you should be ready
 
