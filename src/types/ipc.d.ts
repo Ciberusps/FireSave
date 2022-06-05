@@ -7,9 +7,9 @@ declare global {
       availableMB: number;
     };
 
-    type TCreateGamePayload = {
-      gamePath: TFolderOrFilesPlatformSpecific;
-      saveFilesOrFolder: TFolderOrFilesPlatformSpecific;
+    type TCreateCustomGamePayload = {
+      gamePath: TFolderOrFilesRaw;
+      savesConfig: TSavesConfig;
     };
 
     type TEditGamePayload = Partial<TGame>;
@@ -42,7 +42,7 @@ declare global {
     };
 
     type TGamesApi = {
-      createGame: (payload: TCreateGamePayload) => Promise<boolean>;
+      createCustomGame: (payload: TCreateCustomGamePayload) => Promise<void>;
       editGame: (gameId: string, payload: TEditGamePayload) => Promise<boolean>;
       removeGame: (id: string) => Promise<boolean>;
     };

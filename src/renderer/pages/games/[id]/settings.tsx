@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled, { useTheme } from "styled-components";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -35,6 +35,7 @@ import { useGamesStore, useSettingsStore } from "../../../utils/stores";
 const folderColor = "#ffd970";
 
 type TGameForm = {
+  gamePath: TFolderOrFilesRaw;
   savesConfig: TSavesConfig & {
     saveFolder: TFolderOrFilesRaw;
   };
@@ -43,6 +44,7 @@ type TGameForm = {
 // TODO: globby size
 // TODO: prefill from pcGamingWiki
 const GameSettingsPage = () => {
+  const navigate = useNavigate();
   const games = useGamesStore((state) => state.games);
   const PLATFORM = useSettingsStore((state) => state.envs.PLATFORM);
   const theme = useTheme();
@@ -78,6 +80,7 @@ const GameSettingsPage = () => {
   const { control, watch, handleSubmit, register, setValue } =
     useForm<TGameForm>({
       defaultValues: {
+        gamePath: game?.gamePath?.[PLATFORM],
         savesConfig: {
           type: "simple",
           saveFolder: {
@@ -180,22 +183,24 @@ const GameSettingsPage = () => {
 
   const onSubmit = async (data: TGameForm) => {
     console.log("NEW DATA", data);
-    if (!game) return;
     try {
-      const newSavesConfig: TSavesConfig = data.savesConfig;
-      if (newSavesConfig.type === "simple") {
-        newSavesConfig.includeList = [];
-        newSavesConfig.excludeList = [];
-        newSavesConfig.saveFullFolder = true;
+      if (isEditing && game) {
+        // TODO: так делать нерпавильно нужно вынести в main process заполнение платформы
+        window.electron.editGame(game.id, {
+          isValid: true,
+          savesConfig: { [PLATFORM]: data.savesConfig },
+        });
+      } else {
+        if (!data.gamePath || !data.savesConfig) {
+          // TODO: show error
+          return;
+        }
+        window.electron.createCustomGame({
+          gamePath: data.gamePath,
+          savesConfig: data.savesConfig,
+        });
       }
-      if (newSavesConfig.saveFullFolder) {
-        newSavesConfig.includeList = [];
-      }
-
-      window.electron.editGame(game.id, {
-        isValid: true,
-        savesConfig: { [PLATFORM]: data.savesConfig },
-      });
+      navigate("/");
     } catch (err) {
       Toaster.add({
         intent: "error",
@@ -204,21 +209,28 @@ const GameSettingsPage = () => {
     }
   };
 
-  if (!game) return null;
-
   return (
     <Layout>
       <Header>{isEditing ? game?.name : "Add game"}</Header>
 
-      <h3>You need to setup saves config first</h3>
+      <h3>{isEditing ? "You need to setup saves config first" : ""}</h3>
 
       <FormBlock onSubmit={handleSubmit(onSubmit)}>
+        <FolderOrFilesInput<TGameForm>
+          control={control}
+          name="gamePath"
+          label="Game exe file"
+          description={<Description>Path to game exe</Description>}
+          property={"openFile"}
+          isDisabled={isEditing && game?.isCreatedAutomatically}
+        />
+
         <SwitchInput<TGameForm>
           control={control}
           name="savesConfig.type"
           values={[{ value: "simple" }, { value: "advanced" }]}
           label="Save config type"
-          description="'Simple' easy to setup only folder required but heavier in size, 'Advanced' - select folder and exclude unnecessary files"
+          description="'Simple' easy to setup only folder required but can be heavier in size, 'Advanced' - select folder and exclude unnecessary files"
         />
 
         <FolderOrFilesInput<TGameForm>

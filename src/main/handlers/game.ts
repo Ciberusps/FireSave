@@ -1,17 +1,16 @@
+import Games from "../utils/games";
 import Stores from "../stores";
 
-// import Games from "../utils/games";
-
 type TGamesHandlers = {
-  // createGame: IPC.THandler<"createGame">;
+  createCustomGame: IPC.THandler<"createCustomGame">;
   removeGame: IPC.THandler<"removeGame">;
   editGame: IPC.THandler<"editGame">;
 };
 
 const GamesHandlers: TGamesHandlers = {
-  // createGame: async (_, { gamePath, saveFilesOrFolder }) => {
-  //   return Games.create({ gamePath, saveFilesOrFolder });
-  // },
+  createCustomGame: async (_, payload) => {
+    Games.createCustomGame(payload);
+  },
   editGame: async (_, gameId, payload) => {
     console.log("TRY SAVE");
     const game = Stores.Games.store.games[gameId];

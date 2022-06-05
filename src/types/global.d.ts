@@ -25,6 +25,7 @@ type TSettingsStore = {
     isLoadingApp: boolean;
   };
   envs: {
+    // TODO: not platform specific should be OS specific, migration required
     PLATFORM: NodeJS.Platform;
     RESOURCES_PATH: string;
     IS_DEV: boolean;
@@ -48,7 +49,5 @@ type TFolderOrFilesRaw = {
   path: string;
   files: string[];
 };
-
-type TFolderOrFilesPlatformSpecific = TPlatformSpecific<TFolderOrFilesRaw>;
 
 type TPlatformSpecific<T> = Partial<{ [key in NodeJS.Platform]: T }>;

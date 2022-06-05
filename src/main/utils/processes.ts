@@ -2,6 +2,7 @@ import { promisify } from "util";
 import wmi, { TProccess } from "node-wmi";
 
 import { PLATFORM } from "./config";
+import { joinAndNormalize } from ".";
 
 const wmiRes = promisify(wmi.Query);
 
@@ -17,7 +18,7 @@ const getProcessesList = async () => {
 
     processes.forEach((p) => {
       if (!p?.ExecutablePath) return undefined;
-      return result.push({ path: p.ExecutablePath });
+      return result.push({ path: joinAndNormalize(p.ExecutablePath) });
     });
   } else {
     throw new Error(

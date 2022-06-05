@@ -42,7 +42,7 @@ declare global {
     name?: string;
 
     // мне прям путь до exeшника неособо нужен
-    gamePath?: TFolderOrFilesPlatformSpecific;
+    gamePath?: TPlatformSpecific<TFolderOrFilesRaw>;
 
     savesConfig?: TPlatformSpecific<TSavesConfig>;
   };

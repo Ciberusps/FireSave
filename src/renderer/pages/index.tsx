@@ -24,9 +24,12 @@ const IndexPage = () => {
       </Header>
 
       <Games>
-        {games?.map((game) => (
-          <GameCard key={game.id} game={game} />
-        ))}
+        {games
+          // @ts-ignore
+          ?.sort((a, b) => b.isValid - a.isValid)
+          .map((game) => (
+            <GameCard key={game.id} game={game} />
+          ))}
       </Games>
     </Layout>
   );

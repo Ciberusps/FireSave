@@ -24,7 +24,7 @@ const storesApi: IPC.TStoresApi = {
 };
 
 const gamesApi: IPC.TGamesApi = {
-  createGame: defaultInvokeFunction("createGame"),
+  createCustomGame: defaultInvokeFunction("createCustomGame"),
   editGame: defaultInvokeFunction("editGame"),
   removeGame: defaultInvokeFunction("removeGame"),
 };

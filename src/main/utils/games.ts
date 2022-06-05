@@ -6,6 +6,7 @@ import Processes from "./processes";
 
 import Stores from "../stores";
 import { PLATFORM } from "./config";
+import { joinAndNormalize } from ".";
 
 const generateUniqGameId = (limit = 10): string | null => {
   let result = null;
@@ -124,6 +125,40 @@ const fillSteamGames = async () => {
   }
 };
 
+const createCustomGame = async (
+  payload: IPC.TCreateCustomGamePayload
+): Promise<void> => {
+  // probably check that game not exist, dont know how to do it
+  const id = generateUniqGameId();
+  if (!id) {
+    // TODO: error handling
+    // ipcMain.emit("error", "Cant generate game id");
+    return;
+  }
+
+  const name = payload.gamePath.files[0] || "Unknown";
+  const gamePath = joinAndNormalize(
+    payload.gamePath.path,
+    payload.gamePath.files[0]
+  );
+
+  const newGame: TGame = {
+    id,
+    name,
+    isValid: true,
+    isPlaingNow: false,
+    isCreatedAutomatically: false,
+    // name but probably installDir better, mb for steamgames prefix "steam__" can be done or for others "nonsteam__"
+    savePointsFolderName: name.replace(".exe", ""),
+    savesStats: { total: 0, auto: 0, manual: 0 },
+    imageUrl: undefined,
+    gamePath: { [PLATFORM]: { path: gamePath } },
+  };
+  console.log(newGame);
+
+  Stores.Games.set(`games.${id}`, newGame);
+};
+
 const updateRunningGames = async () => {
   const gamesList = Object.values(Stores.Games.store.games);
   const processes = await Processes.getProcessesList();
@@ -147,6 +182,7 @@ const updateRunningGames = async () => {
 
 const Games = {
   // create,
+  createCustomGame,
   fillSteamGames,
   updateRunningGames,
   // TODO:
