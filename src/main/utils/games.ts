@@ -7,6 +7,8 @@ import Processes from "./processes";
 import Stores from "../stores";
 import { PLATFORM } from "./config";
 import { joinAndNormalize } from ".";
+import { app, nativeImage } from "electron";
+import path from "path";
 
 const generateUniqGameId = (limit = 10): string | null => {
   let result = null;
@@ -137,10 +139,6 @@ const createCustomGame = async (
   }
 
   const name = payload.gamePath.files[0] || "Unknown";
-  const gamePath = joinAndNormalize(
-    payload.gamePath.path,
-    payload.gamePath.files[0]
-  );
 
   const newGame: TGame = {
     id,
@@ -152,7 +150,7 @@ const createCustomGame = async (
     savePointsFolderName: name.replace(".exe", ""),
     savesStats: { total: 0, auto: 0, manual: 0 },
     imageUrl: undefined,
-    gamePath: { [PLATFORM]: { path: gamePath } },
+    gamePath: { [PLATFORM]: payload.gamePath },
   };
   console.log(newGame);
 
@@ -180,11 +178,46 @@ const updateRunningGames = async () => {
   }
 };
 
+const updateGamesIcons = async () => {
+  const games = Object.values(Stores.Games.store.games);
+  const gamesWithPathToExe = games.filter((g) =>
+    g.gamePath?.[PLATFORM]?.files?.[0]?.endsWith(".exe")
+  );
+  console.log(gamesWithPathToExe);
+  for (const game of gamesWithPathToExe) {
+    try {
+      console.log("game", game.name);
+      const gamePath = game.gamePath?.[PLATFORM];
+      if (gamePath?.path && gamePath?.files?.[0]) {
+        const pathToExe = joinAndNormalize(
+          gamePath?.path,
+          gamePath?.files?.[0]
+        );
+        const pathToExeNormalized = path.normalize(pathToExe);
+        console.log({ pathToExe, pathToExeNormalized });
+        const icon = await nativeImage.createThumbnailFromPath(
+          pathToExeNormalized,
+          { width: 512, height: 512 }
+        );
+        if (icon) {
+          console.log(icon.isEmpty());
+          Stores.Games.set(
+            `games.${game.id}.iconImg`,
+            icon.toPNG().toString("base64")
+          );
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
 const Games = {
-  // create,
   createCustomGame,
   fillSteamGames,
   updateRunningGames,
+  updateGamesIcons,
   // TODO:
   // getValidAndRunningGames
 };
