@@ -42,6 +42,7 @@ const api: IPC.TApi = {
   revealInFileExplorer: defaultInvokeFunction("revealInFileExplorer"),
   analyticsPageView: defaultInvokeFunction("analyticsPageView"),
   openDialog: defaultInvokeFunction("openDialog"),
+  getDisplays: defaultInvokeFunction("getDisplays"),
 
   ...storesApi,
   ...gamesApi,

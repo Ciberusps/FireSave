@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 
@@ -7,26 +8,41 @@ import Layout from "../components/Layout";
 import FormBlock from "../components/FormBlock";
 import ToggleInput from "../components/ToggleInput";
 import NumberInput from "../components/NumberInput";
+import DisplaysInput from "renderer/components/DisplaysInput";
+
 import { useSettingsStore } from "../utils/stores";
 
-type TSettingsForm = {
-  isAutoSaveOn: boolean;
-  autoSaveMinutes: number;
-};
+type TSettingsForm = Pick<
+  TSettingsStore,
+  "selectedDisplay" | "isAutoSaveOn" | "autoSaveMinutes"
+>;
 
 const SettingsPage = () => {
   const settingsStore = useSettingsStore();
+  const [displays, setDisplays] = useState<Electron.Display[]>([]);
 
-  const { register, handleSubmit, control } = useForm<TSettingsForm>({
-    defaultValues: {
-      isAutoSaveOn: settingsStore.isAutoSaveOn,
-      autoSaveMinutes: settingsStore.autoSaveMinutes,
-    },
-  });
+  const { control, register, handleSubmit, setValue, watch } =
+    useForm<TSettingsForm>({
+      defaultValues: {
+        selectedDisplay: settingsStore.selectedDisplay,
+        isAutoSaveOn: settingsStore.isAutoSaveOn,
+        autoSaveMinutes: settingsStore.autoSaveMinutes,
+      },
+    });
+  const watchSelectedDisplay = watch("selectedDisplay");
 
   const onSubmit = (data: TSettingsForm) => {
     window.electron.changeSettings(data);
   };
+
+  const getDisplays = useCallback(async () => {
+    const newDisplays = await window.electron.getDisplays();
+    setDisplays(newDisplays || []);
+  }, [setDisplays]);
+
+  useEffect(() => {
+    getDisplays();
+  }, [getDisplays]);
 
   if (!settingsStore) return null;
 
@@ -35,6 +51,14 @@ const SettingsPage = () => {
       <h1>Settings</h1>
 
       <MainSettingsBlock onSubmit={handleSubmit(onSubmit)}>
+        <DisplaysInput
+          label="Display for screenshots"
+          description="Select the display to take screenshots from"
+          selectedDisplayId={watchSelectedDisplay?.id || -1}
+          displays={displays}
+          onChange={(newDisplay) => setValue("selectedDisplay", newDisplay)}
+        />
+
         <ToggleInput
           label="Autosaves"
           description="Makes autosaves when game runned"

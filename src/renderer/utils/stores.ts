@@ -17,6 +17,7 @@ export const useSettingsStore = create<TSettingsStore>(() => ({
     y: 5,
     isMaximized: false,
   },
+  selectedDisplay: undefined,
   runtimeValues: {
     isLoadingApp: true,
   },
@@ -25,6 +26,7 @@ export const useSettingsStore = create<TSettingsStore>(() => ({
     PLATFORM: "win32",
     RESOURCES_PATH: "",
     IS_DEV: false,
+    IS_STEAMWORKS_AVAILABLE: false,
   },
 }));
 
