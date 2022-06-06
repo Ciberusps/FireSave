@@ -27,7 +27,7 @@ const FileSystemHandlers: TFileSystemHandlers = {
     return { path, files };
   },
   revealInFileExplorer: async (_, path) => {
-    shell.showItemInFolder(path);
+    shell.openPath(path);
   },
 };
 
