@@ -2,7 +2,7 @@
   "productName": "FireSave",
   "appId": "gg.ciberus.firesave",
   "asar": true,
-  "asarUnpack": "**\\*.{node,dll}",
+  "asarUnpack": ["**\\*.{node,dll}"],
   "files": [
     "dist",
     "node_modules",
@@ -38,8 +38,7 @@
   },
   "win": {
     "publish": ["github"],
-    "target": ["nsis"],
-    "asarUnpack": ["node_modules/screenshot-desktop/lib/win32"]
+    "target": ["nsis"]
   },
   "linux": {
     "target": ["AppImage"],

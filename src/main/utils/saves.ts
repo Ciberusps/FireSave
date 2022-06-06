@@ -1,14 +1,12 @@
 import faker from "@faker-js/faker";
 import copy from "recursive-copy";
-// screenshot-desktop dont work without asarUnpack
-// @ts-ignore
-import screenshot from "screenshot-desktop";
 import { format } from "date-fns";
 import { nanoid } from "nanoid";
 
-import Stores from "../stores";
-import FileSystem from "./fileSystem";
 import Games from "./games";
+import Stores from "../stores";
+import Capture from "./capture";
+import FileSystem from "./fileSystem";
 import { PLATFORM, SCREENSHOTS_FOLDER_NAME } from "./config";
 import { getGlobby, joinAndNormalize } from ".";
 
@@ -121,12 +119,14 @@ const makeSavePoint = async (
     FileSystem.createDir(screenshotFolderPath);
 
     console.log({ screenshotFolderPath, screenshotFilePath });
-    await screenshot({ filename: screenshotFilePath, format: "jpg" });
-
-    Stores.Games.set(
-      `savePoints.${gameId}.${newSavePointId}.screenshotFileName`,
-      screenshotFileName
-    );
+    const screenShot = await Capture.makeSelectedDisplayScreenShot();
+    if (screenShot) {
+      FileSystem.writeFileSync(screenshotFilePath, screenShot);
+      Stores.Games.set(
+        `savePoints.${gameId}.${newSavePointId}.screenshotFileName`,
+        screenshotFileName
+      );
+    }
   } catch (err) {
     // TODO: send logs
     console.error(err);

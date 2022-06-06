@@ -1,4 +1,4 @@
-import { ipcMain } from "electron";
+import { ipcMain, screen } from "electron";
 
 import SavesHandlers, { TSavesHandlers } from "./saves";
 import GamesHandlers, { TGamesHandlers } from "./game";
@@ -17,6 +17,7 @@ type TCommonHandlers = {
   changeSettings: IPC.THandler<"changeSettings">;
   changePersistentStore: IPC.THandler<"changePersistentStore">;
   getGlobby: IPC.THandler<"getGlobby">;
+  getDisplays: IPC.THandler<"getDisplays">;
 };
 
 const commonHandlers: TCommonHandlers = {
@@ -28,6 +29,8 @@ const commonHandlers: TCommonHandlers = {
   changeSettings: async (_, newSettings) => {
     Stores.Settings.set("isAutoSaveOn", newSettings.isAutoSaveOn);
     Stores.Settings.set("autoSaveMinutes", newSettings.autoSaveMinutes);
+    Stores.Settings.set("selectedDisplay", newSettings.selectedDisplay);
+
     Scheduler.start();
     return true;
   },
@@ -36,6 +39,7 @@ const commonHandlers: TCommonHandlers = {
     return true;
   },
   getGlobby: async (_, options) => getGlobby(options),
+  getDisplays: async () => screen.getAllDisplays(),
 };
 
 type THandlersList = TCommonHandlers &

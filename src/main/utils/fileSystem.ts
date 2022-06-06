@@ -18,7 +18,12 @@ const isDir = (path: string) => {
   return fs.lstatSync(path).isDirectory();
 };
 
+const writeFileSync = (...args: Parameters<typeof fs.writeFileSync>) => {
+  return fs.writeFileSync(...args);
+};
+
 const FileSystem = {
+  writeFileSync,
   removeFileOrFolder,
   createDir,
   isDir,

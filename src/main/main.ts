@@ -12,6 +12,7 @@ import { app, nativeTheme, protocol } from "electron";
 import isDev from "electron-is-dev";
 
 import Stores from "./stores";
+import Capture from "./utils/capture";
 import Scheduler from "./utils/scheduler";
 import Shortcuts from "./utils/shortcuts";
 import MainWindow from "./windows/mainWindow";
@@ -95,7 +96,10 @@ class Main {
       RESOURCES_PATH,
       IS_DEV: isDev,
     });
+
     await Games.fillSteamGames();
+    Capture.verifyPrimaryDisplaySelected();
+
     Stores.Settings.set("runtimeValues.isLoadingApp", false);
 
     protocol.registerFileProtocol("file", (request, callback) => {

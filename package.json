@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.4.3",
+  "version": "0.4.7",
   "description": "Saves manager",
   "main": "./src/main/main.ts",
   "scripts": {
@@ -144,7 +144,6 @@
     "react-router-dom": "^6.3.0",
     "react-toastify": "^8.1.1",
     "recursive-copy": "^2.0.14",
-    "screenshot-desktop": "^1.12.7",
     "simple-vdf": "^1.1.1",
     "styled-components": "^5.3.3",
     "upath": "^2.0.1",

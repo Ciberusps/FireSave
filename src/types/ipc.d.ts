@@ -57,17 +57,14 @@ declare global {
       TGamesApi &
       TSavePointsApi & {
         getQuota: () => Promise<TGetQuotaRes>;
-
         test: () => void;
-
         getGlobby: (options: TGetGlobbyOptions) => Promise<any>;
-
         revealInFileExplorer: (val: string) => Promise<void>;
-
         analyticsPageView: (url: string) => Promise<void>;
         openDialog: (
           options: OpenDialogOptions
         ) => Promise<TFolderOrFilesRaw | null>;
+        getDisplays: () => Promise<Electron.Display[]>;
       };
 
     type THandler<T extends keyof IPC.TApi = keyof IPC.TApi> = (
