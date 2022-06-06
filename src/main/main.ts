@@ -95,7 +95,10 @@ class Main {
       RESOURCES_PATH,
       IS_DEV: isDev,
     });
+
     await Games.fillSteamGames();
+    await Games.updateGamesIcons();
+
     Stores.Settings.set("runtimeValues.isLoadingApp", false);
 
     protocol.registerFileProtocol("file", (request, callback) => {

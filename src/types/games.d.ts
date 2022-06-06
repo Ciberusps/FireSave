@@ -45,6 +45,8 @@ declare global {
     gamePath?: TPlatformSpecific<TFolderOrFilesRaw>;
 
     savesConfig?: TPlatformSpecific<TSavesConfig>;
+
+    iconImg?: string;
   };
 
   type TSavesConfigType = "simple" | "advanced";

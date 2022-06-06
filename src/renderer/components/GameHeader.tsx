@@ -13,7 +13,7 @@ const GameHeader = (props: TProps) => {
   const { game } = props;
 
   const name = game?.name || "Unknown game";
-  const imgSrc = game.imageUrl;
+  const imgSrc = game.imageUrl || `data:image/png;base64,${game.iconImg}`;
 
   const onSave = async () => {
     await window.electron.makeSavePoint(game.id);
