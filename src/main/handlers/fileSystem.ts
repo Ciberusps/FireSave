@@ -1,3 +1,4 @@
+import path from "path";
 import { dialog, shell } from "electron";
 
 import FileSystem from "../utils/fileSystem";
@@ -26,8 +27,8 @@ const FileSystemHandlers: TFileSystemHandlers = {
       : filesOrDirs.map((f) => getFileNameWithExtension(f));
     return { path, files };
   },
-  revealInFileExplorer: async (_, path) => {
-    shell.openPath(path);
+  revealInFileExplorer: async (_, pathString) => {
+    shell.openPath(path.normalize(pathString));
   },
 };
 
