@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled, { useTheme } from "styled-components";
-import { StylesConfig, OnChangeValue } from "react-select";
 import CreatableSelect from "react-select/creatable";
+import { StylesConfig, OnChangeValue } from "react-select";
 import { format, formatDistance } from "date-fns";
-import lodashThrottle from "lodash.throttle";
+import lodashDebounce from "lodash.debounce";
 
 import Text from "./Text";
 import Image from "./Image";
@@ -18,12 +18,11 @@ const DEFAULT_CARD_HEIGHT = 170;
 const MAX_IMG_WIDTH = (DEFAULT_CARD_HEIGHT * 16) / 9;
 const CARD_BORDER_RADIUS = 10;
 
-const changeSavePointName = lodashThrottle(
+const changeSavePointNameDebounced = lodashDebounce(
   (gameId: string, savePointId: string, newName: string) => {
-    console.log("LJDSLFKJDLKFJ:KDJF");
     window.electron.changeSavePointName(gameId, savePointId, newName);
   },
-  3000
+  1000
 );
 
 type TOption = { value: string; label: string };
@@ -148,7 +147,7 @@ const SavePointCard = (props: TProps) => {
     (newVal) => {
       const newName = newVal.target.value;
       setName(newName);
-      changeSavePointName(game.id, savePoint.id, newName);
+      changeSavePointNameDebounced(game.id, savePoint.id, newName);
     },
     [game.id, savePoint.id]
   );
