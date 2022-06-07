@@ -8,7 +8,7 @@ type TSavesHandlers = {
   loadSavePoint: IPC.THandler<"loadSavePoint">;
   removeSavePoint: IPC.THandler<"removeSavePoint">;
   getQuota: IPC.THandler<"getQuota">;
-  changeTags: IPC.THandler<"changeTags">;
+  changeSavePointTags: IPC.THandler<"changeSavePointTags">;
 };
 
 const SavesHandlers: TSavesHandlers = {
@@ -29,7 +29,7 @@ const SavesHandlers: TSavesHandlers = {
       availableMB: cloudQuota.availableBytes / 1000 / 1000,
     };
   },
-  changeTags: async (_, gameId, savePointId, newTags) => {
+  changeSavePointTags: async (_, gameId, savePointId, newTags) => {
     try {
       const allTags = Stores.Games.store.tags;
       const savePoint = Stores.Games.store.savePoints?.[gameId]?.[savePointId];

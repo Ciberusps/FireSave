@@ -125,7 +125,7 @@ const SavePointCard = (props: TProps) => {
 
   const onChangeTags = useCallback(
     (newTags: OnChangeValue<TOption, true>) => {
-      window.electron.changeTags(
+      window.electron.changeSavePointTags(
         game.id,
         savePoint.id,
         newTags.map((t) => t.value)
