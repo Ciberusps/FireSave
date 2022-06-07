@@ -4,12 +4,25 @@ import persistentStore from "./persistent";
 import { PLATFORM } from "../utils/config";
 import { joinAndNormalize } from "../utils";
 
+const DEFAULT_TAGS_LIST = [
+  "auto",
+  "manual",
+  "boss",
+  "quest",
+  "story",
+  "tutorial",
+  "lore",
+  "cutscene",
+  "other",
+];
+
 const gamesStore = new ElectronStore<TGamesStore>({
   cwd: persistentStore.store.gamesStorePath,
   name: "games",
   defaults: {
     games: {},
     savePoints: {},
+    tags: DEFAULT_TAGS_LIST,
   },
   migrations: {
     "1.0.0": () => {

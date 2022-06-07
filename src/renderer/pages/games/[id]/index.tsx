@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { useParams } from "react-router-dom";
 
 import Layout from "../../../components/Layout";
-import SavePoint from "../../../components/SavePoint";
 import GameHeader from "../../../components/GameHeader";
+import SavePointCard from "../../../components/SavePointCard";
+
 import { useGamesStore, usePersistentStore } from "../../../utils/stores";
 import { joinAndNormalize } from "../../../utils/common";
 
@@ -30,7 +31,7 @@ const GamePage = () => {
 
       <SavePoints>
         {savePoints?.reverse()?.map((point) => (
-          <SavePoint
+          <SavePointCard
             key={point.id}
             game={game}
             gamePath={gamePath}

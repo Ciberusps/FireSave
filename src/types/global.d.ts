@@ -37,12 +37,12 @@ type TGamesStore = {
   games: {
     [gameId: string]: TGame;
   };
-
   savePoints: {
     [gameId: string]: {
       [savePointId: string]: TSavePoint;
     };
   };
+  tags: string[];
 };
 
 type TFolderOrFilesRaw = {
