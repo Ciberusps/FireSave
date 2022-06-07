@@ -26,7 +26,6 @@ type TSettingsStore = {
   };
   selectedDisplay: Electron.Display | undefined;
   envs: {
-    // TODO: not platform specific should be OS specific, migration required
     PLATFORM: NodeJS.Platform;
     RESOURCES_PATH: string;
     IS_DEV: boolean;

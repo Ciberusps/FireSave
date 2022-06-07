@@ -4,7 +4,8 @@ import upath from "upath";
 import VDF from "simple-vdf";
 import { URL } from "url";
 
-import { RESOURCES_PATH, NODE_ENV, PORT } from "./config";
+import FileSystem from "./fileSystem";
+import { RESOURCES_PATH, NODE_ENV, PORT, PLATFORM } from "./config";
 
 export const resolveHtmlPath = (htmlFileName: string): string => {
   if (NODE_ENV === "development") {
@@ -47,4 +48,17 @@ export const getGlobby = async (
       // objectMode: true
     }
   );
+};
+
+export const gamePathToExePath = (
+  gamePath: TPlatformSpecific<TFolderOrFilesRaw> | undefined
+): string | null => {
+  const folder = gamePath?.[PLATFORM]?.path;
+  const file = gamePath?.[PLATFORM]?.files?.[0];
+
+  if (folder && file) {
+    const exePath = joinAndNormalize(folder, file);
+    return FileSystem.isExist(exePath) ? exePath : null;
+  }
+  return null;
 };

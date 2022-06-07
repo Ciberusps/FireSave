@@ -43,6 +43,7 @@ const runRunningGamesCheck = () => {
     clearInterval(runningGamesCheckTask);
   }
 
+  Games.updateRunningGames();
   runningGamesCheckTask = setInterval(() => {
     Games.updateRunningGames();
   }, RUNNING_GAME_CHECK_INTERVAL);

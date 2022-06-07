@@ -60,6 +60,7 @@ const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
                   Choose
                 </Button>
 
+                {/* TODO: should not be clickable in disabled state */}
                 <RevealInFileExplorerButton
                   path={field.value?.path}
                   isDisabled={!field.value?.path}

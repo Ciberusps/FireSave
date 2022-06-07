@@ -19,6 +19,10 @@ const GameHeader = (props: TProps) => {
     await window.electron.makeSavePoint(game.id);
   };
 
+  const onPlayGame = async () => {
+    window.electron.runGame(game.id);
+  };
+
   return (
     <Container>
       <Info>
@@ -37,7 +41,9 @@ const GameHeader = (props: TProps) => {
           Save
         </Button>
 
-        <SettingsButton icon="settings" to={`/games/${game.id}/settings`} />
+        {!game.isPlaingNow && <PlayButton icon="play" onClick={onPlayGame} />}
+
+        <Button icon="settings" to={`/games/${game.id}/settings`} />
       </CtaButtons>
     </Container>
   );
@@ -77,10 +83,18 @@ const Name = styled(Text)``;
 
 const CtaButtons = styled.div`
   display: flex;
+
+  > *:not(:first-child) {
+    margin-left: 8px;
+  }
 `;
 
-const SettingsButton = styled(Button)`
-  margin-left: 12px;
+const PlayButton = styled(Button)`
+  background: linear-gradient(#6fd61d, #38bf3c);
+  &:hover {
+    background: linear-gradient(#6fd61d, #38bf3c);
+    filter: brightness(1.1);
+  }
 `;
 
 export default GameHeader;

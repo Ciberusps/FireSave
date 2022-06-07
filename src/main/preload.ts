@@ -27,6 +27,7 @@ const gamesApi: IPC.TGamesApi = {
   createCustomGame: defaultInvokeFunction("createCustomGame"),
   editGame: defaultInvokeFunction("editGame"),
   removeGame: defaultInvokeFunction("removeGame"),
+  runGame: defaultInvokeFunction("runGame"),
 };
 
 const savePontsApi: IPC.TSavePointsApi = {

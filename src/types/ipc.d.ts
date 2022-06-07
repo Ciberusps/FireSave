@@ -45,6 +45,7 @@ declare global {
       createCustomGame: (payload: TCreateCustomGamePayload) => Promise<void>;
       editGame: (gameId: string, payload: TEditGamePayload) => Promise<boolean>;
       removeGame: (id: string) => Promise<boolean>;
+      runGame: (id: string) => Promise<void>;
     };
 
     type TSavePointsApi = {
