@@ -1,8 +1,9 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled, { useTheme } from "styled-components";
 import { StylesConfig, OnChangeValue } from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { format, formatDistance } from "date-fns";
+import lodashThrottle from "lodash.throttle";
 
 import Text from "./Text";
 import Image from "./Image";
@@ -17,6 +18,14 @@ const DEFAULT_CARD_HEIGHT = 170;
 const MAX_IMG_WIDTH = (DEFAULT_CARD_HEIGHT * 16) / 9;
 const CARD_BORDER_RADIUS = 10;
 
+const changeSavePointName = lodashThrottle(
+  (gameId: string, savePointId: string, newName: string) => {
+    console.log("LJDSLFKJDLKFJ:KDJF");
+    window.electron.changeSavePointName(gameId, savePointId, newName);
+  },
+  3000
+);
+
 type TOption = { value: string; label: string };
 
 type TProps = {
@@ -29,6 +38,7 @@ type TProps = {
 const SavePointCard = (props: TProps) => {
   const { game, gamePath, savePoint, className } = props;
   const theme = useTheme();
+  const [name, setName] = useState<string>(savePoint.name);
   const tags = useGamesStore((state) => state.tags);
 
   const tagsInputOptions = useMemo(
@@ -78,10 +88,6 @@ const SavePointCard = (props: TProps) => {
     [theme]
   );
 
-  const name = useMemo(
-    () => savePoint?.name || savePoint.id,
-    [savePoint?.name, savePoint.id]
-  );
   const screenshotPath: string | undefined = useMemo(() => {
     if (savePoint?.screenshotFileName) {
       return joinAndNormalize(
@@ -116,6 +122,10 @@ const SavePointCard = (props: TProps) => {
     [game.id]
   );
 
+  useEffect(() => {
+    setName(savePoint.name);
+  }, [savePoint.name]);
+
   const onRemoveSave = useCallback(
     async (savePoint: TSavePoint) => {
       await window.electron.removeSavePoint(game.id, savePoint.id);
@@ -130,6 +140,15 @@ const SavePointCard = (props: TProps) => {
         savePoint.id,
         newTags.map((t) => t.value)
       );
+    },
+    [game.id, savePoint.id]
+  );
+
+  const onChangeName: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (newVal) => {
+      const newName = newVal.target.value;
+      setName(newName);
+      changeSavePointName(game.id, savePoint.id, newName);
     },
     [game.id, savePoint.id]
   );
@@ -151,7 +170,12 @@ const SavePointCard = (props: TProps) => {
 
       <Info>
         <Description>
-          <Name title={savePoint.id}>{name}</Name>
+          <Name
+            type="text"
+            title={savePoint.id}
+            value={name}
+            onChange={onChangeName}
+          />
           <Type>
             {savePoint?.type === "manual" ? "Manual save" : "Autosave"}{" "}
             {savePoint.saveNumberByType && " - " + savePoint.saveNumberByType}
@@ -162,6 +186,7 @@ const SavePointCard = (props: TProps) => {
           placeholder="no tags..."
           isMulti
           isClearable
+          closeMenuOnSelect={false}
           menuPortalTarget={document.body}
           options={tagsInputOptions}
           styles={tagsInputStyles}
@@ -263,11 +288,16 @@ const Description = styled.div`
   flex-direction: column;
 `;
 
-const Name = styled(Text)`
+const Name = styled.input`
   font-style: normal;
   font-weight: 600;
   font-size: 24px;
   line-height: 32px;
+  background: transparent;
+  color: ${({ theme }) => theme.white};
+  border: none;
+  border-color: red;
+  border-bottom-width: 1px;
 `;
 
 const Type = styled(Text)`

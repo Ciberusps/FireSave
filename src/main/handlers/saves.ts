@@ -9,6 +9,7 @@ type TSavesHandlers = {
   removeSavePoint: IPC.THandler<"removeSavePoint">;
   getQuota: IPC.THandler<"getQuota">;
   changeSavePointTags: IPC.THandler<"changeSavePointTags">;
+  changeSavePointName: IPC.THandler<"changeSavePointName">;
 };
 
 const SavesHandlers: TSavesHandlers = {
@@ -54,6 +55,21 @@ const SavesHandlers: TSavesHandlers = {
         Stores.Games.set("tags", allTags);
         Stores.Games.set(`savePoints.${gameId}.${savePointId}`, savePoint);
       }
+    } catch (err) {
+      // TODO: toaster error
+      console.log(err);
+    }
+  },
+  changeSavePointName: async (_, gameId, savePointId, newName) => {
+    try {
+      const savePoint = Stores.Games.store.savePoints?.[gameId]?.[savePointId];
+      if (!savePoint) throw new Error("Save point not found");
+      if (typeof newName !== "string") {
+        throw new Error("New save point name not valid");
+      }
+
+      Stores.Games.set(`savePoints.${gameId}.${savePointId}.name`, newName);
+      // TODO: toaster success
     } catch (err) {
       // TODO: toaster error
       console.log(err);

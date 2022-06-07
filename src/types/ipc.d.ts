@@ -57,6 +57,11 @@ declare global {
         savePointId: string,
         tags: string[]
       ) => Promise<void>;
+      changeSavePointName: (
+        gameId: string,
+        savePointId: string,
+        newName: string
+      ) => Promise<void>;
     };
 
     type TApi = TStoresApi &
