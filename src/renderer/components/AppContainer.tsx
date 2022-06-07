@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 
 import IndexPage from "../pages";
@@ -19,15 +19,15 @@ const AppContainer = () => {
   );
   const [isLoadingStores, setIsLoadingStores] = useState(true);
 
-  const loadApp = async () => {
+  const loadApp = useCallback(async () => {
     await loadStores();
     await subscribeOnStoresChanges();
     setIsLoadingStores(false);
-  };
+  }, []);
 
   useEffect(() => {
     loadApp();
-  }, []);
+  }, [loadApp]);
 
   return (
     <Router>
