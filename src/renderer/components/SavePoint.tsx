@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import styled from "styled-components";
 import { format, formatDistance } from "date-fns";
 
@@ -21,33 +22,50 @@ type TProps = {
 const SavePoint = (props: TProps) => {
   const { game, gamePath, savePoint, className } = props;
 
-  const onLoadSave = async (savePoint: TSavePoint) => {
-    const isLoaded = await window.electron.loadSavePoint(game.id, savePoint.id);
-    if (isLoaded) {
-      Toaster.add({ content: "Saved & Loaded", intent: "success" });
-    } else {
-      Toaster.add({ content: "Load failed", intent: "error" });
+  const name = useMemo(
+    () => savePoint?.name || savePoint.id,
+    [savePoint?.name, savePoint.id]
+  );
+  const screenshotPath: string | undefined = useMemo(() => {
+    if (savePoint?.screenshotFileName) {
+      return joinAndNormalize(
+        "file://",
+        gamePath + `__${game.id}`,
+        savePoint.folderName,
+        "__screenshots",
+        savePoint?.screenshotFileName
+      );
     }
-  };
+    return undefined;
+  }, [game.id, gamePath, savePoint?.screenshotFileName, savePoint.folderName]);
 
-  const onRemoveSave = async (savePoint: TSavePoint) => {
-    await window.electron.removeSavePoint(game.id, savePoint.id);
-  };
+  const formatedDate = (() => {
+    const date = new Date(savePoint.date);
+    const distance = formatDistance(date, new Date());
+    return format(date, "dd.MM.yyyy, HH:mm") + " - " + distance + " ago";
+  })();
 
-  const name = savePoint?.name || savePoint.id;
-  const date = new Date(savePoint.date);
-  const distance = formatDistance(date, new Date());
-  const formatedDate =
-    format(date, "dd.MM.yyyy, HH:mm") + " - " + distance + " ago";
-  const screenshotPath =
-    savePoint?.screenshotFileName &&
-    joinAndNormalize(
-      "file://",
-      gamePath + `__${game.id}`,
-      savePoint.folderName,
-      "__screenshots",
-      savePoint?.screenshotFileName
-    );
+  const onLoadSave = useCallback(
+    async (savePoint: TSavePoint) => {
+      const isLoaded = await window.electron.loadSavePoint(
+        game.id,
+        savePoint.id
+      );
+      if (isLoaded) {
+        Toaster.add({ content: "Saved & Loaded", intent: "success" });
+      } else {
+        Toaster.add({ content: "Load failed", intent: "error" });
+      }
+    },
+    [game.id]
+  );
+
+  const onRemoveSave = useCallback(
+    async (savePoint: TSavePoint) => {
+      await window.electron.removeSavePoint(game.id, savePoint.id);
+    },
+    [game.id]
+  );
 
   return (
     <Container className={className}>
@@ -65,7 +83,7 @@ const SavePoint = (props: TProps) => {
 
       <CTAButtons>
         <Button
-          title="Save current & load"
+          title="Make backup save and load this save point"
           icon="upload"
           onClick={() => onLoadSave(savePoint)}
         >
