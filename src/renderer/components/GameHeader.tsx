@@ -66,6 +66,7 @@ const Container = styled.div`
 
 const Info = styled.div`
   display: flex;
+  height: 100%;
   align-items: center;
 `;
 
@@ -75,11 +76,17 @@ const BackArrow = styled(Button)`
 
 const Description = styled.div`
   display: flex;
+  justify-content: space-around;
+  height: 100%;
+  padding: 8px 0px;
   flex-direction: column;
   margin-left: 24px;
 `;
 
-const Name = styled(Text)``;
+const Name = styled(Text)`
+  font-size: 1.35rem;
+  font-weight: normal;
+`;
 
 const CtaButtons = styled.div`
   display: flex;
