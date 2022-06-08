@@ -5,13 +5,18 @@ import Button from "../components/Button";
 import Layout from "../components/Layout";
 
 import { useGamesStore } from "../utils/stores";
+import { useMemo } from "react";
 
 const IndexPage = () => {
   const games = useGamesStore((state) => Object.values(state.games));
 
-  console.log({
-    games: games.map((g) => ({ id: g.id, isPlayingNow: g.isPlaingNow })),
-  });
+  const validGames = useMemo(() => {
+    return games.filter((game) => game.isValid);
+  }, [games]);
+
+  const notValidGames = useMemo(() => {
+    return games.filter((game) => !game.isValid);
+  }, [games]);
 
   return (
     <Layout>
@@ -23,14 +28,31 @@ const IndexPage = () => {
         </Button>
       </Header>
 
-      <Games>
-        {games
-          // @ts-ignore
-          ?.sort((a, b) => b.isValid - a.isValid)
-          .map((game) => (
-            <GameCard key={game.id} game={game} />
-          ))}
-      </Games>
+      {validGames.length > 0 && (
+        <GamesContainer>
+          <h2>Ready games</h2>
+          <Games>
+            {validGames.map((game) => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </Games>
+        </GamesContainer>
+      )}
+
+      {notValidGames.length > 0 && (
+        <GamesContainer>
+          <h2>Setup required</h2>
+          <Games>
+            {notValidGames.map((game) => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </Games>
+        </GamesContainer>
+      )}
+
+      {validGames.length === 0 && notValidGames.length === 0 && (
+        <NoGames>No games found, you can add new one</NoGames>
+      )}
     </Layout>
   );
 };
@@ -41,12 +63,22 @@ const Header = styled.div`
   justify-content: space-between;
 `;
 
+const GamesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const Games = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin: -10px;
-  margin-top: 20px;
+  margin-bottom: 15px;
+  /* margin-top: 20px; */
+`;
+
+const NoGames = styled.div`
+  margin-top: 30px;
 `;
 
 export default IndexPage;
