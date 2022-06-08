@@ -30,6 +30,7 @@ const GameCard = (props: TProps) => {
     () => lastSaveDate && formatDistance(lastSaveDate, new Date()),
     [lastSaveDate]
   );
+  const isSteamGame = game.isCreatedAutomatically;
 
   return (
     <Container
@@ -38,15 +39,21 @@ const GameCard = (props: TProps) => {
     >
       {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
 
-      {!game.isValid && (
-        <Tooltip text="Setup required">
-          <IsValidIcon>
-            <Icon size="small" icon="warning" color="black" />
-          </IsValidIcon>
-        </Tooltip>
-      )}
+      <ImageContainer>
+        {!game.isValid && (
+          <Tooltip text="Setup required">
+            <IsValidIcon>
+              <Icon size="small" icon="warning" color="black" />
+            </IsValidIcon>
+          </Tooltip>
+        )}
 
-      <Img width="100%" height={215} src={game?.imageUrl} />
+        <Img width="100%" height={215} src={game?.imageUrl} />
+
+        <Badges>
+          {isSteamGame ? <SteamBadge>steam</SteamBadge> : <Badge>custom</Badge>}
+        </Badges>
+      </ImageContainer>
 
       <Description>
         <GameName>{game?.steam?.storeInfo?.name || game.name}</GameName>
@@ -89,8 +96,36 @@ const Container = styled(Link)<TContainer>`
   }
 `;
 
+const ImageContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 215px;
+`;
+
 const Img = styled(Image)`
   object-fit: cover;
+  width: 100%;
+  height: 100%;
+`;
+
+const Badges = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  bottom: 10px;
+  left: 15px;
+`;
+
+const Badge = styled.div`
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  background: ${({ theme }) => theme.background};
+  border-radius: 30px;
+`;
+
+const SteamBadge = styled(Badge)`
+  background: linear-gradient(120deg, blue, red);
+  background: linear-gradient(90deg, #399aed, #245ecf);
 `;
 
 const Description = styled.div`
