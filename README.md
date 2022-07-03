@@ -35,8 +35,8 @@ Short-term:
 
 - [x] More games support(Hollow Knight?)
 - [ ] QOL features for saves
-  - [ ] name editing
-  - [ ] tags
+  - [x] name editing
+  - [x] tags
   - [ ] sorts & filters
   - [ ] search
 
