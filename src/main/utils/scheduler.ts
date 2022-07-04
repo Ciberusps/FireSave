@@ -2,7 +2,7 @@ import Stores from "../stores";
 import Games from "./games";
 import Saves from "./saves";
 
-const RUNNING_GAME_CHECK_INTERVAL = 60 * 1000; // 1 min
+const RUNNING_GAME_CHECK_INTERVAL = 15 * 1000; // 15 sec
 
 let autoSavesTask: NodeJS.Timer | null = null;
 let runningGamesCheckTask: NodeJS.Timer | null = null;

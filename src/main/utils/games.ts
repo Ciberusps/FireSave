@@ -8,6 +8,7 @@ import Processes from "./processes";
 
 import Stores from "../stores";
 import { PLATFORM } from "./config";
+import { joinAndNormalize } from ".";
 
 const generateUniqGameId = (limit = 10): string | null => {
   let result = null;
@@ -58,16 +59,6 @@ const createSteamGame = async (
   Stores.Games.set(`games.${id}`, newGame);
 };
 
-const updateSteamGame = async (
-  game: TGame,
-  storeInfo: TSteamAppStoreInfo,
-  steamApp: ISteamApp
-): Promise<void> => {
-  Stores.Games.set(`games.${game.id}.gamePath.${PLATFORM}`, steamApp.path);
-  Stores.Games.set(`games.${game.id}.steam.storeInfo`, storeInfo);
-  Stores.Games.set(`games.${game.id}.imageUrl`, storeInfo.header_image);
-};
-
 const fillSteamGames = async () => {
   try {
     const games = Stores.Games.get("games");
@@ -82,8 +73,13 @@ const fillSteamGames = async () => {
         const game = Object.values(games).find(
           (g) => g.steam?.appId === app.appId
         );
+
         if (game) {
-          if (!game.steam?.storeInfo || !game.gamePath || !game.imageUrl) {
+          Stores.Games.set(
+            `games.${game.id}.gamePath.${PLATFORM}.path`,
+            joinAndNormalize(app.path)
+          );
+          if (!game.steam?.storeInfo || !game.imageUrl) {
             // TODO: report why game is not valid
             gamesToUpdate.push({ game, steamApp: app });
           }
@@ -99,25 +95,30 @@ const fillSteamGames = async () => {
         ...gamesToUpdate.map((g) => g.steamApp.appId),
       ];
       const gamesStoreInfo = await SteamAPI.fetchGamesStoreInfo(appIds);
+      if (!gamesStoreInfo) return;
 
-      if (gamesStoreInfo) {
-        for (const game of gamesToUpdate) {
-          if (game.game.steam?.appId) {
-            const storeInfo = gamesStoreInfo.result?.[game.game.steam?.appId];
-            const steamApp = game.steamApp;
-            if (storeInfo) {
-              updateSteamGame(game.game, storeInfo, steamApp);
-            }
+      for (const game of gamesToUpdate) {
+        if (game.game.steam?.appId) {
+          const storeInfo = gamesStoreInfo.result?.[game.game.steam?.appId];
+          if (storeInfo) {
+            Stores.Games.set(
+              `games.${game.game.id}.steam.storeInfo`,
+              storeInfo
+            );
+            Stores.Games.set(
+              `games.${game.game.id}.imageUrl`,
+              storeInfo.header_image
+            );
           }
         }
+      }
 
-        for (const steamApp of gamesToCreate) {
-          const storeInfo = gamesStoreInfo.result?.[steamApp.appId];
-          if (storeInfo) {
-            createSteamGame(steamApp, storeInfo);
-          } else {
-            // TODO: report why cant create game
-          }
+      for (const steamApp of gamesToCreate) {
+        const storeInfo = gamesStoreInfo.result?.[steamApp.appId];
+        if (storeInfo) {
+          createSteamGame(steamApp, storeInfo);
+        } else {
+          // TODO: report why cant create game
         }
       }
     }
