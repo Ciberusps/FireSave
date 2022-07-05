@@ -45,7 +45,7 @@ const GamePage = () => {
       <SavePoints>
         {isOnlineGame && (
           <OnlineGameAlert variant="info">
-            {`Looks like its online game, manipulation with saves can lead to "ban"/"shadow ban"/"soft ban", avoid using FireSave in "online" mode`}
+            {`Looks like its online game, manipulation with saves can lead to ban/shadow ban, to avoid it LOG OUT from online session before loading`}
           </OnlineGameAlert>
         )}
 
