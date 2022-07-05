@@ -91,5 +91,7 @@ type TExpandButton = {
   isOpened: boolean;
 };
 const ExpandButton = styled(Button)<TExpandButton>`
-  transform: ${({ isOpened }) => (isOpened ? "unset" : "rotate(180deg)")};
+  svg {
+    transform: ${({ isOpened }) => (isOpened ? "unset" : "rotate(180deg)")};
+  }
 `;

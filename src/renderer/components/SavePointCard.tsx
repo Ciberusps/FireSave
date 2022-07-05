@@ -155,7 +155,7 @@ const SavePointCard = (props: TProps) => {
   );
 
   return (
-    <Container className={className}>
+    <Container className={className} tabIndex={0}>
       <ScreenshotContainer>
         <ScreenshotBackground
           src={screenshotPath}
