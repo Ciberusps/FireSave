@@ -7,8 +7,10 @@ import Icon, { TIcons, TSizes, TProps as TIconProps } from "./Icon";
 import ActivityIndicator from "./ActivityIndicator";
 
 type TSize = "normal" | "small";
+type TVariant = "primary" | "secondary";
 
 type TProps = Partial<LinkProps> & {
+  variant?: TVariant;
   to?: To;
   size?: TSize;
   href?: string;
@@ -25,6 +27,7 @@ type TProps = Partial<LinkProps> & {
 
 const Button = (props: TProps, ref: any) => {
   const {
+    variant = "primary",
     children,
     size = "normal",
     icon,
@@ -50,7 +53,7 @@ const Button = (props: TProps, ref: any) => {
       type={type}
       role="button"
       size={size}
-      hasChildren={!!children}
+      variant={variant}
       isLoading={!!isLoading}
       disabled={!!isDisabled}
       className={className}
@@ -84,7 +87,7 @@ export default forwardRef<HTMLButtonElement, TProps>(Button);
 const height = "48px";
 
 type TContainer = Pick<HTMLProps<HTMLAnchorElement>, "href"> & {
-  hasChildren: boolean;
+  variant: TVariant;
   disabled: boolean;
   isLoading: boolean;
   size: TSize;
@@ -100,8 +103,8 @@ const Container = styled.button<TContainer>`
   height: ${({ size }) => (size === "normal" ? height : "30px")};
   min-height: ${({ size }) => (size === "normal" ? height : "30px")};
 
-  background: ${({ theme, hasChildren }) =>
-    hasChildren ? theme.purple : theme.darkOpacity};
+  background: ${({ theme, variant }) =>
+    variant === "primary" ? theme.purple : theme.darkOpacity};
   color: ${({ disabled, theme }) =>
     disabled ? theme.darkOpacity : theme.white};
   text-decoration: none;
@@ -116,11 +119,11 @@ const Container = styled.button<TContainer>`
   &:hover,
   &.hover {
     text-decoration: none;
-    ${({ disabled, hasChildren }) =>
+    ${({ disabled, variant }) =>
       !disabled &&
       css`
         background: ${({ theme }) =>
-          hasChildren ? theme.purpleHovered : theme.purpleHovered};
+          variant === "primary" ? theme.purpleHovered : theme.purpleHovered};
       `}
   }
 
@@ -132,11 +135,11 @@ const Container = styled.button<TContainer>`
   &:active,
   &.active {
     text-decoration: none;
-    ${({ disabled, hasChildren }) =>
+    ${({ disabled, variant }) =>
       !disabled &&
       css`
         background: ${({ theme }) =>
-          hasChildren ? theme.purpleHovered : theme.purpleHovered};
+          variant === "primary" ? theme.purpleHovered : theme.purpleHovered};
       `}
   }
 

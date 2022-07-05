@@ -35,6 +35,7 @@ const FAQ = (props: TProps) => {
               <ExpandButton
                 icon="chevronUp"
                 size="small"
+                variant="secondary"
                 isOpened={isOpened}
                 onClick={() => toggleItem(item.title)}
               />

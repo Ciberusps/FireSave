@@ -26,7 +26,7 @@ const GameHeader = (props: TProps) => {
   return (
     <Container>
       <Info>
-        <BackArrow to="/" icon="leftArrow" />
+        <BackArrow to="/" icon="leftArrow" variant="secondary" />
 
         <Image width={150} height={70} src={imgSrc} alt={`Game ${name}`} />
 
@@ -43,7 +43,11 @@ const GameHeader = (props: TProps) => {
 
         {!game.isPlaingNow && <PlayButton icon="play" onClick={onPlayGame} />}
 
-        <Button icon="settings" to={`/games/${game.id}/settings`} />
+        <Button
+          icon="settings"
+          variant="secondary"
+          to={`/games/${game.id}/settings`}
+        />
       </CtaButtons>
     </Container>
   );

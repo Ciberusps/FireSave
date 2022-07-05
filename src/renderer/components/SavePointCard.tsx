@@ -8,6 +8,7 @@ import lodashDebounce from "lodash.debounce";
 import Text from "./Text";
 import Image from "./Image";
 import Button from "./Button";
+import DefaultConfirmModal from "./DefaultConfirmModal";
 
 import Toaster from "../utils/toaster";
 import { joinAndNormalize } from "../utils/common";
@@ -39,6 +40,7 @@ const SavePointCard = (props: TProps) => {
   const theme = useTheme();
   const [name, setName] = useState<string>(savePoint.name);
   const tags = useGamesStore((state) => state.tags);
+  const [savePointToDelete, setSavePointToDelete] = useState<TSavePoint>();
 
   const tagsInputOptions = useMemo(
     () => tags.map((t) => ({ value: t, label: t })),
@@ -125,7 +127,7 @@ const SavePointCard = (props: TProps) => {
     setName(savePoint.name);
   }, [savePoint.name]);
 
-  const onRemoveSave = useCallback(
+  const removeSave = useCallback(
     async (savePoint: TSavePoint) => {
       await window.electron.removeSavePoint(game.id, savePoint.id);
     },
@@ -226,8 +228,25 @@ const SavePointCard = (props: TProps) => {
         >
           Load
         </Button>
-        <Button icon="close" onClick={() => onRemoveSave(savePoint)} />
+        <Button
+          icon="close"
+          variant="secondary"
+          onClick={() => setSavePointToDelete(savePoint)}
+        />
       </CTAButtons>
+
+      <DefaultConfirmModal
+        isOpen={!!savePointToDelete}
+        title="Remove save"
+        description="Are you sure you want to delete this save?"
+        onRequestClose={(result) => {
+          if (result && savePointToDelete) {
+            removeSave(savePointToDelete);
+          } else {
+            setSavePointToDelete(undefined);
+          }
+        }}
+      />
     </Container>
   );
 };

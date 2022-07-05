@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
+import Modal from "react-modal";
 
 import IndexPage from "../pages";
 import GamePage from "../pages/games/[id]";
@@ -12,6 +13,8 @@ import {
   loadStores,
   subscribeOnStoresChanges,
 } from "../utils/stores";
+
+Modal.setAppElement("#root");
 
 const AppContainer = () => {
   const isLoadingApp = useSettingsStore(
