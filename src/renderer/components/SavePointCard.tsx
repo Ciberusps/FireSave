@@ -236,7 +236,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 900px;
   min-height: ${DEFAULT_CARD_HEIGHT}px;
   background: #1c1c1c;
   border-radius: ${CARD_BORDER_RADIUS}px;

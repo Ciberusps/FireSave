@@ -1,6 +1,7 @@
 import { toast, TypeOptions } from "react-toastify";
 
-type TIntent = Exclude<TypeOptions, "default">;
+export type TIntent = Exclude<TypeOptions, "default">;
+
 type TAddProps = {
   content: any;
   intent: TIntent;
