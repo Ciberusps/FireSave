@@ -11,14 +11,21 @@ const scollbarStyles = css`
   }
 
   &::-webkit-scrollbar {
-    width: 8px;
-    background-color: ${({ theme }) => theme.background};
+    width: 14px;
+    background: transparent;
   }
 
   &::-webkit-scrollbar-thumb {
+    width: 10px;
     border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: rgba(255, 255, 255, 0.3);
+    border: 4px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    transition: 0.32s ease-in-out;
+
+    &:hover {
+      border-width: 1px;
+    }
   }
 `;
 
