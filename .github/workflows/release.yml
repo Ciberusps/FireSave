@@ -50,11 +50,14 @@ jobs:
         run: |
           cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content
 
-      - name: Create steamworks build script
+      - name: Create steamworks build script and auth files for steam guard
         run: node ./scripts/createSteamBuildScript.js
         shell: bash
         env:
           STEAM_APP_ID: 1904150
+          STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF }}
+          STEAM_SSFN_FILE_NAME: ${{ secrets.STEAM_SSFN_FILE_NAME }}
+          STEAM_SSFN_FILE_CONTENTS: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
 
       - name: Create auth files for steam guard/steamcmd
         shell: bash
@@ -65,9 +68,9 @@ jobs:
           pwd
           ls
           echo "Create steam config.vdf file"
-          echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d > "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf"
+          echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d > ./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf
           echo "Create steam ssfn file"
-          echo "${{ secrets.STEAM_SSFN_FILE_CONTENTS }}" | base64 -d > "./steamworks_sdk/tools/ContentBuilder/builder/${{ secrets.STEAM_SSFN_FILE_NAME }}"
+          echo "${{ secrets.STEAM_SSFN_FILE_CONTENTS }}" | base64 -d > ./steamworks_sdk/tools/ContentBuilder/builder/${{ secrets.STEAM_SSFN_FILE_NAME }}
 
       - name: Steam build & release
         run: |

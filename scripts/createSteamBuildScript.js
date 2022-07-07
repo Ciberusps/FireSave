@@ -2,7 +2,12 @@ require("dotenv").config();
 const fs = require("fs");
 const exec = require("child_process").exec;
 
-const { STEAM_APP_ID } = process.env;
+const {
+  STEAM_APP_ID,
+  STEAM_CONFIG_VDF,
+  STEAM_SSFN_FILE_NAME,
+  STEAM_SSFN_FILE_CONTENTS,
+} = process.env;
 
 if (!STEAM_APP_ID) {
   throw new Error("process.env.STEAM_APP_ID should be defined");
@@ -34,4 +39,18 @@ const buildScript = `"AppBuild"
 fs.writeFileSync(
   "./steamworks_sdk/tools/ContentBuilder/scripts/simple_build.vdf",
   buildScript
+);
+
+const configVdf = atob(STEAM_CONFIG_VDF);
+
+fs.writeFileSync(
+  "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf",
+  configVdf
+);
+
+const ssfnFileContent = atob(STEAM_SSFN_FILE_CONTENTS);
+
+fs.writeFileSync(
+  `./steamworks_sdk/tools/ContentBuilder/builder/${STEAM_SSFN_FILE_NAME}`,
+  configVdf
 );
