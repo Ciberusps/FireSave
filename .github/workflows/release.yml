@@ -27,6 +27,7 @@ jobs:
           sudo dpkg --add-architecture i386
           sudo apt update
           sudo apt install -y wine-stable
+          sudo apt-get install wine32
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v3
