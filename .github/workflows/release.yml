@@ -52,10 +52,12 @@ jobs:
 
       - name: Create steamworks build script
         run: node ./scripts/createSteamBuildScript.js
+        shell: bash
         env:
           STEAM_APP_ID: 1904150
 
       - name: Create auth files for steam guard/steamcmd
+        shell: bash
         run: |
           echo "Create steam config.vdf file"
           echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d > "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf"
