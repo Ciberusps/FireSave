@@ -1,6 +1,6 @@
 require("dotenv").config();
 const fs = require("fs");
-const exec = require("child_process").exec;
+const exec = require("child_process").execSync;
 
 const {
   STEAM_APP_ID,
@@ -41,31 +41,23 @@ fs.writeFileSync(
   buildScript
 );
 
-// console.log(STEAM_CONFIG_VDF);
-const configVdf = atob(STEAM_CONFIG_VDF);
-// console.log(configVdf);
-
+const configPath =
+  "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf";
+const configContent = atob(STEAM_CONFIG_VDF);
 fs.mkdirSync("./steamworks_sdk/tools/ContentBuilder/builder/config", {
   recursive: true,
 });
-fs.writeFileSync(
-  "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf",
-  configVdf,
-  {
-    encoding: "utf8",
-    flag: "w",
-  }
-);
+fs.writeFileSync(configPath, configContent, {
+  encoding: "utf8",
+  flag: "w",
+});
+exec(`chmod 777 "${configPath}"`);
 
-// console.log(STEAM_SSFN_FILE_CONTENTS);
+const ssfnFilePath = `./steamworks_sdk/tools/ContentBuilder/builder/${STEAM_SSFN_FILE_NAME}`;
 const ssfnFileContent = atob(STEAM_SSFN_FILE_CONTENTS);
-// console.log(ssfnFileContent);
 
-fs.writeFileSync(
-  `./steamworks_sdk/tools/ContentBuilder/builder/${STEAM_SSFN_FILE_NAME}`,
-  configVdf,
-  {
-    encoding: "utf8",
-    flag: "w",
-  }
-);
+fs.writeFileSync(ssfnFilePath, configContent, {
+  encoding: "utf8",
+  flag: "w",
+});
+exec(`chmod 777 "${ssfnFilePath}"`);
