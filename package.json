@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Saves manager",
   "main": "./src/main/main.ts",
   "scripts": {
@@ -154,9 +154,6 @@
     "styled-components": "^5.3.3",
     "upath": "^2.0.1",
     "zustand": "^3.7.2"
-  },
-  "engines": {
-    "npm": "~14.18.3"
   },
   "devEngines": {
     "node": ">=14.x",
