@@ -50,9 +50,9 @@ jobs:
         run: |
           cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content
 
-      - name: Steamcmd setup
-        run: |
-          "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +quit
+      # - name: Steamcmd setup
+      #   run: |
+      #     "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +quit
 
       - name: Create steamworks build script and auth files for steam guard
         run: node ./scripts/createSteamBuildScript.js
