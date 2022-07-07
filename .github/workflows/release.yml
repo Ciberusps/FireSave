@@ -59,18 +59,18 @@ jobs:
           STEAM_SSFN_FILE_NAME: ${{ secrets.STEAM_SSFN_FILE_NAME }}
           STEAM_SSFN_FILE_CONTENTS: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
 
-      - name: Create auth files for steam guard/steamcmd
-        shell: bash
-        run: |
-          pwd
-          ls
-          cd ./steamworks_sdk
-          pwd
-          ls
-          echo "Create steam config.vdf file"
-          echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d > ./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf
-          echo "Create steam ssfn file"
-          echo "${{ secrets.STEAM_SSFN_FILE_CONTENTS }}" | base64 -d > ./steamworks_sdk/tools/ContentBuilder/builder/${{ secrets.STEAM_SSFN_FILE_NAME }}
+      # - name: Create auth files for steam guard/steamcmd
+      #   shell: bash
+      #   run: |
+      #     pwd
+      #     ls
+      #     cd ./steamworks_sdk
+      #     pwd
+      #     ls
+      #     echo "Create steam config.vdf file"
+      #     echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d > ./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf
+      #     echo "Create steam ssfn file"
+      #     echo "${{ secrets.STEAM_SSFN_FILE_CONTENTS }}" | base64 -d > ./steamworks_sdk/tools/ContentBuilder/builder/${{ secrets.STEAM_SSFN_FILE_NAME }}
 
       - name: Steam build & release
         run: |
