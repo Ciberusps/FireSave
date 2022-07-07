@@ -41,14 +41,18 @@ fs.writeFileSync(
   buildScript
 );
 
+// console.log(STEAM_CONFIG_VDF);
 const configVdf = atob(STEAM_CONFIG_VDF);
+// console.log(configVdf);
 
 fs.writeFileSync(
   "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf",
   configVdf
 );
 
+// console.log(STEAM_SSFN_FILE_CONTENTS);
 const ssfnFileContent = atob(STEAM_SSFN_FILE_CONTENTS);
+// console.log(ssfnFileContent);
 
 fs.writeFileSync(
   `./steamworks_sdk/tools/ContentBuilder/builder/${STEAM_SSFN_FILE_NAME}`,
