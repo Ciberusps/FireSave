@@ -45,6 +45,9 @@ fs.writeFileSync(
 const configVdf = atob(STEAM_CONFIG_VDF);
 // console.log(configVdf);
 
+fs.mkdirSync("./steamworks_sdk/tools/ContentBuilder/builder/config", {
+  recursive: true,
+});
 fs.writeFileSync(
   "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf",
   configVdf,
