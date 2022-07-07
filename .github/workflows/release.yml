@@ -9,9 +9,14 @@ jobs:
   release:
     runs-on: ${{ matrix.os }}
 
+    defaults:
+      run:
+        shell: bash
+
     env:
       STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
       STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
+      STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK: ${{ secrets.STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK }}
 
     strategy:
       matrix:
@@ -29,9 +34,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install
+          npm install --legacy-peer-deps
 
-      - name: Publish releases
+      - name: Publish github releases
         env:
           # These values are used for auto updates signing
           # APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -43,5 +48,22 @@ jobs:
         run: |
           npm run postinstall
           npm run build
-          npm exec electron-builder -- --publish always --win
+          npm exec electron-builder -- --publish always
           # npm exec electron-builder -- --publish always --win --mac --linux
+
+      - name: Copy release build to steamworks_sdk "content" folder
+        run: |
+          cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
+
+      - name: Create steamworks build script
+        run: node ./scripts/createSteamBuildScript.js
+        env:
+          STEAM_APP_ID: 1904150
+          RELEASE_BRANCH: development
+
+      - name: Create auth files
+        run: node ./scripts/fetchSteamAuthFiles.js
+
+      - name: Steam build & release
+        run: |
+          "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit

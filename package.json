@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.5.4",
+  "version": "0.6.0",
   "description": "Saves manager",
   "main": "./src/main/main.ts",
   "scripts": {
@@ -10,7 +10,7 @@
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --config ./electron-builder.json --publish never",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && npm run install:native-deps && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts && opencollective-postinstall",
-    "install:native-deps": "cd release/app && npm i --ignore-scripts && cd ../.. && npm run steamworks-sdk:download && npm run steamworks-sdk:unzip",
+    "install:native-deps": "cd release/app && npm i --ignore-scripts && cd ../.. && node ./scripts/fetchSteamworksSdk.js",
     "prepare": "husky install",
     "start": "cross-env npm run bump:version $npm_package_version && ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
     "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
@@ -21,9 +21,6 @@
     "lint:types": "tsc --noEmit",
     "test": "jest",
     "bump:version": "node scripts/bumpVersion.js",
-    "steamworks-sdk:download": "node ./scripts/steamworksSdkDownload.js",
-    "steamworks-sdk:zip": "rm -rf steamworks_sdk.zip && node ./scripts/steamworksSdkZip.js",
-    "steamworks-sdk:unzip": "node ./scripts/steamworksSdkUnZip.js",
     "docs:scrap-greenworks": "node ./scripts/scrapGreensworksDocs.js",
     "check:steam-licenses": "npx license-checker > steam-licenses.json --exclude MIT,ISC,Apache-2.0,BSD-3-Clause,WTFPL,CC-BY-4.0,0BSD,Python-2.0,Zlib,BSD-2-Clause,Unlicense"
   },
@@ -154,9 +151,6 @@
     "styled-components": "^5.3.3",
     "upath": "^2.0.1",
     "zustand": "^3.7.2"
-  },
-  "engines": {
-    "npm": "~14.18.3"
   },
   "devEngines": {
     "node": ">=14.x",
