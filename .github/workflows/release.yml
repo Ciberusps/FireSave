@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -51,5 +51,5 @@ jobs:
         run: |
           npm run postinstall
           npm run build
-          npm exec electron-builder -- --publish always --win
+          npm exec electron-builder -- --publish always
           # npm exec electron-builder -- --publish always --win --mac --linux
