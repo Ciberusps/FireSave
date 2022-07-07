@@ -1,10 +1,9 @@
 name: Build/release
 
 on:
-  push
-  # push:
-  # tags:
-  #   - "*"
+  push:
+    tags:
+      - "*"
 
 jobs:
   release:
@@ -16,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, ubuntu-latest]
 
     steps:
       - name: Check out Git repository
