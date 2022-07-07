@@ -73,6 +73,7 @@ jobs:
       #     echo "${{ secrets.STEAM_SSFN_FILE_CONTENTS }}" | base64 -d > ./steamworks_sdk/tools/ContentBuilder/builder/${{ secrets.STEAM_SSFN_FILE_NAME }}
 
       - name: Steam build & release
+        shell: bash
         run: |
           "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
 
