@@ -59,6 +59,11 @@ jobs:
       - name: Create auth files for steam guard/steamcmd
         shell: bash
         run: |
+          pwd
+          ls
+          cd ./steamworks_sdk
+          pwd
+          ls
           echo "Create steam config.vdf file"
           echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d > "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf"
           echo "Create steam ssfn file"
