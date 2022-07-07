@@ -21,6 +21,19 @@ exec(
     }
     console.log(`stdout: ${stdout}`);
 
-    console.log("successfully unzipped ");
+    console.log("- [steamworksSdkUnZip] successfully unzipped for greenworks");
+  }
+);
+
+exec(
+  `npx 7z-wasm x steamworks_sdk.zip -o./steamworks_sdk -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`,
+  (error, stdout, stderr) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+    console.log(`stdout: ${stdout}`);
+
+    console.log("- [steamworksSdkUnZip] successfully unzipped for greenworks");
   }
 );
