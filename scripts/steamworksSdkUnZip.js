@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { exec } = require("child_process");
+const exec = require("child_process").execSync;
 
 const { STEAMWORKS_SDK_ARCHIVE_PASSWORD } = process.env;
 if (!STEAMWORKS_SDK_ARCHIVE_PASSWORD) {
