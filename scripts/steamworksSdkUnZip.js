@@ -8,10 +8,6 @@ if (!STEAMWORKS_SDK_ARCHIVE_PASSWORD) {
   );
 }
 
-console.info(
-  `Your steamworks sdk archive password ${STEAMWORKS_SDK_ARCHIVE_PASSWORD}`
-);
-
 exec(
   `npx 7z-wasm x steamworks_sdk.zip -o./release/app/node_modules/greenworks/deps/steamworks_sdk -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`,
   (error, stdout, stderr) => {

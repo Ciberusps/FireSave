@@ -88,12 +88,17 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 ## How to update SteamworksSDK
 
 - download steamworks sdk from https://partner.steamgames.com/downloads/list
-- extract content from "sdk" folder to "/steamworks_sdk" folder
+- extract content from "sdk" folder to `/steamworks_sdk` folder
 - fill `STEAMWORKS_SDK_ARCHIVE_PASSWORD` in `.env`
-- `npm run steamworks-sdk:zip`
+- run 7zip and create archive with password from `steamworks_sdk` folder
 - upload `steamworks-sdk:zip` to google drive, make it available to "anyone with the link"(not possible to place zip in git somehow zip brokes after being pushed to any remote same for gitlab and github)
 - fill `STEAMWORKS_SDK_GOOGLE_DRIVE_LINK` in `.env` via instructions in `.env.example`
 - `npm run steamworks-sdk:unzip` will automatically runned on depenecies install via `npm i`
+
+## How to add "steam auth files" for release github action
+
+- copy
+- `npx 7z-wasm a ../steamworks_sdk.zip * -aoa -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -y`
 
 ### Build
 
