@@ -47,7 +47,11 @@ const configVdf = atob(STEAM_CONFIG_VDF);
 
 fs.writeFileSync(
   "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf",
-  configVdf
+  configVdf,
+  {
+    encoding: "utf8",
+    flag: "w",
+  }
 );
 
 // console.log(STEAM_SSFN_FILE_CONTENTS);
@@ -56,5 +60,9 @@ const ssfnFileContent = atob(STEAM_SSFN_FILE_CONTENTS);
 
 fs.writeFileSync(
   `./steamworks_sdk/tools/ContentBuilder/builder/${STEAM_SSFN_FILE_NAME}`,
-  configVdf
+  configVdf,
+  {
+    encoding: "utf8",
+    flag: "w",
+  }
 );
