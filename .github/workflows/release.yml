@@ -15,18 +15,11 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest]
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
-
-      # - name: Install Wine
-      #   run: |
-      #     sudo dpkg --add-architecture i386
-      #     sudo apt update
-      #     sudo apt install -y wine-stable
-      #     sudo apt-get install wine32
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v3
@@ -52,3 +45,37 @@ jobs:
           npm run build
           npm exec electron-builder -- --publish always
           # npm exec electron-builder -- --publish always --win --mac --linux
+
+      - name: Copy release build to steamworks_sdk "content" folder
+        run: |
+          cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content
+
+      - name: Create steamworks build script
+        run: node ./scripts/createSteamBuildScript.js
+        env:
+          STEAM_APP_ID: 1904150
+
+      - name: Create auth files for steam guard/steamcmd
+        run: |
+          echo "Create steam config.vdf file"
+          echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d > "./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf"
+          echo "Create steam ssfn file"
+          echo "${{ secrets.STEAM_SSFN_FILE_CONTENTS }}" | base64 -d > "./steamworks_sdk/tools/ContentBuilder/builder/${{ secrets.STEAM_SSFN_FILE_NAME }}"
+
+      - name: Steam build & release
+        run: |
+          "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
+
+      # - uses: game-ci/steam-deploy@v1
+      #   with:
+      #     username: ${{ secrets.STEAM_USERNAME }}
+      #     password: ${{ secrets.STEAM_PASSWORD }}
+      #     configVdf: ${{ secrets.STEAM_CONFIG_VDF}}
+      #     ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
+      #     ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
+      #     appId: 1904150
+      #     buildDescription: ${{ steps.package-version.outputs.current-version}}
+      #     rootPath: build
+      #     depot1Path: StandaloneWindows64
+      #     depot2Path: StandaloneLinux64
+      #     releaseBranch: development
