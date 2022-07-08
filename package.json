@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Saves manager",
   "main": "./src/main/main.ts",
   "scripts": {
@@ -129,6 +129,7 @@
     "electron-store": "^8.0.1",
     "electron-updater": "^4.6.5",
     "framer-motion": "^6.3.3",
+    "fs-extra": "^10.1.0",
     "lodash.debounce": "^4.0.8",
     "lodash.groupby": "^4.6.0",
     "nanoid": "^3.2.0",

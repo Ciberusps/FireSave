@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 
@@ -18,9 +17,7 @@ const ONLINE_GAMES_STEAM_CATEGORIES = [
 
 const GamePage = () => {
   const { id } = useParams<{ id: string }>();
-  const settingsStorePath = usePersistentStore(
-    (state) => state.settingsStorePath
-  );
+  const savesFolder = usePersistentStore((state) => state.savesFolder);
   const game = useGamesStore((state) => id && state.games[id]);
   const saves = useGamesStore((state) => id && state.savePoints[id]);
 
@@ -29,8 +26,8 @@ const GamePage = () => {
   const savePoints = (saves && Object.values(saves)) || [];
   if (!savePoints) return <div>error</div>;
 
-  const gamePath = joinAndNormalize(
-    settingsStorePath,
+  const gameSavesPath = joinAndNormalize(
+    savesFolder,
     game.savePointsFolderName
   );
 
@@ -53,7 +50,7 @@ const GamePage = () => {
           <SavePointCard
             key={point.id}
             game={game}
-            gamePath={gamePath}
+            gameSavesPath={gameSavesPath}
             savePoint={point}
           />
         ))}

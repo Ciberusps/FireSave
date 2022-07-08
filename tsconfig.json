@@ -3,8 +3,6 @@
     "target": "esnext",
     "module": "commonjs",
     "lib": ["dom", "esnext"],
-    "declaration": true,
-    "declarationMap": true,
     "jsx": "react-jsx",
     "strict": true,
     "pretty": true,

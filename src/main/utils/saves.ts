@@ -12,7 +12,7 @@ import { getGlobby, joinAndNormalize } from ".";
 
 const getOrCreateSavesFolder = (game: TGame): string => {
   const savesFolderPath = joinAndNormalize(
-    Stores.Persistent.store.settingsStorePath,
+    Stores.Persistent.store.savesFolder,
     `${game.savePointsFolderName}__${game.id}`
   );
 

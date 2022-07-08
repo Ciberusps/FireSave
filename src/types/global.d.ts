@@ -3,8 +3,11 @@ interface Window {
 }
 
 type TPersistentStore = {
-  settingsStorePath: string;
-  gamesStorePath: string;
+  savesFolder: string;
+  /** @deprecated can be replaced with "savesFolder" without breaking changes */
+  settingsStorePath?: string;
+  /** @deprecated can be replaced with "savesFolder" without breaking changes */
+  gamesStorePath?: string;
 };
 
 type TWindowSettings = {
