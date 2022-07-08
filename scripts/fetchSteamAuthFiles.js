@@ -19,16 +19,12 @@ try {
   exec(
     `curl -L "${STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK}" > steam_auth_files.zip`
   );
-  console.log("successfully downloaded");
+  console.info("- [fetchSteamAuthFiles]");
 
   exec(
-    `npx 7z-wasm x steam_auth_files.zip -o./steam_auth_files -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
+    `npx 7z-wasm x steam_auth_files.zip -o./steamworks_sdk/tools/ContentBuilder/builder -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
   );
-  console.log("- [steamworksSdkUnZip] successfully unzipped for greenworks");
-
-  exec(
-    `cp ./steam_auth_files/. ./steamworks_sdk/tools/ContentBuilder/builder -r`
-  );
+  console.info("- [fetchSteamAuthFiles] successfully unzipped");
 } catch (err) {
   console.error(err);
 }

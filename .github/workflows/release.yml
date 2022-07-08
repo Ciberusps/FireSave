@@ -9,6 +9,10 @@ jobs:
   release:
     runs-on: ${{ matrix.os }}
 
+    defaults:
+      run:
+        shell: bash
+
     env:
       STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
       STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
@@ -32,7 +36,7 @@ jobs:
         run: |
           npm install --legacy-peer-deps
 
-      - name: Publish releases
+      - name: Publish github releases
         env:
           # These values are used for auto updates signing
           # APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -49,51 +53,16 @@ jobs:
 
       - name: Copy release build to steamworks_sdk "content" folder
         run: |
-          cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content
+          cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
 
-      # - name: Steamcmd setup
-      #   run: |
-      #     "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +quit
-
-      - name: Create steamworks build script and auth files for steam guard
+      - name: Create steamworks build script
         run: node ./scripts/createSteamBuildScript.js
-        shell: bash
         env:
           STEAM_APP_ID: 1904150
-          STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF }}
-          STEAM_SSFN_FILE_NAME: ${{ secrets.STEAM_SSFN_FILE_NAME }}
-          STEAM_SSFN_FILE_CONTENTS: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
 
       - name: Create auth files
         run: node ./scripts/fetchSteamAuthFiles.js
-      # - name: Create auth files for steam guard/steamcmd
-      #   shell: bash
-      #   run: |
-      #     pwd
-      #     ls
-      #     cd ./steamworks_sdk
-      #     pwd
-      #     ls
-      #     echo "Create steam config.vdf file"
-      #     echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d > ./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf
-      #     echo "Create steam ssfn file"
-      #     echo "${{ secrets.STEAM_SSFN_FILE_CONTENTS }}" | base64 -d > ./steamworks_sdk/tools/ContentBuilder/builder/${{ secrets.STEAM_SSFN_FILE_NAME }}
 
       - name: Steam build & release
-        shell: bash
         run: |
           "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
-
-      # - uses: game-ci/steam-deploy@v1
-      #   with:
-      #     username: ${{ secrets.STEAM_USERNAME }}
-      #     password: ${{ secrets.STEAM_PASSWORD }}
-      #     configVdf: ${{ secrets.STEAM_CONFIG_VDF}}
-      #     ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
-      #     ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
-      #     appId: 1904150
-      #     buildDescription: ${{ steps.package-version.outputs.current-version}}
-      #     rootPath: build
-      #     depot1Path: StandaloneWindows64
-      #     depot2Path: StandaloneLinux64
-      #     releaseBranch: development
