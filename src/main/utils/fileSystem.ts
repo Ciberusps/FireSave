@@ -28,16 +28,20 @@ const writeFileSync = (...args: Parameters<typeof fs.writeFileSync>) => {
 const copyFolder = fsExtra.copySync;
 
 const isPathsEqual = (path1: string, path2: string): boolean => {
-  return joinAndNormalizeUpath(path1) === joinAndNormalizeUpath(path2);
+  return normalizeUpath(path1) === normalizeUpath(path2);
 };
 
 const normalizeUpath = (pathString: string): string => {
   return upath.normalize(pathString);
 };
 
-const joinAndNormalizeUpath = (...args: string[]) => {
-  return normalizeUpath(upath.join(...args));
+const normalize = (pathString: string): string => {
+  return path.normalize(pathString);
 };
+
+const join = path.join;
+
+const joinUpath = upath.join;
 
 const normalizePathForCurrentOS = (pathString: string): string => {
   return path.normalize(pathString);
@@ -51,8 +55,10 @@ const FileSystem = {
   isDir,
   isExist,
   isPathsEqual,
+  normalize,
   normalizeUpath,
-  joinAndNormalizeUpath,
+  join,
+  joinUpath,
   normalizePathForCurrentOS,
 };
 

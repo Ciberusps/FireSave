@@ -29,15 +29,6 @@ export const parseVdf = <T>(file: string): T => {
   return VDF.parse(file) as T;
 };
 
-/**
- * @deprecated use FileSystem.joinAndNormalizeUpath
- * @param args
- * @returns
- */
-export const joinAndNormalize = (...args: string[]) => {
-  return upath.normalize(upath.join(...args));
-};
-
 export const getGlobby = async (
   options: IPC.TGetGlobbyOptions
 ): Promise<string[]> => {
@@ -55,14 +46,14 @@ export const getGlobby = async (
   );
 };
 
-export const gamePathToExePath = (
+export const getCustomGameExePath = (
   gamePath: TPlatformSpecific<TFolderOrFilesRaw> | undefined
 ): string | null => {
   const folder = gamePath?.[PLATFORM]?.path;
   const file = gamePath?.[PLATFORM]?.files?.[0];
 
   if (folder && file) {
-    const exePath = joinAndNormalize(folder, file);
+    const exePath = FileSystem.join(folder, file);
     return FileSystem.isExist(exePath) ? exePath : null;
   }
   return null;

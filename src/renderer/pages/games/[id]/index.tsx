@@ -1,3 +1,4 @@
+import path from "path";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 
@@ -7,7 +8,6 @@ import GameHeader from "../../../components/GameHeader";
 import SavePointCard from "../../../components/SavePointCard";
 
 import { useGamesStore, usePersistentStore } from "../../../utils/stores";
-import { joinAndNormalize } from "../../../utils/common";
 
 const ONLINE_GAMES_STEAM_CATEGORIES = [
   "Online PvP",
@@ -26,10 +26,7 @@ const GamePage = () => {
   const savePoints = (saves && Object.values(saves)) || [];
   if (!savePoints) return <div>error</div>;
 
-  const gameSavesPath = joinAndNormalize(
-    savesFolder,
-    game.savePointsFolderName
-  );
+  const gameSavesPath = path.join(savesFolder, game.savePointsFolderName);
 
   const isOnlineGame = game?.steam?.storeInfo?.categories
     ?.map((c) => c.description)

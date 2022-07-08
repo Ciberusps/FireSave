@@ -1,6 +1,6 @@
 import ElectronStore from "electron-store";
-import FileSystem from "../utils/fileSystem";
 
+import FileSystem from "../utils/fileSystem";
 import { DEFAULT_STORES_PATH } from "../utils/config";
 
 // persistent store in `%AppData%/FireSave/config.json` exists even after app uninstall
@@ -8,7 +8,7 @@ const persistentStore = new ElectronStore<TPersistentStore>({
   defaults: {
     settingsStorePath: undefined,
     gamesStorePath: undefined,
-    savesFolder: DEFAULT_STORES_PATH,
+    savesFolder: FileSystem.normalizeUpath(DEFAULT_STORES_PATH),
   },
   migrations: {
     "0.6.1": (store) => {
@@ -33,6 +33,13 @@ const persistentStore = new ElectronStore<TPersistentStore>({
         store.delete("settingsStorePath");
         store.delete("gamesStorePath");
       }
+    },
+    "0.6.3": (store) => {
+      console.log("MIGRATION RUNNED");
+      store.set(
+        "savesFolder",
+        FileSystem.normalizeUpath(store.store.savesFolder)
+      );
     },
   },
 });

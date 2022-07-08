@@ -3,8 +3,7 @@ import child from "child_process";
 
 import Games from "../utils/games";
 import Stores from "../stores";
-import { PLATFORM } from "../utils/config";
-import { gamePathToExePath, joinAndNormalize } from "../utils";
+import { getCustomGameExePath } from "../utils";
 
 type TGamesHandlers = {
   createCustomGame: IPC.THandler<"createCustomGame">;
@@ -44,7 +43,7 @@ const GamesHandlers: TGamesHandlers = {
       if (game.steam?.appId) {
         shell.openExternal("steam://rungameid/" + game.steam.appId);
       } else if (!game.isCreatedAutomatically) {
-        const exePath = gamePathToExePath(game?.gamePath);
+        const exePath = getCustomGameExePath(game?.gamePath);
         if (exePath) {
           child.execFile(exePath);
         } else {

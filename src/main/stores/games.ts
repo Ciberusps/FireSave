@@ -1,8 +1,8 @@
 import ElectronStore from "electron-store";
 
 import persistentStore from "./persistent";
+import FileSystem from "../utils/fileSystem";
 import { PLATFORM } from "../utils/config";
-import { joinAndNormalize } from "../utils";
 
 const DEFAULT_TAGS_LIST = [
   "auto",
@@ -43,7 +43,17 @@ const gamesStore = new ElectronStore<TGamesStore>({
       Object.entries(games).forEach(([, game]) => {
         const gamePath = game.gamePath?.[PLATFORM];
         if (gamePath?.path) {
-          gamePath.path = joinAndNormalize(gamePath.path);
+          gamePath.path = FileSystem.normalizeUpath(gamePath.path);
+        }
+      });
+      store.set("games", games);
+    },
+    "0.6.2": (store) => {
+      const games = store.store.games;
+      Object.entries(games).forEach(([, game]) => {
+        const gamePath = game.gamePath?.[PLATFORM];
+        if (gamePath?.path) {
+          gamePath.path = FileSystem.normalizeUpath(gamePath.path);
         }
       });
       store.set("games", games);

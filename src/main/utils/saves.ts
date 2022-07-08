@@ -8,10 +8,10 @@ import Stores from "../stores";
 import Capture from "./capture";
 import FileSystem from "./fileSystem";
 import { PLATFORM, SCREENSHOTS_FOLDER_NAME } from "./config";
-import { getGlobby, joinAndNormalize } from ".";
+import { getGlobby } from ".";
 
 const getOrCreateSavesFolder = (game: TGame): string => {
-  const savesFolderPath = joinAndNormalize(
+  const savesFolderPath = FileSystem.joinUpath(
     Stores.Persistent.store.savesFolder,
     `${game.savePointsFolderName}__${game.id}`
   );
@@ -22,7 +22,10 @@ const getOrCreateSavesFolder = (game: TGame): string => {
 };
 
 const getSavePointFolder = (game: TGame, savePoint: TSavePoint): string => {
-  return joinAndNormalize(getOrCreateSavesFolder(game), savePoint.folderName);
+  return FileSystem.joinUpath(
+    getOrCreateSavesFolder(game),
+    savePoint.folderName
+  );
 };
 
 type TCountStatsRes = {
@@ -65,10 +68,10 @@ const makeSavePoint = async (
     if (!savesConfigFolderPath) throw new Error("Save config folder not found");
 
     const newSavePointId = nanoid();
-    const newSaveFolderName = joinAndNormalize(
-      newSavePointId + format(new Date(), "__HH-mm-ss__dd_MM_yyyy")
-    );
-    const newSaveFolder = joinAndNormalize(savesFolder, newSaveFolderName);
+    const newSaveFolderName =
+      newSavePointId + format(new Date(), "__HH-mm-ss__dd_MM_yyyy");
+
+    const newSaveFolder = FileSystem.joinUpath(savesFolder, newSaveFolderName);
     // FileSystem.createDir(newSaveFolder);
     console.log({
       gameFolders: savesFolder,
@@ -107,12 +110,12 @@ const makeSavePoint = async (
     };
     Stores.Games.set(`savePoints.${gameId}.${newSavePointId}`, savePointData);
 
-    const screenshotFolderPath = joinAndNormalize(
+    const screenshotFolderPath = FileSystem.joinUpath(
       newSaveFolder,
       SCREENSHOTS_FOLDER_NAME
     );
     const screenshotFileName = `screenshot.jpg`;
-    const screenshotFilePath = joinAndNormalize(
+    const screenshotFilePath = FileSystem.joinUpath(
       screenshotFolderPath,
       screenshotFileName
     );

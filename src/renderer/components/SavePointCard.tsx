@@ -4,6 +4,7 @@ import CreatableSelect from "react-select/creatable";
 import { StylesConfig, OnChangeValue } from "react-select";
 import { format, formatDistance } from "date-fns";
 import lodashDebounce from "lodash.debounce";
+import path from "path";
 
 import Text from "./Text";
 import Image from "./Image";
@@ -11,7 +12,6 @@ import Button from "./Button";
 import DefaultConfirmModal from "./DefaultConfirmModal";
 
 import Toaster from "../utils/toaster";
-import { joinAndNormalize } from "../utils/common";
 import { transparentize } from "polished";
 import { useGamesStore } from "renderer/utils/stores";
 
@@ -91,12 +91,14 @@ const SavePointCard = (props: TProps) => {
 
   const screenshotPath: string | undefined = useMemo(() => {
     if (savePoint?.screenshotFileName) {
-      return joinAndNormalize(
-        "file://",
-        gameSavesPath + `__${game.id}`,
-        savePoint.folderName,
-        "__screenshots",
-        savePoint?.screenshotFileName
+      return path.normalize(
+        path.join(
+          "file://",
+          gameSavesPath + `__${game.id}`,
+          savePoint.folderName,
+          "__screenshots",
+          savePoint?.screenshotFileName
+        )
       );
     }
     return undefined;

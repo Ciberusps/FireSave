@@ -7,8 +7,8 @@ import SteamAPI from "./steamAPI";
 import Processes from "./processes";
 
 import Stores from "../stores";
+import FileSystem from "../utils/fileSystem";
 import { PLATFORM } from "./config";
-import { joinAndNormalize } from ".";
 
 const generateUniqGameId = (limit = 10): string | null => {
   let result = null;
@@ -49,7 +49,9 @@ const createSteamGame = async (
     savePointsFolderName: steamApp.manifest.name,
     savesStats: { total: 0, auto: 0, manual: 0 },
     imageUrl: storeInfo?.header_image,
-    gamePath: { [PLATFORM]: { path: steamApp.path } },
+    gamePath: {
+      [PLATFORM]: { path: FileSystem.normalizeUpath(steamApp.path) },
+    },
     steam: {
       appId: steamApp.appId,
       storeInfo,
@@ -77,7 +79,7 @@ const fillSteamGames = async () => {
         if (game) {
           Stores.Games.set(
             `games.${game.id}.gamePath.${PLATFORM}.path`,
-            joinAndNormalize(app.path)
+            FileSystem.normalizeUpath(app.path)
           );
           if (!game.steam?.storeInfo || !game.imageUrl) {
             // TODO: report why game is not valid
