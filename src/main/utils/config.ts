@@ -12,7 +12,10 @@ export const RESOURCES_PATH = app.isPackaged
 
 export const STEAM_APP_ID = 1904150;
 
-export const DEFAULT_STORES_PATH = path.join(app.getAppPath(), "FireSave_Data");
+export const DEFAULT_STORES_PATH = path.join(
+  app.getPath("exe").replace("FireSave.exe", ""),
+  "FireSave_Data"
+);
 
 export const APP_VERSION = app.getVersion();
 
