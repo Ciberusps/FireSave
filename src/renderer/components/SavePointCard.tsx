@@ -30,13 +30,13 @@ type TOption = { value: string; label: string };
 
 type TProps = {
   game: TGame;
-  gamePath: string;
+  gameSavesPath: string;
   savePoint: TSavePoint;
   className?: string;
 };
 
 const SavePointCard = (props: TProps) => {
-  const { game, gamePath, savePoint, className } = props;
+  const { game, gameSavesPath, savePoint, className } = props;
   const theme = useTheme();
   const [name, setName] = useState<string>(savePoint.name);
   const tags = useGamesStore((state) => state.tags);
@@ -93,14 +93,19 @@ const SavePointCard = (props: TProps) => {
     if (savePoint?.screenshotFileName) {
       return joinAndNormalize(
         "file://",
-        gamePath + `__${game.id}`,
+        gameSavesPath + `__${game.id}`,
         savePoint.folderName,
         "__screenshots",
         savePoint?.screenshotFileName
       );
     }
     return undefined;
-  }, [game.id, gamePath, savePoint?.screenshotFileName, savePoint.folderName]);
+  }, [
+    game.id,
+    gameSavesPath,
+    savePoint?.screenshotFileName,
+    savePoint.folderName,
+  ]);
 
   const formatedDate = (() => {
     const date = new Date(savePoint.date);

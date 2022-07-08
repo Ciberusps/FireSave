@@ -29,6 +29,11 @@ export const parseVdf = <T>(file: string): T => {
   return VDF.parse(file) as T;
 };
 
+/**
+ * @deprecated use FileSystem.joinAndNormalizeUpath
+ * @param args
+ * @returns
+ */
 export const joinAndNormalize = (...args: string[]) => {
   return upath.normalize(upath.join(...args));
 };

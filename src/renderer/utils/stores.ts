@@ -3,6 +3,7 @@ import create from "zustand";
 export const usePersistentStore = create<TPersistentStore>(() => ({
   gamesStorePath: "",
   settingsStorePath: "",
+  savesFolder: "",
 }));
 
 export const useSettingsStore = create<TSettingsStore>(() => ({

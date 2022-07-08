@@ -4,7 +4,7 @@ import persistentStore from "./persistent";
 
 const settingsStore = new ElectronStore<TSettingsStore>({
   // TODO: should be app folder, not %appdata%
-  cwd: persistentStore.store.settingsStorePath,
+  cwd: persistentStore.store.savesFolder,
   name: "settings",
   defaults: {
     mainWindow: {
@@ -23,6 +23,7 @@ const settingsStore = new ElectronStore<TSettingsStore>({
     runtimeValues: {
       isLoadingApp: true,
     },
+    selectedDisplay: undefined,
     envs: {
       IS_DEV: false,
       PLATFORM: process.platform,

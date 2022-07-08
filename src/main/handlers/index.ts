@@ -35,7 +35,7 @@ const commonHandlers: TCommonHandlers = {
     return true;
   },
   changePersistentStore: async (_, newSettings) => {
-    Stores.Persistent.set("settingsStorePath", newSettings.settingsStorePath);
+    Stores.Persistent.set("savesFolder", newSettings.savesFolder);
     return true;
   },
   getGlobby: async (_, options) => getGlobby(options),

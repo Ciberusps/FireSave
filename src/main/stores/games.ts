@@ -17,7 +17,7 @@ const DEFAULT_TAGS_LIST = [
 ];
 
 const gamesStore = new ElectronStore<TGamesStore>({
-  cwd: persistentStore.store.gamesStorePath,
+  cwd: persistentStore.store.savesFolder,
   name: "games",
   defaults: {
     games: {},
