@@ -101,7 +101,7 @@ You can boost up my motivation/development speed via DonationAlerts - https://ww
 - fill `STEAMWORKS_SDK_ARCHIVE_PASSWORD` in `.env`
 - copy
   - `./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf`
-  - `./steamworks_sdk/tools/ContentBuilder/builder/ssfn<hashOfNumbers>`
+  - `./steamworks_sdk/tools/ContentBuilder/builder/ssfn<hashOfNumbers>` only "hidden" required - [how to show hidden files](https://support.microsoft.com/en-us/windows/view-hidden-files-and-folders-in-windows-97fbc472-c603-9d90-91d0-1166d1d9f4b5)
   - files to `./steam_auth_files` folder
 - open `steam_auth_files` select all files and create .zip password protected archive using 7zip and password from `STEAMWORKS_SDK_ARCHIVE_PASSWORD`
 - upload archive on google drive

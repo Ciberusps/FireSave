@@ -2,17 +2,18 @@ require("dotenv").config();
 const fs = require("fs");
 const exec = require("child_process").execSync;
 
-const { STEAM_APP_ID } = process.env;
+const { checkRequiredEnvs } = require("./utils");
 
-if (!STEAM_APP_ID) {
-  throw new Error("process.env.STEAM_APP_ID should be defined");
-}
+const { STEAM_APP_ID, RELEASE_BRANCH } = process.env;
+checkRequiredEnvs(["STEAM_APP_ID", "RELEASE_BRANCH"]);
+
 const packageJson = JSON.parse(fs.readFileSync("package.json"));
 
 const buildScript = `"AppBuild"
 {
 	"AppID" "${STEAM_APP_ID}" // your AppID
 	"Desc" "v${packageJson.version}" // internal description for this build
+  "SetLive" "${RELEASE_BRANCH}"
 
 	"ContentRoot" "../content/" // root content folder, relative to location of this file
 	"BuildOutput" "../output/" // build output folder for build logs and build cache files

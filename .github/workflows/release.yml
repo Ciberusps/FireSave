@@ -59,6 +59,7 @@ jobs:
         run: node ./scripts/createSteamBuildScript.js
         env:
           STEAM_APP_ID: 1904150
+          RELEASE_BRANCH: development
 
       - name: Create auth files
         run: node ./scripts/fetchSteamAuthFiles.js
