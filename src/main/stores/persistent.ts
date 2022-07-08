@@ -1,10 +1,12 @@
 import ElectronStore from "electron-store";
+import isDev from "electron-is-dev";
 
 import FileSystem from "../utils/fileSystem";
 import { DEFAULT_STORES_PATH } from "../utils/config";
 
 // persistent store in `%AppData%/FireSave/config.json` exists even after app uninstall
 const persistentStore = new ElectronStore<TPersistentStore>({
+  name: isDev ? "config.dev" : "config",
   defaults: {
     settingsStorePath: undefined,
     gamesStorePath: undefined,
