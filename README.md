@@ -2,7 +2,7 @@
 
 FireSave is a saves management app that helps you to make saves, name them, tag, sort, filter, and load of course. All saves are synced between devices with the steam cloud(only steam version). Add cloud saves in games that don't support steam cloud saves, like Dark Souls 3
 
-![cover](https://user-images.githubusercontent.com/14001879/167883425-0023a3de-a32d-41c7-aa60-551f16883073.jpg)
+![github_header_banner](https://user-images.githubusercontent.com/14001879/177992026-c1f2ff5d-7fa9-423d-99c8-edf64c35b9f1.png)
 
 ## Motivation
 
@@ -69,3 +69,4 @@ Check out [contribute guide][contribute]
 ## Support
 
 You can boost up my motivation/development speed via [DonationAlerts](https://www.donationalerts.com/r/ciberusps)
+
