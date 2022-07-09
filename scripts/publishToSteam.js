@@ -14,11 +14,7 @@ checkRequiredEnvs([
 
 const buildScriptPath = path.normalize(path.resolve("./steam_build.vdf"));
 
-try {
-  exec(
-    `${STEAM_CMD} +login ${STEAM_USERNAME} ${STEAM_PASSWORD} +run_app_build ${buildScriptPath} +quit`
-  );
-  console.info("- [publishToSteam] success");
-} catch (err) {
-  console.error(err);
-}
+exec(
+  `${STEAM_CMD} +login ${STEAM_USERNAME} ${STEAM_PASSWORD} +run_app_build ${buildScriptPath} +quit`
+);
+console.info("- [publishToSteam] success");
