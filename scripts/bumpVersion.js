@@ -3,33 +3,44 @@ const process = require("process");
 const semver = require("semver");
 const fs = require("fs");
 
-const packageJsonPath = "release/app/package.json";
-const packageLockJsonPath = "release/app/package-lock.json";
-const mainPackageJsonPath = "package.json";
+const mainPackagePath = "package.json";
+const mainPackageLockPath = "package-lock.json";
+const releaseAppPackagePath = "release/app/package.json";
+const releaseAppPackageLockPath = "release/app/package-lock.json";
 
 const error = chalk.bold.red;
 
 const versionArgument = process.argv[2];
 if (semver.valid(versionArgument)) {
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
-  const packageLockJson = JSON.parse(fs.readFileSync(packageJsonPath));
-  const mainPackageJson = JSON.parse(fs.readFileSync(mainPackageJsonPath));
+  const mainPackageJson = JSON.parse(fs.readFileSync(mainPackagePath));
+  const mainPackageLockJson = JSON.parse(fs.readFileSync(mainPackageLockPath));
+  const releaseAppPackageJson = JSON.parse(
+    fs.readFileSync(releaseAppPackagePath)
+  );
+  const releaseAppPackageLockJson = JSON.parse(
+    fs.readFileSync(releaseAppPackagePath)
+  );
 
-  packageJson.version = versionArgument;
-  packageLockJson.version = versionArgument;
   mainPackageJson.version = versionArgument;
+  mainPackageLockJson.version = versionArgument;
+  releaseAppPackageJson.version = versionArgument;
+  releaseAppPackageLockJson.version = versionArgument;
 
   fs.writeFileSync(
-    packageJsonPath,
-    JSON.stringify(packageJson, null, 2) + "\n"
-  );
-  fs.writeFileSync(
-    packageLockJsonPath,
-    JSON.stringify(packageLockJson, null, 2) + "\n"
-  );
-  fs.writeFileSync(
-    mainPackageJsonPath,
+    mainPackagePath,
     JSON.stringify(mainPackageJson, null, 2) + "\n"
+  );
+  fs.writeFileSync(
+    mainPackageLockPath,
+    JSON.stringify(mainPackageLockJson, null, 2) + "\n"
+  );
+  fs.writeFileSync(
+    releaseAppPackagePath,
+    JSON.stringify(releaseAppPackageJson, null, 2) + "\n"
+  );
+  fs.writeFileSync(
+    releaseAppPackageLockPath,
+    JSON.stringify(releaseAppPackageLockJson, null, 2) + "\n"
   );
 
   process.exit();
