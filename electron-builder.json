@@ -14,8 +14,9 @@
   "mac": {
     "target": {
       "target": "default",
-      "arch": ["arm64", "x64"]
+      "arch": ["x64"]
     },
+    "category": "public.app-category.games",
     "type": "distribution",
     "hardenedRuntime": true,
     "entitlements": "assets/entitlements.mac.plist",
@@ -42,7 +43,7 @@
   },
   "linux": {
     "target": ["AppImage"],
-    "category": "Development"
+    "category": "Game"
   },
   "directories": {
     "app": "release/app",

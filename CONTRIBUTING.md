@@ -17,18 +17,6 @@
 - fill `STEAMWORKS_SDK_GOOGLE_DRIVE_LINK` in `.env` via instructions in `.env.example`
 - `npm run steamworks-sdk:unzip` will automatically runned on depenecies install via `npm i`
 
-## How to add "steam auth files" for release on steam via github action
-
-- auth with `./steamworks_sdk/tools/ContentBuilder/builder/steamcmd +login ${steam_login} ${steam_password} +quit`
-- fill `STEAMWORKS_SDK_ARCHIVE_PASSWORD` in `.env`
-- copy
-  - `./steamworks_sdk/tools/ContentBuilder/builder/config/config.vdf`
-  - `./steamworks_sdk/tools/ContentBuilder/builder/ssfn<hashOfNumbers>` only "hidden" required - [how to show hidden files](https://support.microsoft.com/en-us/windows/view-hidden-files-and-folders-in-windows-97fbc472-c603-9d90-91d0-1166d1d9f4b5)
-  - files to `./steam_auth_files` folder
-- open `steam_auth_files` select all files and create .zip password protected archive using 7zip and password from `STEAMWORKS_SDK_ARCHIVE_PASSWORD`
-- upload archive on google drive
-- fill `STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK` in `.env` via instructions in `.env.example`
-
 ### Build
 
 - make some changes

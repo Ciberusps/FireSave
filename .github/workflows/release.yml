@@ -16,11 +16,11 @@ jobs:
     env:
       STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
       STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
-      STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK: ${{ secrets.STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK }}
 
     strategy:
+      fail-fast: false
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
       - name: Check out Git repository
@@ -36,7 +36,12 @@ jobs:
         run: |
           npm install --legacy-peer-deps
 
-      - name: Publish github releases
+      - name: Build
+        run: |
+          npm run postinstall
+          npm run build
+
+      - name: Publish to github
         env:
           # These values are used for auto updates signing
           # APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -45,25 +50,32 @@ jobs:
           # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
           # This is used for uploading release assets to github
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm run postinstall
-          npm run build
-          npm exec electron-builder -- --publish always
-          # npm exec electron-builder -- --publish always --win --mac --linux
+        run: npm exec electron-builder -- --publish always
 
-      - name: Copy release build to steamworks_sdk "content" folder
-        run: |
-          cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
+      - id: setup-steamcmd
+        uses: CyberAndrii/setup-steamcmd@v1.1.1
 
       - name: Create steamworks build script
         run: node ./scripts/createSteamBuildScript.js
         env:
           STEAM_APP_ID: 1904150
           RELEASE_BRANCH: development
+          DEPOT_WINDOWS_ID: 1904151
+          DEPOT_LINUX_ID: 1904152
+          DEPOT_MACOS_ID: 1904153
+          RUNNER_OS: $RUNNER_OS
 
-      - name: Create auth files
-        run: node ./scripts/fetchSteamAuthFiles.js
+      - name: Generate steam guard auth code
+        id: generate
+        uses: CyberAndrii/steam-totp@v1.0.2
+        with:
+          shared_secret: ${{ secrets.STEAM_SHARED_SECRET }}
 
-      - name: Steam build & release
+      - name: Publish to Steam
         run: |
-          "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
+          node ./scripts/publishToSteam.js
+        env:
+          STEAM_CMD: ${{ steps.setup-steamcmd.outputs.executable }}
+          STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+          STEAM_GUARD_CODE: ${{ steps.generate.outputs.code }}
