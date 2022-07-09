@@ -20,7 +20,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, linux-latest, macos-latest]
 
     steps:
       - name: Check out Git repository
@@ -53,13 +53,26 @@ jobs:
 
       - name: Copy release build to steamworks_sdk "content" folder
         run: |
-          cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
+          if [ "$RUNNER_OS" == "Linux" ]; then
+                cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+                cp -r ./release/build/linux-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+                cp -r ./release/build/macos-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
+          else
+                echo "$RUNNER_OS not supported"
+                exit 1
+          fi
 
       - name: Create steamworks build script
         run: node ./scripts/createSteamBuildScript.js
         env:
           STEAM_APP_ID: 1904150
           RELEASE_BRANCH: development
+          DEPOT_WINDOWS_ID: 1904151
+          DEPOT_LINUX_ID: 1904152
+          DEPOT_MACOS_ID: 1904153
+          RUNNER_OS: $RUNNER_OS
 
       - name: Create auth files
         run: node ./scripts/fetchSteamAuthFiles.js
