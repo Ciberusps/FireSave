@@ -21,7 +21,10 @@ try {
   console.info("- [fetchSteamAuthFiles] donwloaded");
 
   exec(
-    `npx 7z-wasm x steam_auth_files.zip -o${STEAMCMD_DIR} -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
+    `npx 7z-wasm x steam_auth_files.zip -o${STEAMCMD_DIR.slice(
+      0,
+      test.length - 1
+    )} -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
   );
   console.info("- [fetchSteamAuthFiles] unzipped");
 } catch (err) {
