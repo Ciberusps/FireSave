@@ -16,25 +16,32 @@ checkRequiredEnvs(["STEAM_APP_ID", "RELEASE_BRANCH", "RUNNER_OS"]);
 console.log("RUNNER_OS", RUNNER_OS);
 
 let depotId = undefined;
+let contentRoot = undefined;
 
 switch (RUNNER_OS) {
   case "Windows":
     if (!DEPOT_WINDOWS_ID) throw new Error("DEPOT_WINDOWS_ID is required");
     depotId = DEPOT_WINDOWS_ID;
+    contentRoot = "./release/build/win-unpacked/";
     break;
   case "Linux":
     if (!DEPOT_LINUX_ID) throw new Error("DEPOT_LINUX_ID is required");
     depotId = DEPOT_LINUX_ID;
+    contentRoot = "./release/build/linux-unpacked/";
     break;
   case "MacOS":
     if (!DEPOT_MACOS_ID) throw new Error("DEPOT_MACOS_ID is required");
     depotId = DEPOT_MACOS_ID;
+    contentRoot = "./release/build/macos-unpacked/";
     break;
   default:
     break;
 }
 
 if (!depotId) {
+  throw new Error("Failed to choose DepotId");
+}
+if (!contentRoot) {
   throw new Error("Failed to choose DepotId");
 }
 
@@ -46,8 +53,8 @@ const buildScript = `"AppBuild"
 	"Desc" "v${packageJson.version}" // internal description for this build
   "SetLive" "${RELEASE_BRANCH}"
 
-	"ContentRoot" "../content/" // root content folder, relative to location of this file
-	"BuildOutput" "../output/" // build output folder for build logs and build cache files
+	"ContentRoot" "${contentRoot}" // root content folder, relative to location of this file
+	"BuildOutput" "./BuildOutput/" // build output folder for build logs and build cache files
 
 	"Depots"
 	{
@@ -63,7 +70,4 @@ const buildScript = `"AppBuild"
 	}
 }`.toString();
 
-fs.writeFileSync(
-  "./steamworks_sdk/tools/ContentBuilder/scripts/simple_build.vdf",
-  buildScript
-);
+fs.writeFileSync("./steam_build.vdf", buildScript);

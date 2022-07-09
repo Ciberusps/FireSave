@@ -38,33 +38,24 @@ jobs:
         run: |
           npm install --legacy-peer-deps
 
-      - name: Publish github releases
-        env:
-          # These values are used for auto updates signing
-          # APPLE_ID: ${{ secrets.APPLE_ID }}
-          # APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASS }}
-          # CSC_LINK: ${{ secrets.CSC_LINK }}
-          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          # This is used for uploading release assets to github
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
         run: |
           npm run postinstall
           npm run build
-          npm exec electron-builder -- --publish always
-          # npm exec electron-builder -- --publish always --win --mac --linux
 
-      - name: Copy release build to steamworks_sdk "content" folder
-        run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-                cp -r ./release/build/linux-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-                cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-                cp -r ./release/build/macos-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
-          else
-                echo "$RUNNER_OS not supported"
-                exit 1
-          fi
+      # - name: Publish to github
+      #   env:
+      #     # These values are used for auto updates signing
+      #     # APPLE_ID: ${{ secrets.APPLE_ID }}
+      #     # APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASS }}
+      #     # CSC_LINK: ${{ secrets.CSC_LINK }}
+      #     # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+      #     # This is used for uploading release assets to github
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: npm exec electron-builder -- --publish always
+
+      - id: setup-steamcmd
+        uses: CyberAndrii/setup-steamcmd@v1.1.1
 
       - name: Create steamworks build script
         run: node ./scripts/createSteamBuildScript.js
@@ -79,15 +70,6 @@ jobs:
       - name: Create auth files
         run: node ./scripts/fetchSteamAuthFiles.js
 
-      - name: Steam build & release
+      - name: Publish to Steam
         run: |
-          if [ "$RUNNER_OS" == "Linux" ]; then
-                sudo "./steamworks_sdk/tools/ContentBuilder/builder_linux/steamcmd.sh" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-                "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-                sudo "./steamworks_sdk/tools/ContentBuilder/builder_osx/steamcmd.sh" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
-          else
-                echo "$RUNNER_OS not supported"
-                exit 1
-          fi
+          ${{ steps.setup-steamcmd.outputs.executable }} +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ./steam_build.vdf +quit
