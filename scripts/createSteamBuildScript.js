@@ -1,6 +1,7 @@
 require("dotenv").config();
 const fs = require("fs");
 const exec = require("child_process").execSync;
+const path = require("path");
 
 const { checkRequiredEnvs } = require("./utils");
 
@@ -17,22 +18,23 @@ console.log("RUNNER_OS", RUNNER_OS);
 
 let depotId = undefined;
 let contentRoot = undefined;
+const buildOutput = path.resolve("./BuildOutput/");
 
 switch (RUNNER_OS) {
   case "Windows":
     if (!DEPOT_WINDOWS_ID) throw new Error("DEPOT_WINDOWS_ID is required");
     depotId = DEPOT_WINDOWS_ID;
-    contentRoot = "./release/build/win-unpacked/";
+    contentRoot = path.resolve("./release/build/win-unpacked/");
     break;
   case "Linux":
     if (!DEPOT_LINUX_ID) throw new Error("DEPOT_LINUX_ID is required");
     depotId = DEPOT_LINUX_ID;
-    contentRoot = "./release/build/linux-unpacked/";
+    contentRoot = path.resolve("./release/build/linux-unpacked/");
     break;
   case "MacOS":
     if (!DEPOT_MACOS_ID) throw new Error("DEPOT_MACOS_ID is required");
     depotId = DEPOT_MACOS_ID;
-    contentRoot = "./release/build/macos-unpacked/";
+    contentRoot = path.resolve("./release/build/macos-unpacked/");
     break;
   default:
     break;
@@ -54,7 +56,7 @@ const buildScript = `"AppBuild"
   "SetLive" "${RELEASE_BRANCH}"
 
 	"ContentRoot" "${contentRoot}" // root content folder, relative to location of this file
-	"BuildOutput" "./BuildOutput/" // build output folder for build logs and build cache files
+	"BuildOutput" "${buildOutput}" // build output folder for build logs and build cache files
 
 	"Depots"
 	{

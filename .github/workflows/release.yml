@@ -72,10 +72,6 @@ jobs:
           echo "dir ${{ steps.setup-steamcmd.outputs.directory }}"
           echo "executable ${{ steps.setup-steamcmd.outputs.executable }}"
           node ./scripts/fetchSteamAuthFiles.js
-          cd steam_auth_files
-          ls
-          cd ${{ steps.setup-steamcmd.outputs.directory }}
-          ls
         env:
           STEAMCMD_DIR: ${{ steps.setup-steamcmd.outputs.directory }}
 
