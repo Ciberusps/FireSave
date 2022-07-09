@@ -14,6 +14,11 @@ checkRequiredEnvs([
   "STEAMCMD_DIR",
 ]);
 
+const steamCmdDirWithoutSlashAtTheEnd = STEAMCMD_DIR.slice(
+  0,
+  STEAMCMD_DIR.length - 1
+);
+
 try {
   exec(
     `curl -L "${STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK}" > steam_auth_files.zip`
@@ -21,10 +26,7 @@ try {
   console.info("- [fetchSteamAuthFiles] donwloaded");
 
   exec(
-    `npx 7z-wasm x steam_auth_files.zip -o${STEAMCMD_DIR.slice(
-      0,
-      test.length - 1
-    )} -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
+    `npx 7z-wasm x steam_auth_files.zip -o${steamCmdDirWithoutSlashAtTheEnd} -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
   );
   console.info("- [fetchSteamAuthFiles] unzipped");
 } catch (err) {
