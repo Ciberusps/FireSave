@@ -31,9 +31,7 @@ try {
   );
   console.info("- [fetchSteamAuthFiles] unzipped");
 
-  exec(
-    `cp -r ./steam_auth_files/. "${steamCmdDirWithoutSlashAtTheEnd}" -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
-  );
+  exec(`cp -r ./steam_auth_files/. "${steamCmdDirWithoutSlashAtTheEnd}"`);
   console.info("- [fetchSteamAuthFiles] copied");
 } catch (err) {
   console.error(err);
