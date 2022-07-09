@@ -31,7 +31,7 @@ try {
   );
   console.info("- [fetchSteamAuthFiles] unzipped");
 
-  exec(`cp -r ./steam_auth_files/. "${steamCmdDirWithoutSlashAtTheEnd}"`);
+  exec(`cp -r ./steam_auth_files/. "${STEAMCMD_DIR}"`);
   console.info("- [fetchSteamAuthFiles] copied");
 } catch (err) {
   console.error(err);
