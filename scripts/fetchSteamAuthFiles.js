@@ -32,9 +32,7 @@ try {
   console.info("- [fetchSteamAuthFiles] unzipped");
 
   exec(
-    `cp -r ./steam_auth_files/. ${path.normalize(
-      steamCmdDirWithoutSlashAtTheEnd
-    )} -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
+    `cp -r ./steam_auth_files/. "${steamCmdDirWithoutSlashAtTheEnd}" -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
   );
   console.info("- [fetchSteamAuthFiles] copied");
 } catch (err) {
