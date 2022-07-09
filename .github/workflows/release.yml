@@ -81,4 +81,4 @@ jobs:
 
       - name: Publish to Steam
         run: |
-          ${{ steps.setup-steamcmd.outputs.executable }} +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ./steam_build.vdf +quit
+          ${{ steps.setup-steamcmd.outputs.executable }} +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ${{ github.workspace }}/steam_build.vdf +quit
