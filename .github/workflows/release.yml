@@ -82,11 +82,11 @@ jobs:
       - name: Steam build & release
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-                "./steamworks_sdk/tools/ContentBuilder/builder_linux/steamcmd.sh" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
+                sudo "./steamworks_sdk/tools/ContentBuilder/builder_linux/steamcmd.sh" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
           elif [ "$RUNNER_OS" == "Windows" ]; then
                 "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
           elif [ "$RUNNER_OS" == "macOS" ]; then
-                "./steamworks_sdk/tools/ContentBuilder/builder_osx/steamcmd.sh" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
+                sudo "./steamworks_sdk/tools/ContentBuilder/builder_osx/steamcmd.sh" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
           else
                 echo "$RUNNER_OS not supported"
                 exit 1
