@@ -26,9 +26,14 @@ try {
   console.info("- [fetchSteamAuthFiles] donwloaded");
 
   exec(
-    `npx 7z-wasm x steam_auth_files.zip -o${steamCmdDirWithoutSlashAtTheEnd} -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
+    `npx 7z-wasm x steam_auth_files.zip -o./steam_auth_files -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
   );
   console.info("- [fetchSteamAuthFiles] unzipped");
+
+  exec(
+    `cp -r ./steam_auth_files/. ${steamCmdDirWithoutSlashAtTheEnd} -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
+  );
+  console.info("- [fetchSteamAuthFiles] copied");
 } catch (err) {
   console.error(err);
 }

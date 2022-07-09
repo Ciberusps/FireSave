@@ -1,10 +1,10 @@
 name: Build/release
 
 on:
-  # push
-  push:
-    tags:
-      - "*"
+  push
+  # push:
+  #   tags:
+  #     - "*"
 
 jobs:
   release:
@@ -68,7 +68,10 @@ jobs:
           RUNNER_OS: $RUNNER_OS
 
       - name: Create auth files
-        run: node ./scripts/fetchSteamAuthFiles.js
+        run: |
+          echo "dir ${{ steps.setup-steamcmd.outputs.directory }}"
+          echo "executable ${{ steps.setup-steamcmd.outputs.executable }}"
+          node ./scripts/fetchSteamAuthFiles.js
         env:
           STEAMCMD_DIR: ${{ steps.setup-steamcmd.outputs.directory }}
 
