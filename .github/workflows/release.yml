@@ -1,10 +1,10 @@
 name: Build/release
 
 on:
-  push
-  # push:
-  #   tags:
-  #     - "*"
+  # push
+  push:
+    tags:
+      - "*"
 
 jobs:
   release:
