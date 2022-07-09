@@ -15,7 +15,7 @@ const {
 checkRequiredEnvs(["STEAM_APP_ID", "RELEASE_BRANCH", "RUNNER_OS"]);
 console.log("RUNNER_OS", RUNNER_OS);
 
-const depotId = undefined;
+let depotId = undefined;
 
 switch (RUNNER_OS) {
   case "Windows":
