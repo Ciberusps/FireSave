@@ -56,9 +56,9 @@ jobs:
       - name: Copy release build to steamworks_sdk "content" folder
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-                cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
-          elif [ "$RUNNER_OS" == "Windows" ]; then
                 cp -r ./release/build/linux-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+                cp -r ./release/build/win-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
           elif [ "$RUNNER_OS" == "macOS" ]; then
                 cp -r ./release/build/macos-unpacked/. ./steamworks_sdk/tools/ContentBuilder/content/
           else
