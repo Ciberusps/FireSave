@@ -9,7 +9,6 @@ on:
 jobs:
   release:
     runs-on: ${{ matrix.os }}
-    continue-on-error: true
 
     defaults:
       run:
@@ -21,8 +20,9 @@ jobs:
       STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK: ${{ secrets.STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK }}
 
     strategy:
+      fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Check out Git repository
@@ -81,4 +81,13 @@ jobs:
 
       - name: Steam build & release
         run: |
-          "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
+          if [ "$RUNNER_OS" == "Linux" ]; then
+                "./steamworks_sdk/tools/ContentBuilder/builder_linux/steamcmd.sh" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+                "./steamworks_sdk/tools/ContentBuilder/builder/steamcmd.exe" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+                "./steamworks_sdk/tools/ContentBuilder/builder_osx/steamcmd.sh" +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} +run_app_build ../scripts/simple_build.vdf +quit
+          else
+                echo "$RUNNER_OS not supported"
+                exit 1
+          fi
