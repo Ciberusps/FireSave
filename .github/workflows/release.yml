@@ -69,6 +69,8 @@ jobs:
 
       - name: Create auth files
         run: node ./scripts/fetchSteamAuthFiles.js
+        env:
+          STEAMCMD_DIR: ${{ steps.setup-steamcmd.outputs.directory }}
 
       - name: Publish to Steam
         run: |

@@ -3,11 +3,15 @@ const exec = require("child_process").execSync;
 
 const { checkRequiredEnvs } = require("./utils");
 
-const { STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK, STEAMWORKS_SDK_ARCHIVE_PASSWORD } =
-  process.env;
+const {
+  STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK,
+  STEAMWORKS_SDK_ARCHIVE_PASSWORD,
+  STEAMCMD_DIR,
+} = process.env;
 checkRequiredEnvs([
   "STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK",
   "STEAMWORKS_SDK_ARCHIVE_PASSWORD",
+  "STEAMCMD_DIR",
 ]);
 
 try {
@@ -17,7 +21,7 @@ try {
   console.info("- [fetchSteamAuthFiles] donwloaded");
 
   exec(
-    `npx 7z-wasm x steam_auth_files.zip -o./steamworks_sdk/tools/ContentBuilder/builder -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
+    `npx 7z-wasm x steam_auth_files.zip -o${STEAMCMD_DIR} -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
   );
   console.info("- [fetchSteamAuthFiles] unzipped");
 } catch (err) {
