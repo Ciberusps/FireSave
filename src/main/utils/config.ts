@@ -16,7 +16,8 @@ export const RESOURCES_PATH = app.isPackaged
 
 export const STEAM_APP_ID = 1904150;
 
-export const DEFAULT_STORES_PATH = path.join(appRoot, "FireSave_Data");
+const APP_ROOT_PATH = appRoot.toString();
+export const DEFAULT_STORES_PATH = path.join(APP_ROOT_PATH, "FireSave_Data");
 console.log({
   cwd: process.cwd(),
   appRootPath: appRoot,
