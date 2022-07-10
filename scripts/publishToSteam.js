@@ -16,7 +16,7 @@ checkRequiredEnvs([
 const buildScriptPath = path.normalize(path.resolve("./steam_build.vdf"));
 
 exec(
-  `${STEAM_CMD} +login "${STEAM_USERNAME}" "${STEAM_PASSWORD}" ${STEAM_GUARD_CODE} +run_app_build ${buildScriptPath} +quit`,
+  `${STEAM_CMD} +login "${STEAM_USERNAME}" "${STEAM_PASSWORD}" "${STEAM_GUARD_CODE}" +run_app_build ${buildScriptPath} +quit`,
   { stdio: "inherit" }
 );
 console.info("- [publishToSteam] success");
