@@ -2,6 +2,8 @@ import path from "path";
 import { app } from "electron";
 // @ts-ignore
 import { rootPath } from "electron-root-path";
+// @ts-ignore
+import appRoot from "app-root-path";
 
 export const { NODE_ENV, PORT, START_MINIMIZED, cwd } = process.env;
 
@@ -14,8 +16,14 @@ export const RESOURCES_PATH = app.isPackaged
 
 export const STEAM_APP_ID = 1904150;
 
-export const DEFAULT_STORES_PATH = path.join(process.cwd(), "FireSave_Data");
-console.log({ cwd: process.cwd(), __dirname, DEFAULT_STORES_PATH, rootPath });
+export const DEFAULT_STORES_PATH = path.join(appRoot, "FireSave_Data");
+console.log({
+  cwd: process.cwd(),
+  appRootPath: appRoot,
+  __dirname,
+  DEFAULT_STORES_PATH,
+  rootPath,
+});
 
 export const APP_VERSION = app.getVersion();
 
