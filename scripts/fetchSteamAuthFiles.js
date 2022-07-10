@@ -34,7 +34,7 @@ try {
 
   exec(`cp -r ./steam_auth_files/. "${STEAMCMD_DIR}"`);
 
-  if (RUNNER_OS === "Linux") {
+  if (RUNNER_OS === "Linux" || RUNNER_OS === "MacOS") {
     exec(`mkdir -p "/home/runner/Steam/config"`, { stdio: "inherit" });
     exec(`cp -r ./steam_auth_files/. /home/runner/Steam`);
   }
