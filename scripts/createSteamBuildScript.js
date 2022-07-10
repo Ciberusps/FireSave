@@ -52,7 +52,7 @@ const packageJson = JSON.parse(fs.readFileSync("package.json"));
 const buildScript = `"AppBuild"
 {
 	"AppID" "${STEAM_APP_ID}" // your AppID
-	"Desc" "v${packageJson.version}" // internal description for this build
+	"Desc" "v${packageJson.version} - ${RUNNER_OS}" // internal description for this build
   "SetLive" "${RELEASE_BRANCH}"
 
 	"ContentRoot" "${contentRoot}" // root content folder, relative to location of this file

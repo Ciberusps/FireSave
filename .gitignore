@@ -38,4 +38,12 @@ steam_game_templates_2021
 
 /_raw/
 /FireSave_Data*/
+
+# steam ci/cd
 /steam_build.vdf
+/steamcmd_*/
+/steam_auth_files/
+/steam_auth_files/
+/steamcmd_linux.tar.gz
+/steam_auth_files.zip
+/BuildOutput/

@@ -74,6 +74,7 @@ jobs:
           node ./scripts/fetchSteamAuthFiles.js
         env:
           STEAMCMD_DIR: ${{ steps.setup-steamcmd.outputs.directory }}
+          RUNNER_OS: $RUNNER_OS
 
       - name: Publish to Steam
         run: |

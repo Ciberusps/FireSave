@@ -46,4 +46,6 @@ const persistentStore = new ElectronStore<TPersistentStore>({
   },
 });
 
+console.log("pers store path", persistentStore.path);
+
 export default persistentStore;
