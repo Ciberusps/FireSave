@@ -17,12 +17,12 @@ jobs:
     env:
       STEAMWORKS_SDK_ARCHIVE_PASSWORD: ${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }}
       STEAMWORKS_SDK_GOOGLE_DRIVE_LINK: ${{ secrets.STEAMWORKS_SDK_GOOGLE_DRIVE_LINK }}
-      STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK: ${{ secrets.STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK }}
+      # STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK: ${{ secrets.STEAM_AUTH_FILES_GOOGLE_DRIVE_LINK }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Check out Git repository
@@ -67,14 +67,18 @@ jobs:
           DEPOT_MACOS_ID: 1904153
           RUNNER_OS: $RUNNER_OS
 
-      - name: Create auth files
-        run: |
-          echo "dir ${{ steps.setup-steamcmd.outputs.directory }}"
-          echo "executable ${{ steps.setup-steamcmd.outputs.executable }}"
-          node ./scripts/fetchSteamAuthFiles.js
-        env:
-          STEAMCMD_DIR: ${{ steps.setup-steamcmd.outputs.directory }}
-          RUNNER_OS: $RUNNER_OS
+      # - name: Create auth files
+      #   run: |
+      #     node ./scripts/fetchSteamAuthFiles.js
+      #   env:
+      #     STEAMCMD_DIR: ${{ steps.setup-steamcmd.outputs.directory }}
+      #     RUNNER_OS: $RUNNER_OS
+
+      - name: Generate auth code
+        id: generate
+        uses: CyberAndrii/steam-totp@v1.0.2
+        with:
+          shared_secret: ${{ secrets.STEAM_SHARED_SECRET }}
 
       - name: Publish to Steam
         run: |
@@ -83,4 +87,4 @@ jobs:
           STEAM_CMD: ${{ steps.setup-steamcmd.outputs.executable }}
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-          WORKFOLDER: ${{ github.workspace }}
+          STEAM_GUARD_CODE: ${{ steps.generate.outputs.code }}
