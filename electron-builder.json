@@ -14,7 +14,7 @@
   "mac": {
     "target": {
       "target": "default",
-      "arch": "universal"
+      "arch": ["x64"]
     },
     "type": "distribution",
     "hardenedRuntime": true,
