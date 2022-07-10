@@ -2,6 +2,7 @@ import ElectronStore from "electron-store";
 
 import persistentStore from "./persistent";
 
+console.log(persistentStore.store.savesFolder);
 const settingsStore = new ElectronStore<TSettingsStore>({
   // TODO: should be app folder, not %appdata%
   cwd: persistentStore.store.savesFolder,
