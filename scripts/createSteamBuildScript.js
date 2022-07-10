@@ -31,7 +31,7 @@ switch (RUNNER_OS) {
     depotId = DEPOT_LINUX_ID;
     contentRoot = path.resolve("./release/build/linux-unpacked/");
     break;
-  case "MacOS":
+  case "macOS":
     if (!DEPOT_MACOS_ID) throw new Error("DEPOT_MACOS_ID is required");
     depotId = DEPOT_MACOS_ID;
     contentRoot = path.resolve("./release/build/macos-unpacked/");
@@ -44,7 +44,7 @@ if (!depotId) {
   throw new Error("Failed to choose DepotId");
 }
 if (!contentRoot) {
-  throw new Error("Failed to choose DepotId");
+  throw new Error("Failed to choose contentRoot");
 }
 
 const packageJson = JSON.parse(fs.readFileSync("package.json"));
