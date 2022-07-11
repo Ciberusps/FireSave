@@ -23,12 +23,10 @@ const IndexPage = () => {
   return (
     <Layout>
       <Header>
-        <h1>Games</h1>
-
-        <div>{t("Welcome to React")}</div>
+        <h1>{t("Games")}</h1>
 
         <Button icon="add" to="/games/new/settings">
-          Add game
+          {t("Add game")}
         </Button>
       </Header>
 
