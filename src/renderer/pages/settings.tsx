@@ -48,55 +48,65 @@ const SettingsPage = () => {
   if (!settingsStore) return null;
 
   return (
-    <Layout contentStyles={{ height: "100vh" }}>
-      <h1>Settings</h1>
+    <Layout contentStyles={{ height: "100vh", alignItems: "center" }}>
+      <Container>
+        <h1>Settings</h1>
 
-      <MainSettingsBlock onSubmit={handleSubmit(onSubmit)}>
-        <DisplaysInput
-          label="Display for screenshots"
-          description="Select the display to take screenshots from"
-          selectedDisplayId={watchSelectedDisplay?.id || -1}
-          displays={displays}
-          onChange={(newDisplay) => setValue("selectedDisplay", newDisplay)}
-        />
+        <MainSettingsBlock onSubmit={handleSubmit(onSubmit)}>
+          <DisplaysInput
+            label="Display for screenshots"
+            description="Select the display to take screenshots from"
+            selectedDisplayId={watchSelectedDisplay?.id || -1}
+            displays={displays}
+            onChange={(newDisplay) => setValue("selectedDisplay", newDisplay)}
+          />
 
-        <ToggleInput
-          label="Autosaves"
-          description="Makes autosaves when game runned"
-          {...register("isAutoSaveOn")}
-        />
+          <ToggleInput
+            label="Autosaves"
+            description="Makes autosaves when game runned"
+            {...register("isAutoSaveOn")}
+          />
 
-        <NumberInput
-          control={control}
-          min={1}
-          max={60}
-          name="autoSaveMinutes"
-          label="Autosaves interval"
-          description="Interval in minutes between autosaves"
-        />
+          <NumberInput
+            control={control}
+            min={1}
+            max={60}
+            name="autoSaveMinutes"
+            label="Autosaves interval"
+            description="Interval in minutes between autosaves"
+          />
 
-        <ToggleInput
-          label="Start in Tray"
-          description="Starts the app in tray"
-          {...register("isStartingInTray")}
-        />
+          <ToggleInput
+            label="Start in Tray"
+            description="Starts the app in tray"
+            {...register("isStartingInTray")}
+          />
 
-        <CtaButtons>
-          <Button isSubmit>Save</Button>
-        </CtaButtons>
-      </MainSettingsBlock>
+          <CtaButtons>
+            <Button isSubmit>Save</Button>
+          </CtaButtons>
+        </MainSettingsBlock>
 
-      <About>
-        <Version>v{settingsStore?.version}</Version>
-        <WithLove>
-          by&nbsp;
-          <Link to="https://github.com/Ciberusps">Ciberus</Link>
-          &nbsp;for gamers ♥
-        </WithLove>
-      </About>
+        <About>
+          <Version>v{settingsStore?.version}</Version>
+          <WithLove>
+            by&nbsp;
+            <Link to="https://github.com/Ciberusps">Ciberus</Link>
+            &nbsp;for gamers ♥
+          </WithLove>
+        </About>
+      </Container>
     </Layout>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 960px;
+  padding: 0px 30px;
+`;
 
 const About = styled.div`
   position: absolute;

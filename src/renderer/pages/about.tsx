@@ -74,7 +74,8 @@ const AboutPage = () => {
 };
 
 const Container = styled.div`
-  width: 900px;
+  width: 960px;
+  padding: 0 30px;
 `;
 
 const Screenshot = styled(Image)`
