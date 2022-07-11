@@ -23,7 +23,10 @@ class MainWindow extends BrowserWindow {
       ...props,
     });
 
-    if (isMaximized && !isStartingInTray) this.maximize();
+    if (isMaximized) {
+      if (!isStartingInTray) this.maximize();
+      this.isCurrentlyMaximized = true;
+    }
 
     this.appTray = new AppTray({
       isWindowVisible: this.isVisible(),
@@ -100,6 +103,7 @@ class MainWindow extends BrowserWindow {
   }
 
   onClose(event: Electron.Event) {
+    this.savePositionAndSize();
     if (!this.permitQuit && !isDev) {
       event.preventDefault();
       this.hideWindow();
