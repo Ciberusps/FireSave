@@ -125,6 +125,7 @@ const GlobalStyles = createGlobalStyle`
 
   h2 {
     margin: 1em 0em;
+    align-self: flex-start;
   }
 
   .lazyload-wrapper {

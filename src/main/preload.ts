@@ -36,6 +36,7 @@ const savePontsApi: IPC.TSavePointsApi = {
   removeSavePoint: defaultInvokeFunction("removeSavePoint"),
   changeSavePointTags: defaultInvokeFunction("changeSavePointTags"),
   changeSavePointName: defaultInvokeFunction("changeSavePointName"),
+  addToFavorite: defaultInvokeFunction("addToFavorite"),
 };
 
 const api: IPC.TApi = {

@@ -62,6 +62,7 @@ declare global {
         savePointId: string,
         newName: string
       ) => Promise<void>;
+      addToFavorite: (gameId: string, savePointId: string) => Promise<void>;
     };
 
     type TApi = TStoresApi &

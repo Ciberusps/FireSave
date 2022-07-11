@@ -7,6 +7,7 @@ import lodashDebounce from "lodash.debounce";
 import path from "path";
 
 import Text from "./Text";
+import Icon from "./Icon";
 import Image from "./Image";
 import Button from "./Button";
 import DefaultConfirmModal from "./DefaultConfirmModal";
@@ -15,7 +16,7 @@ import Toaster from "../utils/toaster";
 import { transparentize } from "polished";
 import { useGamesStore } from "renderer/utils/stores";
 
-const DEFAULT_CARD_HEIGHT = 170;
+const DEFAULT_CARD_HEIGHT = 160;
 const MAX_IMG_WIDTH = (DEFAULT_CARD_HEIGHT * 16) / 9;
 const CARD_BORDER_RADIUS = 10;
 
@@ -161,8 +162,16 @@ const SavePointCard = (props: TProps) => {
     [game.id, savePoint.id]
   );
 
+  const onAddToFavorite = useCallback(() => {
+    window.electron.addToFavorite(game.id, savePoint.id);
+  }, [game.id, savePoint.id]);
+
   return (
-    <Container className={className} tabIndex={0}>
+    <Container
+      className={className}
+      tabIndex={0}
+      isFavorite={savePoint.isFavorite}
+    >
       <ScreenshotContainer>
         <ScreenshotBackground
           src={screenshotPath}
@@ -174,73 +183,82 @@ const SavePointCard = (props: TProps) => {
           width={MAX_IMG_WIDTH}
           height={DEFAULT_CARD_HEIGHT}
         />
+        <AddToFavorites title="Add to Favorites" onClick={onAddToFavorite}>
+          <AddToFavoritesIcon
+            icon={savePoint.isFavorite ? "starSolid" : "starSolid"}
+            size="small"
+            color={savePoint.isFavorite ? "#ca9849" : "grey"}
+          />
+        </AddToFavorites>
       </ScreenshotContainer>
 
-      <Info>
-        <Description>
-          <Name
-            type="text"
-            title={savePoint.id}
-            value={name}
-            onChange={onChangeName}
+      <RightBlock>
+        <Info>
+          <Description>
+            <Name
+              type="text"
+              title={savePoint.id}
+              value={name}
+              onChange={onChangeName}
+            />
+            <Type>
+              {savePoint?.type === "manual" ? "Manual save" : "Autosave"}{" "}
+              {savePoint.saveNumberByType && " - " + savePoint.saveNumberByType}
+            </Type>
+          </Description>
+
+          <CreatableSelect
+            placeholder="no tags..."
+            isMulti
+            isClearable
+            closeMenuOnSelect={false}
+            menuPortalTarget={document.body}
+            options={tagsInputOptions}
+            styles={tagsInputStyles}
+            value={savePoint.tags.map((t) => ({ value: t, label: t }))}
+            theme={(reactSelectTheme) => ({
+              ...reactSelectTheme,
+              colors: {
+                ...reactSelectTheme.colors,
+                primary: theme.purple,
+                primary75: transparentize(0.75, theme.purple),
+                primary50: transparentize(0.5, theme.purple),
+                primary25: transparentize(0.25, theme.purple),
+                neutral0: theme.white,
+                neutral5: transparentize(0.95, theme.purple),
+                neutral10: transparentize(0.5, theme.purple), // tags background
+                neutral20: transparentize(0.8, theme.purple),
+                neutral30: transparentize(0.7, theme.purple),
+                neutral40: transparentize(0.6, theme.purple),
+                neutral50: theme.dark,
+                neutral60: transparentize(0.4, theme.purple),
+                neutral70: transparentize(0.3, theme.purple),
+                neutral80: theme.white,
+                neutral90: transparentize(0.1, theme.purple),
+              },
+            })}
+            // @ts-ignore
+            onChange={onChangeTags}
           />
-          <Type>
-            {savePoint?.type === "manual" ? "Manual save" : "Autosave"}{" "}
-            {savePoint.saveNumberByType && " - " + savePoint.saveNumberByType}
-          </Type>
-        </Description>
 
-        <CreatableSelect
-          placeholder="no tags..."
-          isMulti
-          isClearable
-          closeMenuOnSelect={false}
-          menuPortalTarget={document.body}
-          options={tagsInputOptions}
-          styles={tagsInputStyles}
-          value={savePoint.tags.map((t) => ({ value: t, label: t }))}
-          theme={(reactSelectTheme) => ({
-            ...reactSelectTheme,
-            colors: {
-              ...reactSelectTheme.colors,
-              primary: theme.purple,
-              primary75: transparentize(0.75, theme.purple),
-              primary50: transparentize(0.5, theme.purple),
-              primary25: transparentize(0.25, theme.purple),
-              neutral0: theme.white,
-              neutral5: transparentize(0.95, theme.purple),
-              neutral10: transparentize(0.5, theme.purple), // tags background
-              neutral20: transparentize(0.8, theme.purple),
-              neutral30: transparentize(0.7, theme.purple),
-              neutral40: transparentize(0.6, theme.purple),
-              neutral50: theme.dark,
-              neutral60: transparentize(0.4, theme.purple),
-              neutral70: transparentize(0.3, theme.purple),
-              neutral80: theme.white,
-              neutral90: transparentize(0.1, theme.purple),
-            },
-          })}
-          // @ts-ignore
-          onChange={onChangeTags}
-        />
+          <DateText>{formatedDate}</DateText>
+        </Info>
 
-        <DateText>{formatedDate}</DateText>
-      </Info>
-
-      <CTAButtons>
-        <Button
-          title="Make backup save and load this save point"
-          icon="upload"
-          onClick={() => onLoadSave(savePoint)}
-        >
-          Load
-        </Button>
-        <Button
-          icon="close"
-          variant="secondary"
-          onClick={() => setSavePointToDelete(savePoint)}
-        />
-      </CTAButtons>
+        <CTAButtons>
+          <Button
+            title="Make backup save and load this save point"
+            icon="upload"
+            onClick={() => onLoadSave(savePoint)}
+          >
+            Load
+          </Button>
+          <Button
+            icon="close"
+            variant="secondary"
+            onClick={() => setSavePointToDelete(savePoint)}
+          />
+        </CTAButtons>
+      </RightBlock>
 
       <DefaultConfirmModal
         isOpen={!!savePointToDelete}
@@ -258,7 +276,11 @@ const SavePointCard = (props: TProps) => {
   );
 };
 
-const Container = styled.div`
+type TContainer = {
+  isFavorite?: boolean;
+};
+
+const Container = styled.div<TContainer>`
   display: flex;
   align-items: center;
   width: 100%;
@@ -268,6 +290,8 @@ const Container = styled.div`
   margin-bottom: 15px;
   position: relative;
   filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.75));
+  border: 1px solid
+    ${({ isFavorite }) => (isFavorite ? "#ca9849" : "transparent")};
 `;
 
 const ScreenshotContainer = styled.div`
@@ -276,10 +300,11 @@ const ScreenshotContainer = styled.div`
   align-items: center;
   width: 400px;
   height: 100%;
-  max-width: ${MAX_IMG_WIDTH}px;
+  max-width: 35%;
   border-top-left-radius: ${CARD_BORDER_RADIUS}px;
   border-bottom-left-radius: ${CARD_BORDER_RADIUS}px;
   background: rgba(0, 0, 0, 0.25);
+  overflow: hidden;
 `;
 
 const ScreenshotBackground = styled(Image)`
@@ -293,13 +318,48 @@ const ScreenshotBackground = styled(Image)`
 `;
 
 const Screenshot = styled(Image)`
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+`;
+
+const AddToFavoritesIcon = styled(Icon)`
   z-index: 1;
+`;
+
+const AddToFavorites = styled.button`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  stroke: black;
+  stroke-width: 50px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+  }
+`;
+
+const RightBlock = styled.div`
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 `;
 
 const Info = styled.div`
   flex: 1;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   height: 100%;
   justify-content: space-between;

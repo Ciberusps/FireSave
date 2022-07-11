@@ -23,8 +23,10 @@ const GamePage = () => {
 
   if (!game) return <div>error</div>;
 
-  const savePoints = (saves && Object.values(saves)) || [];
+  const savePoints = ((saves && Object.values(saves)) || []).reverse();
   if (!savePoints) return <div>error</div>;
+
+  const favoriteSavePoints = savePoints.filter((save) => save.isFavorite);
 
   const gameSavesPath = path.join(savesFolder, game.savePointsFolderName);
 
@@ -43,7 +45,18 @@ const GamePage = () => {
           </OnlineGameAlert>
         )}
 
-        {savePoints?.reverse()?.map((point) => (
+        {favoriteSavePoints.length > 0 && <h2>Favorites</h2>}
+        {favoriteSavePoints?.map((point) => (
+          <SavePointCard
+            key={point.id}
+            game={game}
+            gameSavesPath={gameSavesPath}
+            savePoint={point}
+          />
+        ))}
+
+        {favoriteSavePoints.length > 0 && <h2>Timeline</h2>}
+        {savePoints?.map((point) => (
           <SavePointCard
             key={point.id}
             game={game}
@@ -63,7 +76,7 @@ const SavePoints = styled.div`
   /* margin-top: 40px; */
   align-items: center;
   align-self: center;
-  padding: 40px 0px;
+  padding: 30px 40px;
   width: 100%;
   max-width: 900px;
 `;

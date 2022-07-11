@@ -76,5 +76,7 @@ declare global {
     tags: string[];
 
     screenshotFileName?: string;
+
+    isFavorite?: boolean;
   };
 }
