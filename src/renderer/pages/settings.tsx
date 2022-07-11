@@ -14,7 +14,7 @@ import { useSettingsStore } from "../utils/stores";
 
 type TSettingsForm = Pick<
   TSettingsStore,
-  "selectedDisplay" | "isAutoSaveOn" | "autoSaveMinutes"
+  "selectedDisplay" | "isAutoSaveOn" | "autoSaveMinutes" | "isStartingInTray"
 >;
 
 const SettingsPage = () => {
@@ -27,6 +27,7 @@ const SettingsPage = () => {
         selectedDisplay: settingsStore.selectedDisplay,
         isAutoSaveOn: settingsStore.isAutoSaveOn,
         autoSaveMinutes: settingsStore.autoSaveMinutes,
+        isStartingInTray: settingsStore.isStartingInTray,
       },
     });
   const watchSelectedDisplay = watch("selectedDisplay");
@@ -72,6 +73,12 @@ const SettingsPage = () => {
           name="autoSaveMinutes"
           label="Autosaves interval"
           description="Interval in minutes between autosaves"
+        />
+
+        <ToggleInput
+          label="Start in Tray"
+          description="Starts the app in tray"
+          {...register("isStartingInTray")}
         />
 
         <CtaButtons>

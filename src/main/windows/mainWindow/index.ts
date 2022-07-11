@@ -1,20 +1,36 @@
-import { BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, shell } from "electron";
 import isDev from "electron-is-dev";
 
 import Stores from "../../stores";
 import AppTray from "../../utils/tray";
 import MenuBuilder from "./menu";
-import { START_MINIMIZED } from "../../utils/config";
 import { resolveHtmlPath } from "../../utils";
 
 class MainWindow extends BrowserWindow {
+  private appTray: AppTray;
+  private isCurrentlyMaximized: boolean = false;
+  private permitQuit: boolean = false;
+
   constructor(props: Electron.BrowserWindowConstructorOptions | undefined) {
-    const { isMaximized, ...posAndSize } = Stores.Settings.store.mainWindow;
-    super({ ...posAndSize, ...props });
+    const {
+      isStartingInTray,
+      mainWindow: { isMaximized, ...posAndSize },
+    } = Stores.Settings.store;
 
-    if (isMaximized) this.maximize();
+    super({
+      ...posAndSize,
+      show: !isStartingInTray,
+      ...props,
+    });
 
-    AppTray.init(this);
+    if (isMaximized && !isStartingInTray) this.maximize();
+
+    this.appTray = new AppTray({
+      isWindowVisible: this.isVisible(),
+      onClickShow: this.showWindow.bind(this),
+      onClickHide: this.hideWindow.bind(this),
+      onClickQuit: this.quitApp.bind(this),
+    });
 
     Stores.Persistent.onDidAnyChange((newVal) => {
       this.webContents.send("onPersistentStoreUpdate", newVal);
@@ -26,9 +42,10 @@ class MainWindow extends BrowserWindow {
       this.webContents.send("onGamesStoreUpdate", newVal);
     });
 
-    this.on("ready-to-show", this.onReadyToShow.bind(this));
-    this.on("minimize", this.onMinimize.bind(this));
-    this.on("restore", this.onRestore.bind(this));
+    this.on("minimize", this.hideWindow.bind(this));
+    this.on("maximize", this.onMaximize.bind(this));
+    this.on("unmaximize", this.onUnmaximize.bind(this));
+    this.on("restore", this.showWindow.bind(this));
     this.on("close", this.onClose.bind(this));
 
     this.loadURL(resolveHtmlPath("index.html"));
@@ -43,35 +60,57 @@ class MainWindow extends BrowserWindow {
     });
   }
 
-  onReadyToShow() {
-    if (START_MINIMIZED) {
-      this.minimize();
+  showWindow() {
+    if (this.isVisible()) return;
+
+    const {
+      mainWindow: { isMaximized },
+    } = Stores.Settings.store;
+
+    // if window was maximized but started in tray, maximize should be restored
+    if (isMaximized) {
+      this.maximize();
+      this.focus();
     } else {
+      // else just show the window
       this.show();
     }
+
+    this.appTray.updateContextMenu(true);
   }
 
-  onMinimize() {
+  hideWindow() {
+    this.savePositionAndSize();
+
     this.hide();
+    this.appTray.updateContextMenu(false);
   }
 
-  onRestore() {
-    this.show();
+  quitApp() {
+    app.quit();
+    this.permitQuit = true;
+  }
+
+  onMaximize() {
+    this.isCurrentlyMaximized = true;
+  }
+
+  onUnmaximize() {
+    this.isCurrentlyMaximized = false;
   }
 
   onClose(event: Electron.Event) {
-    if (!AppTray.getIsQuiting() && !isDev) {
+    if (!this.permitQuit && !isDev) {
       event.preventDefault();
-      this.hide();
+      this.hideWindow();
     }
-    this.savePositionAndSize();
     return false;
   }
 
   savePositionAndSize() {
     const position = this.getPosition();
     const size = this.getSize();
-    const isMaximized = this.isMaximized();
+    const isMaximized = this.isCurrentlyMaximized;
 
     const newWindowState = {
       x: position[0],

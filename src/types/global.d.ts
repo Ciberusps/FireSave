@@ -24,10 +24,12 @@ type TSettingsStore = {
   version: string;
   saveShortcut: string;
   mainWindow: TWindowSettings;
+  selectedDisplay: Electron.Display | undefined;
+  isStartingInTray: boolean;
+
   runtimeValues: {
     isLoadingApp: boolean;
   };
-  selectedDisplay: Electron.Display | undefined;
   envs: {
     PLATFORM: NodeJS.Platform;
     RESOURCES_PATH: string;

@@ -20,10 +20,12 @@ const settingsStore = new ElectronStore<TSettingsStore>({
     autoSaveMinutes: 15,
     saveShortcut: "F5",
     version: "unknown",
+    selectedDisplay: undefined,
+    isStartingInTray: false,
+
     runtimeValues: {
       isLoadingApp: true,
     },
-    selectedDisplay: undefined,
     envs: {
       IS_DEV: false,
       PLATFORM: process.platform,

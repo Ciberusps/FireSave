@@ -30,6 +30,7 @@ const commonHandlers: TCommonHandlers = {
     Stores.Settings.set("isAutoSaveOn", newSettings.isAutoSaveOn);
     Stores.Settings.set("autoSaveMinutes", newSettings.autoSaveMinutes);
     Stores.Settings.set("selectedDisplay", newSettings.selectedDisplay);
+    Stores.Settings.set("isStartingInTray", newSettings.isStartingInTray);
 
     Scheduler.start();
     return true;
