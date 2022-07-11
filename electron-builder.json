@@ -50,7 +50,7 @@
     "buildResources": "assets",
     "output": "release/build"
   },
-  "extraResources": ["./assets/**"],
+  "extraResources": ["./assets/**", "./locales/**"],
   "publish": {
     "provider": "github",
     "owner": "ciberusps",

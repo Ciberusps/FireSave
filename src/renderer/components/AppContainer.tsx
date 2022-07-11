@@ -8,12 +8,15 @@ import AboutPage from "../pages/about";
 import LoadingPage from "../pages/loading";
 import SettingsPage from "../pages/settings";
 import GameSettingsPage from "../pages/games/[id]/settings";
+
+import Localization from "../../common/localization";
 import {
   useSettingsStore,
   loadStores,
   subscribeOnStoresChanges,
 } from "../utils/stores";
 
+Localization.init();
 Modal.setAppElement("#root");
 
 const AppContainer = () => {
