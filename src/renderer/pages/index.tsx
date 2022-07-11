@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 import GameCard from "../components/GameCard";
 import Button from "../components/Button";
@@ -8,6 +9,7 @@ import { useGamesStore } from "../utils/stores";
 import { useMemo } from "react";
 
 const IndexPage = () => {
+  const { t } = useTranslation();
   const games = useGamesStore((state) => Object.values(state.games));
 
   const validGames = useMemo(() => {
@@ -21,10 +23,10 @@ const IndexPage = () => {
   return (
     <Layout>
       <Header>
-        <h1>Games</h1>
+        <h1>{t("Games")}</h1>
 
         <Button icon="add" to="/games/new/settings">
-          Add game
+          {t("Add game")}
         </Button>
       </Header>
 

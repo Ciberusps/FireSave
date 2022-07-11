@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import Link from "../components/Link";
 import Button from "../components/Button";
@@ -18,6 +19,7 @@ type TSettingsForm = Pick<
 >;
 
 const SettingsPage = () => {
+  const { t } = useTranslation();
   const settingsStore = useSettingsStore();
   const [displays, setDisplays] = useState<Electron.Display[]>([]);
 
@@ -50,7 +52,7 @@ const SettingsPage = () => {
   return (
     <Layout contentStyles={{ height: "100vh", alignItems: "center" }}>
       <Container>
-        <h1>Settings</h1>
+        <h1>{t("Settings")}</h1>
 
         <MainSettingsBlock onSubmit={handleSubmit(onSubmit)}>
           <DisplaysInput
