@@ -121,6 +121,7 @@ const GlobalStyles = createGlobalStyle`
     font-size: 54px;
     font-weight: bolder;
     margin: 0px;
+    align-self: flex-start;
   }
 
   h2 {

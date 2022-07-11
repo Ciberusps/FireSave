@@ -42,6 +42,7 @@ const SavePointCard = (props: TProps) => {
   const [name, setName] = useState<string>(savePoint.name);
   const tags = useGamesStore((state) => state.tags);
   const [savePointToDelete, setSavePointToDelete] = useState<TSavePoint>();
+  const [savePointToLoad, setSavePointToLoad] = useState<TSavePoint>();
 
   const tagsInputOptions = useMemo(
     () => tags.map((t) => ({ value: t, label: t })),
@@ -116,7 +117,7 @@ const SavePointCard = (props: TProps) => {
     return format(date, "dd.MM.yyyy, HH:mm") + " - " + distance + " ago";
   })();
 
-  const onLoadSave = useCallback(
+  const loadSave = useCallback(
     async (savePoint: TSavePoint) => {
       const isLoaded = await window.electron.loadSavePoint(
         game.id,
@@ -248,7 +249,11 @@ const SavePointCard = (props: TProps) => {
           <Button
             title="Make backup save and load this save point"
             icon="upload"
-            onClick={() => onLoadSave(savePoint)}
+            onClick={() =>
+              game.isPlaingNow
+                ? setSavePointToLoad(savePoint)
+                : loadSave(savePoint)
+            }
           >
             Load
           </Button>
@@ -267,9 +272,28 @@ const SavePointCard = (props: TProps) => {
         onRequestClose={(result) => {
           if (result && savePointToDelete) {
             removeSave(savePointToDelete);
-          } else {
-            setSavePointToDelete(undefined);
           }
+          setSavePointToDelete(undefined);
+        }}
+      />
+
+      <DefaultConfirmModal
+        isOpen={!!savePointToLoad}
+        title="Load save"
+        description={
+          <>
+            Game is currently running.
+            <br /> Loading might cause game to crash.
+            <br />
+            Are you sure you want to load this save?
+          </>
+        }
+        onRequestClose={(result) => {
+          if (result && savePointToLoad) {
+            console.log("load save");
+            loadSave(savePointToLoad);
+          }
+          setSavePointToLoad(undefined);
         }}
       />
     </Container>
