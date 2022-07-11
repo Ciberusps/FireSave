@@ -206,7 +206,7 @@ const saveRunningGames = async () => {
 
   Object.values(Stores.Games.store.games).forEach((game) => {
     if (game.isPlaingNow) {
-      makeSavePoint(game.id, "auto");
+      makeSavePoint(game.id, "manual");
     }
   });
 };
