@@ -28,7 +28,13 @@ const GameHeader = (props: TProps) => {
       <Info>
         <BackArrow to="/" icon="leftArrow" variant="secondary" />
 
-        <Image width={150} height={70} src={imgSrc} alt={`Game ${name}`} />
+        <GameImage
+          width={150}
+          height={70}
+          isPlayingNow={game.isPlaingNow}
+          src={imgSrc}
+          alt={`Game ${name}`}
+        />
 
         <Description>
           <Name>{name}</Name>
@@ -76,6 +82,15 @@ const Info = styled.div`
 
 const BackArrow = styled(Button)`
   margin-right: 20px;
+`;
+
+type TGameImage = {
+  isPlayingNow?: boolean;
+};
+const GameImage = styled(Image)<TGameImage>`
+  box-shadow: 0px 0px 10px
+    ${({ theme, isPlayingNow }) =>
+      isPlayingNow ? theme.purple : "rgba(0, 0, 0, 0.25)"};
 `;
 
 const Description = styled.div`
