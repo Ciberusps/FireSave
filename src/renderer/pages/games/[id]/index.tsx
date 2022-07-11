@@ -78,7 +78,7 @@ const SavePoints = styled.div`
   align-self: center;
   padding: 30px 40px;
   width: 100%;
-  max-width: 900px;
+  max-width: 960px;
 `;
 
 const OnlineGameAlert = styled(Alert)`
