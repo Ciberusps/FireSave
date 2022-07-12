@@ -1,5 +1,7 @@
 # FireSave
 
+[![Crowdin](https://badges.crowdin.net/firesave/localized.svg)](https://crowdin.com/project/firesave)
+
 !WARNING! in active development breaking changes might be in every version
 
 FireSave is a saves management app that helps you to make saves, name them, tag, sort, filter, and load of course. All saves are synced between devices with the steam cloud(only steam version). Add cloud saves in games that don't support steam cloud saves, like Dark Souls 3
