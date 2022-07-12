@@ -1,21 +1,34 @@
 # FireSave
 
-## Setup
+### Setup
 
 - copy `.env.example` rename to `.env` and fill
-- optionaly make things from "How to update SteamworksSDK" section not required for start
-- `npm i`
+- setup up [steam for development](#How-to-setup-Steam-for-development)
+- `npm i --legacy-peer-deps`
 - now you should be ready
 
-## How to update SteamworksSDK
+### How to setup Steam for development
 
-- download steamworks sdk from https://partner.steamgames.com/downloads/list
+- check "How to update SteamworksSDK" section and create your `steamworks_sdk`
+- clone `node-steamworks` and `npm link` it, following instruction below
+  - `npm install –global –production windows-build-tools`
+  - go to your projects folder
+  - git clone `git@github.com:Ciberusps/node-steamworks.git`
+  - `cd node-steamworks`
+  - unpack steamworks-sdk to `node-steamworks/deps/steamworks_sdk`
+  - `npm install`
+  - `npm link`
+  - go to FireSave folder
+  - `npm link "greenworks"` - link `node-steamworks`
+
+### How to update SteamworksSDK
+
+- download [steamworks sdk](https://partner.steamgames.com/downloads/list)
 - extract content from "sdk" folder to `/steamworks_sdk` folder
 - fill `STEAMWORKS_SDK_ARCHIVE_PASSWORD` in `.env`
 - run 7zip and create archive with password from `steamworks_sdk` folder
-- upload `steamworks-sdk:zip` to google drive, make it available to "anyone with the link"(not possible to place zip in git somehow zip brokes after being pushed to any remote same for gitlab and github)
+- upload `steamworks-sdk.zip` to google drive, make it available to "anyone with the link"(not possible to place zip in git somehow zip brokes after being pushed to any remote same for gitlab and github)
 - fill `STEAMWORKS_SDK_GOOGLE_DRIVE_LINK` in `.env` via instructions in `.env.example`
-- `npm run steamworks-sdk:unzip` will automatically runned on depenecies install via `npm i`
 
 ### Build
 
@@ -25,11 +38,6 @@
 - tag it `git tag v0.3.6 && git push --tags`
 - wait for github action release
 - got to github/releases page and release new version
-
-## Steamworks(greenworks)
-
-- Place steamworks `sdk` from https://partner.steamgames.com/downloads/list to `node_modules/greenworks/deps/steamworks_sdk`
-  `npm install –global –production windows-build-tools`
 
 ## Troubleshooting
 
