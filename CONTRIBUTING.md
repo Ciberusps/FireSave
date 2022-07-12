@@ -1,9 +1,9 @@
 # FireSave
 
-### Setup
+## Setup
 
 - copy `.env.example` rename to `.env` and fill
-- setup up [steam for development](#How-to-setup-Steam-for-development)
+- optionally setup up [steam for development](#How-to-setup-Steam-for-development)
 - `npm i --legacy-peer-deps`
 - now you should be ready
 
@@ -19,7 +19,7 @@
   - `npm install`
   - `npm link`
   - go to FireSave folder
-  - `npm link "greenworks"` - link `node-steamworks`
+  - `npm link "greenworks"` - it will link `node-steamworks`
 
 ### How to update SteamworksSDK
 
@@ -33,7 +33,7 @@
 ### Build
 
 - make some changes
-- bump version `npm run bump:version 0.3.6-beta`
+- bump version `npm run bump:version 0.3.6`
 - commit & push changes `git push`
 - tag it `git tag v0.3.6 && git push --tags`
 - wait for github action release
