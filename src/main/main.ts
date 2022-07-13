@@ -89,7 +89,7 @@ class Main {
     try {
       const isSteamworksAvailable = SteamworksSDK.init();
       if (isSteamworksAvailable) {
-        console.info("[main.ts] Steamworks is available");
+        console.info("[main.ts/initSteamworks()] Steamworks is available");
       }
       Stores.Settings.set(
         "envs.IS_STEAMWORKS_AVAILABLE",
@@ -107,12 +107,10 @@ class Main {
     if (!isSteamworksAvailable) return;
     try {
       const language = SteamworksSDK.getCurrentGameLanguage();
-      console.log("language", language);
       const lng = STEAM_LANGUGE_TO_CODES_MAP[language as TSteamLanguage];
       await i18n.changeLanguage(lng);
-      console.log("new lng", lng);
+      console.info("[main.ts/updateLanguageFromSteam()] language updated", lng);
       Stores.Settings.set("language", i18n.language);
-      console.log("i18n.language", i18n.language);
     } catch (err) {
       console.log(err);
     }
