@@ -65,6 +65,10 @@ class Main {
     console.info = log.info;
     log.transports.file.resolvePath = () =>
       path.join(DEFAULT_STORES_PATH, "main.log");
+    Stores.Settings.set(
+      "runtimeValues.DEFAULT_STORES_PATH",
+      DEFAULT_STORES_PATH
+    );
   }
 
   onWillQuit() {
