@@ -24,6 +24,7 @@ import { getAssetPath } from "./utils";
 import {
   PLATFORM,
   RESOURCES_PATH,
+  ASSETS_PATH,
   APP_VERSION,
   DEFAULT_STORES_PATH,
 } from "./utils/config";
@@ -65,6 +66,7 @@ class Main {
     console.info = log.info;
     log.transports.file.resolvePath = () =>
       path.join(DEFAULT_STORES_PATH, "main.log");
+    // TODO: change format on [__filename][functionname] message
     Stores.Settings.set(
       "runtimeValues.DEFAULT_STORES_PATH",
       DEFAULT_STORES_PATH
@@ -133,6 +135,7 @@ class Main {
       ...Stores.Settings.store.envs,
       PLATFORM,
       RESOURCES_PATH,
+      ASSETS_PATH,
       IS_DEV: isDev,
     });
 

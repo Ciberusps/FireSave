@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import Modal from "react-modal";
+import { I18nextProvider } from "react-i18next";
 
 import IndexPage from "../pages";
 import GamePage from "../pages/games/[id]";
@@ -14,7 +15,7 @@ import {
   loadStores,
   subscribeOnStoresChanges,
 } from "../utils/stores";
-import i18n from "renderer/utils/i18n";
+import i18n, { setupI18n } from "../utils/i18n";
 
 Modal.setAppElement("#root");
 
@@ -27,7 +28,10 @@ const AppContainer = () => {
   const loadApp = useCallback(async () => {
     const loadedStores = await loadStores();
     await subscribeOnStoresChanges();
-    i18n.changeLanguage(loadedStores.settingsStore.language);
+    setupI18n(
+      loadedStores.settingsStore.envs.RESOURCES_PATH,
+      loadedStores.settingsStore.language
+    );
     setIsLoadingApp(false);
   }, []);
 
@@ -35,12 +39,16 @@ const AppContainer = () => {
     loadApp();
   }, [loadApp]);
 
-  return (
+  return isLoadingApp || isMainLoading ? (
     <Router>
       <Routes>
-        {isLoadingApp || isMainLoading ? (
-          <Route path="*" element={<LoadingPage />} />
-        ) : (
+        <Route path="*" element={<LoadingPage />} />
+      </Routes>
+    </Router>
+  ) : (
+    <I18nextProvider i18n={i18n}>
+      <Router>
+        <Routes>
           <>
             <Route path="/" element={<IndexPage />} />
             <Route path="/settings" element={<SettingsPage />} />
@@ -48,9 +56,9 @@ const AppContainer = () => {
             <Route path="/games/:id" element={<GamePage />} />
             <Route path="/games/:id/settings" element={<GameSettingsPage />} />
           </>
-        )}
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </I18nextProvider>
   );
 };
 
