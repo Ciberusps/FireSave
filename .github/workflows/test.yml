@@ -22,7 +22,7 @@ jobs:
           node-version: "16"
           cache: "npm"
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Lint
         run: npm run lint
 
@@ -37,7 +37,7 @@ jobs:
           node-version: "16"
           cache: "npm"
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Lint Prettier
         run: npm run lint:prettier
 
@@ -52,7 +52,7 @@ jobs:
           node-version: "16"
           cache: "npm"
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Lint Types
         run: npm run lint:types
 
@@ -67,6 +67,6 @@ jobs:
           node-version: "16"
           cache: "npm"
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
       - name: Test
         run: npm run test
