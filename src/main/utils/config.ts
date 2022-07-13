@@ -41,8 +41,16 @@ if (app.isPackaged && process.platform === "win32") {
   );
 }
 if (app.isPackaged && process.platform === "linux") {
+  APP_ROOT_PATH = FileSystem.normalizeUpath(APP_ROOT_PATH).replace(
+    "/release/build/linux-unpacked/resources/app.asar",
+    ""
+  );
 }
 if (app.isPackaged && process.platform === "darwin") {
+  APP_ROOT_PATH = FileSystem.normalizeUpath(APP_ROOT_PATH).replace(
+    "/release/build/mac/resources/app.asar",
+    ""
+  );
 }
 
 export const DEFAULT_STORES_PATH = path.normalize(
