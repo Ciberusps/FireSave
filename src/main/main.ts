@@ -7,9 +7,10 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from "path";
-
-import { app, nativeTheme, protocol } from "electron";
+import fs from "fs";
+import { app, ipcMain, nativeTheme, protocol } from "electron";
 import isDev from "electron-is-dev";
+import * as backend from "i18next-electron-fs-backend";
 
 import Stores from "./stores";
 import Capture from "./utils/capture";
@@ -21,6 +22,11 @@ import Games from "./utils/games";
 import { getAssetPath } from "./utils";
 import { PLATFORM, RESOURCES_PATH, APP_VERSION } from "./utils/config";
 import "./handlers";
+import i18n from "./utils/i18n";
+import {
+  STEAM_LANGUGE_TO_CODES_MAP,
+  TSteamLanguage,
+} from "../common/steamLangCodesMap";
 
 const isDebug =
   process.env.NODE_ENV === "development" || process.env.DEBUG_PROD === "true";
@@ -38,6 +44,8 @@ class Main {
     // after all windows have been closed
     if (process.platform !== "darwin") {
       app.quit();
+    } else {
+      backend.clearMainBindings(ipcMain);
     }
   }
 
@@ -78,20 +86,40 @@ class Main {
   }
 
   async onReady() {
+    let isSteamworksAvailable = false;
     try {
-      const isSteamworksAvailable = SteamworksSDK.init();
+      isSteamworksAvailable = SteamworksSDK.init();
       if (isSteamworksAvailable) {
         console.log("Steamworks is available");
         Stores.Settings.set("envs.IS_STEAMWORKS_AVAILABLE", true);
+        console.log(
+          "Stores.Settings.store.envs.IS_STEAMWORKS_AVAILABLE",
+          Stores.Settings.store.envs.IS_STEAMWORKS_AVAILABLE
+        );
       }
     } catch (err) {
       Stores.Settings.set("envs.IS_STEAMWORKS_AVAILABLE", false);
       console.log(err);
     }
 
+    if (isSteamworksAvailable) {
+      try {
+        const language = SteamworksSDK.getCurrentGameLanguage();
+        console.log("language", language);
+        const lng = STEAM_LANGUGE_TO_CODES_MAP[language as TSteamLanguage];
+        await i18n.changeLanguage(lng);
+        console.log("new lng", lng);
+        Stores.Settings.set("language", i18n.language);
+        console.log("i18n.language", i18n.language);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
     Stores.Settings.set("version", APP_VERSION);
-    Stores.Settings.set("runtimeValues.isLoadingApp", true);
+    Stores.Settings.set("runtimeValues.IS_MAIN_LOADING", true);
     Stores.Settings.set("envs", {
+      ...Stores.Settings.store.envs,
       PLATFORM,
       RESOURCES_PATH,
       IS_DEV: isDev,
@@ -100,7 +128,7 @@ class Main {
     await Games.fillSteamGames();
     Capture.verifyPrimaryDisplaySelected();
 
-    Stores.Settings.set("runtimeValues.isLoadingApp", false);
+    Stores.Settings.set("runtimeValues.IS_MAIN_LOADING", false);
 
     protocol.registerFileProtocol("file", (request, callback) => {
       const pathname = request.url.replace("file:///", "");
@@ -135,6 +163,8 @@ class Main {
         devTools: isDev,
       },
     });
+
+    backend.mainBindings(ipcMain, this.mainWindow, fs);
 
     this.mainWindow.on("closed", this.onMainWindowClose.bind(this));
 

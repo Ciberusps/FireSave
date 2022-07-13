@@ -11,7 +11,7 @@ checkRequiredEnvs([
 ]);
 
 try {
-  exec(`curl -L "${STEAMWORKS_SDK_GOOGLE_DRIVE_LINK}" > steamworks_sdk.zip`);
+  exec(`gdown "${STEAMWORKS_SDK_GOOGLE_DRIVE_LINK}"`);
   console.info("- [fetchSteamworksSdk] downloaded");
 
   exec(

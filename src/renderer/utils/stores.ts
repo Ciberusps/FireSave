@@ -19,8 +19,11 @@ export const useSettingsStore = create<TSettingsStore>(() => ({
     isMaximized: false,
   },
   selectedDisplay: undefined,
+  isStartingInTray: false,
+  language: "en",
+
   runtimeValues: {
-    isLoadingApp: true,
+    IS_MAIN_LOADING: true,
   },
   // TODO: возможно все таки это плохая идея ENV'ы так долго грузить
   envs: {
@@ -38,22 +41,23 @@ export const useGamesStore = create<TGamesStore>(() => ({
 }));
 
 export const loadStores = async () => {
-  const persistentStore = await window.electron.getPersistentStore();
-  const settingsStore = await window.electron.getSettingsStore();
-  const gamesStore = await window.electron.getGamesStore();
+  const persistentStore = await window.api.getPersistentStore();
+  const settingsStore = await window.api.getSettingsStore();
+  const gamesStore = await window.api.getGamesStore();
   usePersistentStore.setState(persistentStore);
   useSettingsStore.setState(settingsStore);
   useGamesStore.setState(gamesStore);
+  return { persistentStore, settingsStore, gamesStore };
 };
 
 export const subscribeOnStoresChanges = async () => {
-  window.electron.onPersistentStoreUpdate((_, newStore) => {
+  window.api.onPersistentStoreUpdate((_, newStore) => {
     usePersistentStore.setState(newStore);
   });
-  window.electron.onSettingsStoreUpdate((_, newStore) => {
+  window.api.onSettingsStoreUpdate((_, newStore) => {
     useSettingsStore.setState(newStore);
   });
-  window.electron.onGamesStoreUpdate((_, newStore) => {
+  window.api.onGamesStoreUpdate((_, newStore) => {
     console.log("games store updated", newStore);
     useGamesStore.setState(newStore);
   });

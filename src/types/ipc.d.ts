@@ -77,6 +77,8 @@ declare global {
           options: OpenDialogOptions
         ) => Promise<TFolderOrFilesRaw | null>;
         getDisplays: () => Promise<Electron.Display[]>;
+
+        i18nextElectronBackend: any;
       };
 
     type THandler<T extends keyof IPC.TApi = keyof IPC.TApi> = (

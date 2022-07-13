@@ -186,7 +186,7 @@ const GameSettingsPage = () => {
     try {
       if (isEditing && game) {
         // TODO: так делать нерпавильно нужно вынести в main process заполнение платформы
-        window.electron.editGame(game.id, {
+        window.api.editGame(game.id, {
           isValid: true,
           savesConfig: { [PLATFORM]: data.savesConfig },
         });
@@ -195,7 +195,7 @@ const GameSettingsPage = () => {
           // TODO: show error
           return;
         }
-        window.electron.createCustomGame({
+        window.api.createCustomGame({
           gamePath: data.gamePath,
           savesConfig: data.savesConfig,
         });
@@ -337,7 +337,7 @@ const getContentTree = async (
 ): Promise<TNode[] | undefined> => {
   try {
     setLoading(true);
-    let globbyRes = await window.electron.getGlobby({
+    let globbyRes = await window.api.getGlobby({
       path,
       includeList,
       excludeList,

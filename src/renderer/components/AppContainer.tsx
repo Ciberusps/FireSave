@@ -9,26 +9,27 @@ import LoadingPage from "../pages/loading";
 import SettingsPage from "../pages/settings";
 import GameSettingsPage from "../pages/games/[id]/settings";
 
-import Localization from "../../common/localization";
 import {
   useSettingsStore,
   loadStores,
   subscribeOnStoresChanges,
 } from "../utils/stores";
+import i18n from "renderer/utils/i18n";
 
-Localization.init();
 Modal.setAppElement("#root");
 
 const AppContainer = () => {
-  const isLoadingApp = useSettingsStore(
-    (state) => state.runtimeValues.isLoadingApp
+  const isMainLoading = useSettingsStore(
+    (state) => state.runtimeValues.IS_MAIN_LOADING
   );
-  const [isLoadingStores, setIsLoadingStores] = useState(true);
+  const [isLoadingApp, setIsLoadingApp] = useState(true);
 
   const loadApp = useCallback(async () => {
-    await loadStores();
+    const loadedStores = await loadStores();
     await subscribeOnStoresChanges();
-    setIsLoadingStores(false);
+    console.log({ loadedStores });
+    i18n.changeLanguage(loadedStores.settingsStore.language);
+    setIsLoadingApp(false);
   }, []);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const AppContainer = () => {
   return (
     <Router>
       <Routes>
-        {isLoadingStores || isLoadingApp ? (
+        {isLoadingApp || isMainLoading ? (
           <Route path="*" element={<LoadingPage />} />
         ) : (
           <>

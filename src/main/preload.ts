@@ -1,4 +1,5 @@
 import { ipcRenderer, contextBridge } from "electron";
+import * as backend from "i18next-electron-fs-backend";
 
 const defaultInvokeFunction = (key: keyof IPC.TApi) => {
   return async (...args: any) => ipcRenderer.invoke(key, ...args);
@@ -51,6 +52,8 @@ const api: IPC.TApi = {
   ...storesApi,
   ...gamesApi,
   ...savePontsApi,
+
+  i18nextElectronBackend: backend.preloadBindings(ipcRenderer, process),
 };
 
-contextBridge.exposeInMainWorld("electron", api);
+contextBridge.exposeInMainWorld("api", api);

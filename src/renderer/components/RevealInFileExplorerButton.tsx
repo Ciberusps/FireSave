@@ -11,7 +11,7 @@ const RevealInFileExplorerButton = (props: TProps) => {
   const { path, isDisabled } = props;
 
   const onClickRevealInFileExplorer = useCallback(() => {
-    window.electron.revealInFileExplorer(path);
+    window.api.revealInFileExplorer(path);
   }, [path]);
 
   return (

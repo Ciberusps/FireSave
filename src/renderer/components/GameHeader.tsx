@@ -16,11 +16,11 @@ const GameHeader = (props: TProps) => {
   const imgSrc = game.imageUrl;
 
   const onSave = async () => {
-    await window.electron.makeSavePoint(game.id);
+    await window.api.makeSavePoint(game.id);
   };
 
   const onPlayGame = async () => {
-    window.electron.runGame(game.id);
+    window.api.runGame(game.id);
   };
 
   return (
