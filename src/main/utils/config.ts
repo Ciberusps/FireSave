@@ -43,7 +43,7 @@ if (app.isPackaged && process.platform === "linux") {
   APP_ROOT_PATH = path.join(APP_ROOT_PATH, "../..");
 }
 if (app.isPackaged && process.platform === "darwin") {
-  APP_ROOT_PATH = path.join(APP_ROOT_PATH, "../..");
+  APP_ROOT_PATH = path.join(APP_ROOT_PATH, "../../../..");
 }
 
 export const DEFAULT_STORES_PATH = path.normalize(
