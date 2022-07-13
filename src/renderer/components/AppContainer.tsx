@@ -27,7 +27,6 @@ const AppContainer = () => {
   const loadApp = useCallback(async () => {
     const loadedStores = await loadStores();
     await subscribeOnStoresChanges();
-    console.log({ loadedStores });
     i18n.changeLanguage(loadedStores.settingsStore.language);
     setIsLoadingApp(false);
   }, []);

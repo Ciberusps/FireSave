@@ -4,14 +4,8 @@ import upath from "upath";
 import VDF from "simple-vdf";
 import { URL } from "url";
 
-// import Stores from "../stores";
 import FileSystem from "./fileSystem";
 import { RESOURCES_PATH, NODE_ENV, PORT, PLATFORM } from "./config";
-// import {
-//   STEAM_LANGUGE_CODES,
-//   TSteamLanguageCodes,
-// } from "../../common/steamLangCodesMap";
-// import Localization from "../../common/localization";
 
 export const resolveHtmlPath = (htmlFileName: string): string => {
   if (NODE_ENV === "development") {
@@ -64,11 +58,3 @@ export const getCustomGameExePath = (
   }
   return null;
 };
-
-// export const changeLanguage = (lng: string) => {
-//   console.log("Change language");
-//   const newLanguage: string =
-//     STEAM_LANGUGE_CODES?.[lng as TSteamLanguageCodes] || lng;
-//   Stores.Settings.set("language", newLanguage);
-//   Localization.changeLanguage(newLanguage);
-// };

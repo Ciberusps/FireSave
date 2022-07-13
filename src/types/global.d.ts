@@ -1,4 +1,4 @@
-import { TSteamLanguageCode } from "common/steamLangCodesMap";
+import { TSteamLanguageCode } from "../common/steamLangCodesMap";
 
 declare global {
   interface Window {

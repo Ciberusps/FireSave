@@ -78,6 +78,7 @@ declare global {
         ) => Promise<TFolderOrFilesRaw | null>;
         getDisplays: () => Promise<Electron.Display[]>;
 
+        // TODO: contribute typings to `i18next-electron-fs-backend` and add here
         i18nextElectronBackend: any;
       };
 

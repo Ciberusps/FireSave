@@ -19,7 +19,7 @@ type TSettingsForm = Pick<
 >;
 
 const SettingsPage = () => {
-  const { t } = useTranslation("translation");
+  const { t } = useTranslation();
   const settingsStore = useSettingsStore();
   const [displays, setDisplays] = useState<Electron.Display[]>([]);
 
