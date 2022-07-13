@@ -85,36 +85,42 @@ class Main {
     if (this.mainWindow === null) this.createWindow();
   }
 
-  async onReady() {
-    let isSteamworksAvailable = false;
+  initSteamworks() {
     try {
-      isSteamworksAvailable = SteamworksSDK.init();
+      const isSteamworksAvailable = SteamworksSDK.init();
       if (isSteamworksAvailable) {
-        console.log("Steamworks is available");
-        Stores.Settings.set("envs.IS_STEAMWORKS_AVAILABLE", true);
-        console.log(
-          "Stores.Settings.store.envs.IS_STEAMWORKS_AVAILABLE",
-          Stores.Settings.store.envs.IS_STEAMWORKS_AVAILABLE
-        );
+        console.info("[main.ts] Steamworks is available");
       }
+      Stores.Settings.set(
+        "envs.IS_STEAMWORKS_AVAILABLE",
+        isSteamworksAvailable
+      );
     } catch (err) {
       Stores.Settings.set("envs.IS_STEAMWORKS_AVAILABLE", false);
       console.log(err);
     }
+  }
 
-    if (isSteamworksAvailable) {
-      try {
-        const language = SteamworksSDK.getCurrentGameLanguage();
-        console.log("language", language);
-        const lng = STEAM_LANGUGE_TO_CODES_MAP[language as TSteamLanguage];
-        await i18n.changeLanguage(lng);
-        console.log("new lng", lng);
-        Stores.Settings.set("language", i18n.language);
-        console.log("i18n.language", i18n.language);
-      } catch (err) {
-        console.log(err);
-      }
+  async updateLanguageFromSteam() {
+    const isSteamworksAvailable =
+      Stores.Settings.store.envs.IS_STEAMWORKS_AVAILABLE;
+    if (!isSteamworksAvailable) return;
+    try {
+      const language = SteamworksSDK.getCurrentGameLanguage();
+      console.log("language", language);
+      const lng = STEAM_LANGUGE_TO_CODES_MAP[language as TSteamLanguage];
+      await i18n.changeLanguage(lng);
+      console.log("new lng", lng);
+      Stores.Settings.set("language", i18n.language);
+      console.log("i18n.language", i18n.language);
+    } catch (err) {
+      console.log(err);
     }
+  }
+
+  async onReady() {
+    this.initSteamworks();
+    this.updateLanguageFromSteam();
 
     Stores.Settings.set("version", APP_VERSION);
     Stores.Settings.set("runtimeValues.IS_MAIN_LOADING", true);
