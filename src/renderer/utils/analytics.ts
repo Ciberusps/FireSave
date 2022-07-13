@@ -1,5 +1,5 @@
 const pageView = (url: string) => {
-  window.electron.analyticsPageView(url);
+  window.api.analyticsPageView(url);
 };
 
 const Analytics = { pageView };

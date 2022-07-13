@@ -1,58 +1,63 @@
-interface Window {
-  electron: IPC.TApi;
-}
+import { TSteamLanguageCode } from "../common/steamLangCodesMap";
 
-type TPersistentStore = {
-  savesFolder: string;
-  /** @deprecated can be replaced with "savesFolder" without breaking changes */
-  settingsStorePath?: string;
-  /** @deprecated can be replaced with "savesFolder" without breaking changes */
-  gamesStorePath?: string;
-};
+declare global {
+  interface Window {
+    api: IPC.TApi;
+  }
 
-type TWindowSettings = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  isMaximized: boolean;
-};
-
-type TSettingsStore = {
-  isAutoSaveOn: boolean;
-  autoSaveMinutes: number;
-  version: string;
-  saveShortcut: string;
-  mainWindow: TWindowSettings;
-  selectedDisplay: Electron.Display | undefined;
-  isStartingInTray: boolean;
-
-  runtimeValues: {
-    isLoadingApp: boolean;
+  type TPersistentStore = {
+    savesFolder: string;
+    /** @deprecated can be replaced with "savesFolder" without breaking changes */
+    settingsStorePath?: string;
+    /** @deprecated can be replaced with "savesFolder" without breaking changes */
+    gamesStorePath?: string;
   };
-  envs: {
-    PLATFORM: NodeJS.Platform;
-    RESOURCES_PATH: string;
-    IS_DEV: boolean;
-    IS_STEAMWORKS_AVAILABLE: boolean;
-  };
-};
 
-type TGamesStore = {
-  games: {
-    [gameId: string]: TGame;
+  type TWindowSettings = {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    isMaximized: boolean;
   };
-  savePoints: {
-    [gameId: string]: {
-      [savePointId: string]: TSavePoint;
+
+  type TSettingsStore = {
+    isAutoSaveOn: boolean;
+    autoSaveMinutes: number;
+    version: string;
+    saveShortcut: string;
+    mainWindow: TWindowSettings;
+    selectedDisplay: Electron.Display | undefined;
+    isStartingInTray: boolean;
+    language: TSteamLanguageCode;
+
+    runtimeValues: {
+      IS_MAIN_LOADING: boolean;
+    };
+    envs: {
+      PLATFORM: NodeJS.Platform;
+      RESOURCES_PATH: string;
+      IS_DEV: boolean;
+      IS_STEAMWORKS_AVAILABLE: boolean;
     };
   };
-  tags: string[];
-};
 
-type TFolderOrFilesRaw = {
-  path: string;
-  files: string[];
-};
+  type TGamesStore = {
+    games: {
+      [gameId: string]: TGame;
+    };
+    savePoints: {
+      [gameId: string]: {
+        [savePointId: string]: TSavePoint;
+      };
+    };
+    tags: string[];
+  };
 
-type TPlatformSpecific<T> = Partial<{ [key in NodeJS.Platform]: T }>;
+  type TFolderOrFilesRaw = {
+    path: string;
+    files: string[];
+  };
+
+  type TPlatformSpecific<T> = Partial<{ [key in NodeJS.Platform]: T }>;
+}

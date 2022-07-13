@@ -5,7 +5,7 @@ import VDF from "simple-vdf";
 import { URL } from "url";
 
 import FileSystem from "./fileSystem";
-import { RESOURCES_PATH, NODE_ENV, PORT, PLATFORM } from "./config";
+import { ASSETS_PATH, NODE_ENV, PORT, PLATFORM } from "./config";
 
 export const resolveHtmlPath = (htmlFileName: string): string => {
   if (NODE_ENV === "development") {
@@ -23,7 +23,7 @@ export const getFileNameWithExtension = (filePath: string): string =>
 export const getFilePath = (filePath: string) => upath.dirname(filePath);
 
 export const getAssetPath = (...paths: string[]): string =>
-  upath.join(RESOURCES_PATH, ...paths);
+  upath.join(ASSETS_PATH, ...paths);
 
 export const parseVdf = <T>(file: string): T => {
   return VDF.parse(file) as T;

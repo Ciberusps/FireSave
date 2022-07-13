@@ -22,7 +22,7 @@ const CARD_BORDER_RADIUS = 10;
 
 const changeSavePointNameDebounced = lodashDebounce(
   (gameId: string, savePointId: string, newName: string) => {
-    window.electron.changeSavePointName(gameId, savePointId, newName);
+    window.api.changeSavePointName(gameId, savePointId, newName);
   },
   1000
 );
@@ -119,10 +119,7 @@ const SavePointCard = (props: TProps) => {
 
   const loadSave = useCallback(
     async (savePoint: TSavePoint) => {
-      const isLoaded = await window.electron.loadSavePoint(
-        game.id,
-        savePoint.id
-      );
+      const isLoaded = await window.api.loadSavePoint(game.id, savePoint.id);
       if (isLoaded) {
         Toaster.add({ content: "Saved & Loaded", intent: "success" });
       } else {
@@ -138,14 +135,14 @@ const SavePointCard = (props: TProps) => {
 
   const removeSave = useCallback(
     async (savePoint: TSavePoint) => {
-      await window.electron.removeSavePoint(game.id, savePoint.id);
+      await window.api.removeSavePoint(game.id, savePoint.id);
     },
     [game.id]
   );
 
   const onChangeTags = useCallback(
     (newTags: OnChangeValue<TOption, true>) => {
-      window.electron.changeSavePointTags(
+      window.api.changeSavePointTags(
         game.id,
         savePoint.id,
         newTags.map((t) => t.value)
@@ -164,7 +161,7 @@ const SavePointCard = (props: TProps) => {
   );
 
   const onAddToFavorite = useCallback(() => {
-    window.electron.addToFavorite(game.id, savePoint.id);
+    window.api.addToFavorite(game.id, savePoint.id);
   }, [game.id, savePoint.id]);
 
   return (

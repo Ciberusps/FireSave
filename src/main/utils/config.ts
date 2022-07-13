@@ -1,7 +1,5 @@
 import path from "path";
 import { app } from "electron";
-// @ts-ignore
-import appRoot from "app-root-path";
 
 export const { NODE_ENV, PORT, START_MINIMIZED } = process.env;
 
@@ -9,21 +7,29 @@ export const SENTRY_DSN =
   "https://8067b69a6c824137afacdf25c3d8987b@o240795.ingest.sentry.io/5594347";
 
 export const RESOURCES_PATH = app.isPackaged
-  ? path.join(process.resourcesPath, "assets")
-  : path.join(__dirname, "../../../assets");
+  ? process.resourcesPath
+  : path.join(__dirname, "../../../");
+
+export const ASSETS_PATH = path.join(RESOURCES_PATH, "assets");
 
 export const STEAM_APP_ID = 1904150;
 
-let APP_ROOT_PATH = appRoot.toString();
-// TODO: replacement required only in production
-if (process.platform === "darwin") {
-  APP_ROOT_PATH = APP_ROOT_PATH.replace(
-    "/FireSave.app/Contents/Resources/app.asar/dist/main",
-    ""
-  );
-}
+const APP_ROOT_PATH: string = (() => {
+  let result = app.getAppPath();
+  if (app.isPackaged) {
+    if (process.platform === "win32" || process.platform === "linux") {
+      result = path.join(result, "../..");
+    }
+    if (process.platform === "darwin") {
+      result = path.join(result, "../../../..");
+    }
+  }
+  return result;
+})();
 
-export const DEFAULT_STORES_PATH = path.join(APP_ROOT_PATH, "FireSave_Data");
+export const DEFAULT_STORES_PATH = path.normalize(
+  path.join(APP_ROOT_PATH, "FireSave_Data")
+);
 
 export const APP_VERSION = app.getVersion();
 

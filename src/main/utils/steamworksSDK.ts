@@ -19,14 +19,17 @@ const getCloudQuota = async () =>
   );
 
 const getSteamId = () => greenworks.getSteamId();
-
 const getAppInstallDir = () => greenworks.getAppInstallDir(STEAM_APP_ID);
+const getCurrentGameLanguage = () => greenworks.getCurrentGameLanguage();
+const getCurrentUILanguage = () => greenworks.getCurrentUILanguage();
 
 const SteamworksSDK = {
   init,
   getCloudQuota,
   getSteamId,
   getAppInstallDir,
+  getCurrentGameLanguage,
+  getCurrentUILanguage,
 };
 
 export default SteamworksSDK;
