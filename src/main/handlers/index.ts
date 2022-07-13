@@ -27,15 +27,10 @@ const commonHandlers: TCommonHandlers = {
   //
   test: async () => {},
   changeSettings: async (_, newSettings) => {
-    console.log("CHange settings");
-    console.log(newSettings);
     Stores.Settings.set("isAutoSaveOn", newSettings.isAutoSaveOn);
     Stores.Settings.set("autoSaveMinutes", newSettings.autoSaveMinutes);
     Stores.Settings.set("selectedDisplay", newSettings.selectedDisplay);
     Stores.Settings.set("isStartingInTray", newSettings.isStartingInTray);
-    // if (newSettings.language) {
-    //   changeLanguage(newSettings.language);
-    // }
 
     Scheduler.start();
     return true;
