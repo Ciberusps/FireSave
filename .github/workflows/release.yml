@@ -33,7 +33,7 @@ jobs:
           cache: "npm"
 
       - name: TEMPORARY - Install gdown for fetchSteamworksSdk.js
-        run: pip install gdown
+        run: pip3 install gdown
 
       - name: Install dependencies
         run: |
