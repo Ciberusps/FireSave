@@ -32,6 +32,9 @@ jobs:
           node-version: "16"
           cache: "npm"
 
+      - name: TEMPORARY - Install gdown for fetchSteamworksSdk.js
+        run: pip3 install gdown
+
       - name: Install dependencies
         run: |
           npm install --legacy-peer-deps

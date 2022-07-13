@@ -43,6 +43,9 @@ const persistentStore = new ElectronStore<TPersistentStore>({
         FileSystem.normalizeUpath(store.store.savesFolder)
       );
     },
+    "0.6.29": (store) => {
+      store.set("savesFolder", FileSystem.normalizeUpath(DEFAULT_STORES_PATH));
+    },
   },
 });
 

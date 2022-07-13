@@ -38,7 +38,7 @@ const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
         control={control}
         render={({ field }) => {
           const onChooseClick = async () => {
-            const newVal = await window.electron.openDialog({
+            const newVal = await window.api.openDialog({
               properties: [property],
               filters,
               defaultPath: field.value?.path,

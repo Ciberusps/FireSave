@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import Modal from "react-modal";
+import { I18nextProvider } from "react-i18next";
 
 import IndexPage from "../pages";
 import GamePage from "../pages/games/[id]";
@@ -9,38 +10,45 @@ import LoadingPage from "../pages/loading";
 import SettingsPage from "../pages/settings";
 import GameSettingsPage from "../pages/games/[id]/settings";
 
-import Localization from "../../common/localization";
 import {
   useSettingsStore,
   loadStores,
   subscribeOnStoresChanges,
 } from "../utils/stores";
+import i18n, { setupI18n } from "../utils/i18n";
 
-Localization.init();
 Modal.setAppElement("#root");
 
 const AppContainer = () => {
-  const isLoadingApp = useSettingsStore(
-    (state) => state.runtimeValues.isLoadingApp
+  const isMainLoading = useSettingsStore(
+    (state) => state.runtimeValues.IS_MAIN_LOADING
   );
-  const [isLoadingStores, setIsLoadingStores] = useState(true);
+  const [isLoadingApp, setIsLoadingApp] = useState(true);
 
   const loadApp = useCallback(async () => {
-    await loadStores();
+    const loadedStores = await loadStores();
     await subscribeOnStoresChanges();
-    setIsLoadingStores(false);
+    setupI18n(
+      loadedStores.settingsStore.envs.RESOURCES_PATH,
+      loadedStores.settingsStore.language
+    );
+    setIsLoadingApp(false);
   }, []);
 
   useEffect(() => {
     loadApp();
   }, [loadApp]);
 
-  return (
+  return isLoadingApp || isMainLoading ? (
     <Router>
       <Routes>
-        {isLoadingStores || isLoadingApp ? (
-          <Route path="*" element={<LoadingPage />} />
-        ) : (
+        <Route path="*" element={<LoadingPage />} />
+      </Routes>
+    </Router>
+  ) : (
+    <I18nextProvider i18n={i18n}>
+      <Router>
+        <Routes>
           <>
             <Route path="/" element={<IndexPage />} />
             <Route path="/settings" element={<SettingsPage />} />
@@ -48,9 +56,9 @@ const AppContainer = () => {
             <Route path="/games/:id" element={<GamePage />} />
             <Route path="/games/:id/settings" element={<GameSettingsPage />} />
           </>
-        )}
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </I18nextProvider>
   );
 };
 

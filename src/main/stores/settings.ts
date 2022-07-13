@@ -24,7 +24,7 @@ const settingsStore = new ElectronStore<TSettingsStore>({
     isStartingInTray: false,
 
     runtimeValues: {
-      isLoadingApp: true,
+      IS_MAIN_LOADING: true,
     },
     envs: {
       IS_DEV: false,

@@ -35,11 +35,11 @@ const SettingsPage = () => {
   const watchSelectedDisplay = watch("selectedDisplay");
 
   const onSubmit = (data: TSettingsForm) => {
-    window.electron.changeSettings(data);
+    window.api.changeSettings(data);
   };
 
   const getDisplays = useCallback(async () => {
-    const newDisplays = await window.electron.getDisplays();
+    const newDisplays = await window.api.getDisplays();
     setDisplays(newDisplays || []);
   }, [setDisplays]);
 

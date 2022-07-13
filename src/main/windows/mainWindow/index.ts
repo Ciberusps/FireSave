@@ -2,8 +2,9 @@ import { app, BrowserWindow, shell } from "electron";
 import isDev from "electron-is-dev";
 
 import Stores from "../../stores";
-import AppTray from "../../utils/tray";
 import MenuBuilder from "./menu";
+
+import AppTray from "../../utils/tray";
 import { resolveHtmlPath } from "../../utils";
 
 class MainWindow extends BrowserWindow {

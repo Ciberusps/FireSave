@@ -5,6 +5,7 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
 } from "electron";
+import i18n from "../../utils/i18n";
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -152,7 +153,7 @@ export default class MenuBuilder {
       ],
     };
     const subMenuHelp: MenuItemConstructorOptions = {
-      label: "Help",
+      label: i18n.t("Help"),
       submenu: [
         {
           label: "Learn More",
@@ -253,7 +254,7 @@ export default class MenuBuilder {
               ],
       },
       {
-        label: "Help",
+        label: i18n.t("Help"),
         submenu: [
           {
             label: "Learn More",
