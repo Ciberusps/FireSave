@@ -37,22 +37,13 @@ export const STEAM_APP_ID = 1904150;
 // }
 let APP_ROOT_PATH = app.getAppPath();
 if (app.isPackaged && process.platform === "win32") {
-  APP_ROOT_PATH = FileSystem.normalizeUpath(APP_ROOT_PATH).replace(
-    "/release/build/win-unpacked/resources/app.asar",
-    ""
-  );
+  APP_ROOT_PATH = path.join(APP_ROOT_PATH, "../..");
 }
 if (app.isPackaged && process.platform === "linux") {
-  APP_ROOT_PATH = FileSystem.normalizeUpath(APP_ROOT_PATH).replace(
-    "/release/build/linux-unpacked/resources/app.asar",
-    ""
-  );
+  APP_ROOT_PATH = path.join(APP_ROOT_PATH, "../..");
 }
 if (app.isPackaged && process.platform === "darwin") {
-  APP_ROOT_PATH = FileSystem.normalizeUpath(APP_ROOT_PATH).replace(
-    "/release/build/mac/resources/app.asar",
-    ""
-  );
+  APP_ROOT_PATH = path.join(APP_ROOT_PATH, "../..");
 }
 
 export const DEFAULT_STORES_PATH = path.normalize(
