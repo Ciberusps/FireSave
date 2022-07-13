@@ -9,6 +9,7 @@
 import path from "path";
 import fs from "fs";
 import { app, ipcMain, nativeTheme, protocol } from "electron";
+import log from "electron-log";
 import isDev from "electron-is-dev";
 import * as backend from "i18next-electron-fs-backend";
 
@@ -20,7 +21,12 @@ import MainWindow from "./windows/mainWindow";
 import SteamworksSDK from "./utils/steamworksSDK";
 import Games from "./utils/games";
 import { getAssetPath } from "./utils";
-import { PLATFORM, RESOURCES_PATH, APP_VERSION } from "./utils/config";
+import {
+  PLATFORM,
+  RESOURCES_PATH,
+  APP_VERSION,
+  DEFAULT_STORES_PATH,
+} from "./utils/config";
 import "./handlers";
 import i18n from "./utils/i18n";
 import {
@@ -34,35 +40,9 @@ const isDebug =
 class Main {
   private mainWindow: MainWindow | null = null;
 
-  static onWillQuit() {
-    Shortcuts.unregisterAll();
-  }
-
-  static onAllWindowsClosed() {
-    Shortcuts.unregisterAll();
-    // Respect the OSX convention of having the application in memory even
-    // after all windows have been closed
-    if (process.platform !== "darwin") {
-      app.quit();
-    } else {
-      backend.clearMainBindings(ipcMain);
-    }
-  }
-
-  static installExtensions() {
-    const installer = require("electron-devtools-installer");
-    const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-    const extensions = ["REACT_DEVELOPER_TOOLS"];
-
-    return installer
-      .default(
-        extensions.map((name) => installer[name]),
-        forceDownload
-      )
-      .catch(console.log);
-  }
-
   constructor() {
+    this.initLogging();
+
     if (process.env.NODE_ENV === "production") {
       const sourceMapSupport = require("source-map-support");
       sourceMapSupport.install();
@@ -72,11 +52,34 @@ class Main {
       require("electron-debug")();
     }
 
-    app.on("will-quit", Main.onWillQuit);
-    app.on("window-all-closed", Main.onAllWindowsClosed);
+    app.on("will-quit", this.onWillQuit.bind(this));
+    app.on("window-all-closed", this.onAllWindowsClosed.bind(this));
 
     app.on("ready", this.onReady.bind(this));
     app.on("activate", this.activate.bind(this));
+  }
+
+  initLogging() {
+    console.log = log.log;
+    console.error = log.error;
+    console.info = log.info;
+    log.transports.file.resolvePath = () =>
+      path.join(DEFAULT_STORES_PATH, "main.log");
+  }
+
+  onWillQuit() {
+    Shortcuts.unregisterAll();
+  }
+
+  onAllWindowsClosed() {
+    Shortcuts.unregisterAll();
+    // Respect the OSX convention of having the application in memory even
+    // after all windows have been closed
+    if (process.platform !== "darwin") {
+      app.quit();
+    } else {
+      backend.clearMainBindings(ipcMain);
+    }
   }
 
   activate() {
@@ -149,9 +152,22 @@ class Main {
     this.mainWindow = null;
   }
 
+  installExtensions() {
+    const installer = require("electron-devtools-installer");
+    const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+    const extensions = ["REACT_DEVELOPER_TOOLS"];
+
+    return installer
+      .default(
+        extensions.map((name) => installer[name]),
+        forceDownload
+      )
+      .catch(console.log);
+  }
+
   async createWindow() {
     if (isDebug) {
-      await Main.installExtensions();
+      await this.installExtensions();
     }
 
     this.mainWindow = new MainWindow({
