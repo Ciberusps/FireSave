@@ -53,7 +53,7 @@ const Top = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  /* 
+  /*
   > * {
     &:not(:first-child) {
       margin-left: 10px;
@@ -63,7 +63,8 @@ const Top = styled.div`
 
 const Description = styled.div`
   font-style: normal;
-  font-weight: lighter;
+  font-weight: normal;
+  color: #d3d3d3;
   font-size: 14px;
   margin-top: 10px;
 `;

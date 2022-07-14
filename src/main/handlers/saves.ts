@@ -58,7 +58,7 @@ const SavesHandlers: TSavesHandlers = {
       }
     } catch (err) {
       // TODO: toaster error
-      console.log(err);
+      console.error(err);
     }
   },
   changeSavePointName: async (_, gameId, savePointId, newName) => {
@@ -73,7 +73,7 @@ const SavesHandlers: TSavesHandlers = {
       // TODO: toaster success
     } catch (err) {
       // TODO: toaster error
-      console.log(err);
+      console.error(err);
     }
   },
   addToFavorite: async (_, gameId, savePointId) => {
@@ -87,7 +87,7 @@ const SavesHandlers: TSavesHandlers = {
       );
     } catch (err) {
       // TODO: toaster error
-      console.log(err);
+      console.error(err);
     }
   },
 };

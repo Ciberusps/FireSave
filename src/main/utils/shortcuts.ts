@@ -6,16 +6,19 @@ import Saves from "./saves";
 const registerSaveKey = (key: string) => {
   // TODO: check what games run and save
   const ret = globalShortcut.register("F5", () => {
-    console.log("F5 is pressed");
     Saves.saveRunningGames();
   });
 
   if (!ret) {
-    console.log("registration failed");
+    console.warn(
+      `[shortcuts.ts/registerSaveKey()] Can't register shortcut ${key}`
+    );
   }
 
-  // Check whether a shortcut is registered.
-  console.log(globalShortcut.isRegistered("F5"));
+  console.info(
+    `[shortcuts.ts/registerSaveKey()] Shortcut is registered for ${key}?`,
+    globalShortcut.isRegistered(key)
+  );
 };
 
 const unregisterAll = () => {

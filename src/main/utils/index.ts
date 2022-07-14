@@ -32,17 +32,19 @@ export const getGlobby = async (
   options: IPC.TGetGlobbyOptions
 ): Promise<string[]> => {
   const { path, includeList, excludeList, isAbsolutePaths = false } = options;
-  console.log({ path, includeList, excludeList });
-  return globby(
-    [...includeList, ...excludeList.map((exclude) => `!${exclude}`)],
-    {
-      cwd: path,
-      // onlyFiles: false,
-      markDirectories: true,
-      absolute: isAbsolutePaths,
-      // objectMode: true
-    }
-  );
+  const patterns = [
+    ...includeList,
+    ...excludeList.map((exclude) => `!${exclude}`),
+  ];
+  const result = await globby(patterns, {
+    cwd: path,
+    // onlyFiles: false,
+    markDirectories: true,
+    absolute: isAbsolutePaths,
+    // objectMode: true
+  });
+  console.info(`[utils/getGlobby()]`, { options, patterns, result });
+  return result;
 };
 
 export const getCustomGameExePath = (

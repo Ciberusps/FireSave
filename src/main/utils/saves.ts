@@ -73,12 +73,6 @@ const makeSavePoint = async (
 
     const newSaveFolder = FileSystem.joinUpath(savesFolder, newSaveFolderName);
     // FileSystem.createDir(newSaveFolder);
-    console.log({
-      gameFolders: savesFolder,
-      // filesToSave,
-      newSaveFolder,
-      exclude: savesConfig.excludeList.map((exclude) => `!${exclude}`),
-    });
 
     const filesToCopy = await getGlobby({
       path: savesConfigFolderPath,
@@ -88,6 +82,15 @@ const makeSavePoint = async (
       ],
       excludeList: savesConfig.excludeList,
     });
+    console.info(
+      `[saves.ts/makeSavePoint()] Copying files to ${newSaveFolder}`,
+      {
+        savesFolder,
+        filesToCopy,
+        newSaveFolder,
+        exclude: savesConfig.excludeList.map((exclude) => `!${exclude}`),
+      }
+    );
     await copy(savesConfigFolderPath, newSaveFolder, {
       filter: filesToCopy,
     });
@@ -121,9 +124,12 @@ const makeSavePoint = async (
     );
     FileSystem.createDir(screenshotFolderPath);
 
-    console.log({ screenshotFolderPath, screenshotFilePath });
     const screenShot = await Capture.makeSelectedDisplayScreenShot();
     if (screenShot) {
+      console.info(`[saves.ts/makeSavePoint()] Create screenShot`, {
+        screenshotFolderPath,
+        screenshotFilePath,
+      });
       FileSystem.writeFileSync(screenshotFilePath, screenShot);
       Stores.Games.set(
         `savePoints.${gameId}.${newSavePointId}.screenshotFileName`,
@@ -161,8 +167,10 @@ const loadSavePoint = async (gameId: string, savePointId: string) => {
       overwrite: true,
     });
 
+    console.info(
+      `[saves.ts/loadSavePoint()] Loaded save point with id ${savePointId}`
+    );
     // TODO: send Toaster message that game loaded
-    console.log("LOADED");
 
     return true;
   } catch (err) {
@@ -190,7 +198,7 @@ const removeSavePoint = async (gameId: string, savePointId: string) => {
 };
 
 const tryAutoSave = async () => {
-  console.log("Try autosave running games");
+  console.info("[saves.ts/tryAutoSave()] Try autosave running games");
   await Games.updateRunningGames();
 
   Object.values(Stores.Games.store.games).forEach((game) => {
@@ -201,7 +209,7 @@ const tryAutoSave = async () => {
 };
 
 const saveRunningGames = async () => {
-  console.log("Try save running games");
+  console.info("[saves.ts/saveRunningGames()] Try save running games");
   await Games.updateRunningGames();
 
   Object.values(Stores.Games.store.games).forEach((game) => {

@@ -25,9 +25,6 @@ const gamesStore = new ElectronStore<TGamesStore>({
     tags: DEFAULT_TAGS_LIST,
   },
   migrations: {
-    "1.0.0": () => {
-      console.log("MIGRATION RUNNED");
-    },
     "0.3.23": (store) => {
       const games = store.store.games;
       Object.entries(games).forEach(([, game]) => {

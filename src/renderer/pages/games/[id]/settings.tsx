@@ -245,7 +245,15 @@ const GameSettingsPage = () => {
           <>
             <ToggleInput
               label="Save full folder"
-              description="Save full folder"
+              description={
+                <>
+                  Switch between include list and exclude list.
+                  <br /> - Checked - include all files by default and use
+                  exclude list for exclusions
+                  <br /> - Unchecked - include files only from include list and
+                  exclude files from exclude list
+                </>
+              }
               {...register("savesConfig.saveFullFolder")}
             />
 

@@ -66,7 +66,6 @@ class Main {
     console.info = log.info;
     log.transports.file.resolvePath = () =>
       path.join(DEFAULT_STORES_PATH, "main.log");
-    // TODO: change format on [__filename][functionname] message
     Stores.Settings.set(
       "runtimeValues.DEFAULT_STORES_PATH",
       DEFAULT_STORES_PATH
@@ -106,7 +105,7 @@ class Main {
       );
     } catch (err) {
       Stores.Settings.set("envs.IS_STEAMWORKS_AVAILABLE", false);
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -121,7 +120,7 @@ class Main {
       console.info("[main.ts/updateLanguageFromSteam()] language updated", lng);
       Stores.Settings.set("language", i18n.language);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -169,7 +168,7 @@ class Main {
         extensions.map((name) => installer[name]),
         forceDownload
       )
-      .catch(console.log);
+      .catch(console.error);
   }
 
   async createWindow() {

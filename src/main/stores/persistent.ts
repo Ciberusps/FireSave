@@ -14,7 +14,7 @@ const persistentStore = new ElectronStore<TPersistentStore>({
   },
   migrations: {
     "0.6.1": (store) => {
-      console.log("MIGRATION RUNNED");
+      console.info("[persistentStore.ts/migrations/0.6.1] run migration");
 
       if (
         store.store.settingsStorePath &&
@@ -23,7 +23,6 @@ const persistentStore = new ElectronStore<TPersistentStore>({
           DEFAULT_STORES_PATH
         )
       ) {
-        console.log("move");
         FileSystem.copyFolder(
           FileSystem.normalizePathForCurrentOS(store.store.settingsStorePath),
           DEFAULT_STORES_PATH,
@@ -37,13 +36,16 @@ const persistentStore = new ElectronStore<TPersistentStore>({
       }
     },
     "0.6.3": (store) => {
-      console.log("MIGRATION RUNNED");
+      console.info("[persistentStore.ts/migrations/0.6.3] run migration");
+
       store.set(
         "savesFolder",
         FileSystem.normalizeUpath(store.store.savesFolder)
       );
     },
     "0.6.29": (store) => {
+      console.info("[persistentStore.ts/migrations/0.6.29] run migration");
+
       store.set("savesFolder", FileSystem.normalizeUpath(DEFAULT_STORES_PATH));
     },
   },

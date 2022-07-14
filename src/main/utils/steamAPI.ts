@@ -8,7 +8,7 @@ type TFetchGamesStoreInfoRes = {
 export const fetchGamesStoreInfo = async (
   appIds: number[]
 ): Promise<TFetchGamesStoreInfoRes | null> => {
-  console.log("fetchGamesStoreInfo", appIds);
+  console.info("[steamApi.ts/fetchGamesStoreInfo()]", { appIds });
   try {
     const searchParams = new URLSearchParams();
     appIds.forEach((appId) => searchParams.append("appid", appId.toString()));

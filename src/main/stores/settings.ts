@@ -22,6 +22,7 @@ const settingsStore = new ElectronStore<TSettingsStore>({
     version: "unknown",
     selectedDisplay: undefined,
     isStartingInTray: false,
+    language: "en",
 
     runtimeValues: {
       IS_MAIN_LOADING: true,
@@ -34,11 +35,7 @@ const settingsStore = new ElectronStore<TSettingsStore>({
     },
   },
 
-  migrations: {
-    // "1.0.0": (settings) => {
-    //   console.log("MIGRATION RUNNED");
-    // },
-  },
+  migrations: {},
 });
 
 export default settingsStore;

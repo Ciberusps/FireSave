@@ -17,20 +17,22 @@ const foolCheck = () => {
 const runAutoSaves = () => {
   try {
     if (autoSavesTask) {
-      console.log("DESTROY");
       clearInterval(autoSavesTask);
     }
 
     if (Stores.Settings.store.isAutoSaveOn) {
       foolCheck();
-      console.info("AutoSaves enabled, start or restart scheduler");
+      console.info(
+        `[saves.ts/runAutoSaves()] AutoSaves enabled, start or restart scheduler`
+      );
 
       autoSavesTask = setInterval(() => {
-        console.log("running a task every minute");
         Saves.tryAutoSave();
       }, Stores.Settings.store.autoSaveMinutes * 60 * 1000);
     } else {
-      console.info("AutoSaves disabled, scheduler wont start");
+      console.info(
+        `[saves.ts/runAutoSaves()] AutoSaves disabled, scheduler wont start`
+      );
     }
   } catch (error) {
     // TODO: error report

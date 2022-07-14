@@ -17,7 +17,6 @@ const GamesHandlers: TGamesHandlers = {
     Games.createCustomGame(payload);
   },
   editGame: async (_, gameId, payload) => {
-    console.log("TRY SAVE");
     const game = Stores.Games.store.games[gameId];
     if (!game) return false;
     Stores.Games.set(`games.${gameId}`, {
@@ -25,7 +24,6 @@ const GamesHandlers: TGamesHandlers = {
       ...payload,
       // isValid
     });
-    console.log("GAME SAVED");
     return true;
   },
   removeGame: async (_, id) => {

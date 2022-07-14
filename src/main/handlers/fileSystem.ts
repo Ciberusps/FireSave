@@ -10,10 +10,10 @@ type TFileSystemHandlers = {
 
 const FileSystemHandlers: TFileSystemHandlers = {
   openDialog: async (_, options) => {
-    console.log("options", options);
+    console.info("[fileSystem.ts/openDialog() options]", options);
     const filesOrDirs = dialog.showOpenDialogSync(options);
     if (!filesOrDirs) return null;
-    console.log(filesOrDirs);
+    console.info("[fileSystem.ts/openDialog() filesOrDirs]", filesOrDirs);
     const fileOrDir = FileSystem.normalizeUpath(filesOrDirs[0]);
     const isDirectory = FileSystem.isDir(fileOrDir);
     const path = isDirectory ? fileOrDir : getFilePath(fileOrDir);

@@ -125,7 +125,7 @@ const fillSteamGames = async () => {
       }
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
@@ -153,12 +153,13 @@ const createCustomGame = async (
       imageUrl: undefined,
       gamePath: { [PLATFORM]: payload.gamePath },
     };
-    console.log(newGame);
-
     Stores.Games.set(`games.${id}`, newGame);
+    console.info(
+      `[games.ts/createCustomGame] new game created: ${JSON.stringify(newGame)}`
+    );
     // TODO: toaster game created
   } catch (err) {
-    console.log(err);
+    console.error(err);
     // TODO: error handling
   }
 };
@@ -176,7 +177,9 @@ const updateRunningGames = async () => {
     });
 
     if (isRunning) {
-      console.log("Game running", game.name);
+      console.info(
+        `[games.ts/updateRunningGames] game is running: ${game.name}`
+      );
       Stores.Games.set(`games.${game.id}.isPlaingNow`, true);
     } else {
       Stores.Games.set(`games.${game.id}.isPlaingNow`, false);

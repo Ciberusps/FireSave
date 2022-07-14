@@ -7,7 +7,7 @@ import InputWrapper from "./InputWrapper";
 type TProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string;
   label: string;
-  description: string;
+  description: React.ReactNode;
   isDisabled?: boolean;
 };
 

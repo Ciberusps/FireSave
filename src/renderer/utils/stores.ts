@@ -58,7 +58,6 @@ export const subscribeOnStoresChanges = async () => {
     useSettingsStore.setState(newStore);
   });
   window.api.onGamesStoreUpdate((_, newStore) => {
-    console.log("games store updated", newStore);
     useGamesStore.setState(newStore);
   });
 };
