@@ -1,5 +1,175 @@
 {
-  "Settings": "Settings",
-  "Games": "Games",
-  "Add game": "Add game"
+  "steam": "Steam",
+  "button": {
+    "settings": "Ustawienia",
+    "save": {
+      "label": "Zapisz"
+    },
+    "run": "Uruchom",
+    "load": {
+      "label": "Wczytaj",
+      "tooltip": "Utwórz kopię i wczytaj ten punkt zapisu"
+    },
+    "reveal_in_file_explorer": {
+      "label": "Pokaż w Eksploratorze plików"
+    },
+    "add_to_favorites": {
+      "label": "Dodaj do ulubionych"
+    },
+    "remove_save": {
+      "label": "Usuń zapis"
+    },
+    "open_saves_folder": {
+      "label": "Otwórz folder zapisów"
+    },
+    "open_save_point_folder": {
+      "label": "Otwórz folder punktów zapisu"
+    }
+  },
+  "modal": {
+    "default_confirm": {
+      "yes": "Tak",
+      "no": "Anuluj"
+    },
+    "remove_save_point": {
+      "label": "Usuń zapis",
+      "description": "Czy na pewno chcesz usunąć ten zapis?"
+    },
+    "load_save_point": {
+      "label": "Wczytaj zapis",
+      "description": "Gra jest obecnie uruchomiona\nWczytanie zapisu może spowodować awarię gry\nCzy na pewno chcesz wczytać ten zapis?"
+    }
+  },
+  "dates": {
+    "last_save_n_ago": "ostatni zapis: {{n}} temu"
+  },
+  "statuses": {
+    "is_valid": "Gra działa poprawnie",
+    "is_running": "Gra jest uruchomiona",
+    "is_save_config_valid": "Wymagana konfiguracja zapisu",
+    "is_in_saves_library_but_not_installed": "Zainstaluj przez Steam lub zmień \"Wykryj tryb\" na ręcznie"
+  },
+  "menu": {
+    "search_issues": "Wyszukaj problemy",
+    "about_app": "&Informacje",
+    "minimize_to_tray": "&Minimalizuj do zasobnika",
+    "reload": "&Przeładuj",
+    "exit": "&Wyjdź",
+    "toggle_full_screen": "Przełącz pełny ekran",
+    "bring_all_to_front": "Przenieś na wierzch",
+    "view": "&Widok",
+    "file": "&Plik",
+    "validate_games": "&Przeładuj listę gier",
+    "help": "&Pomoc"
+  },
+  "home_page": {
+    "installed_games": "Zainstalowane gry",
+    "no_games_found": "Nie znaleziono gier, ale możesz je dodać",
+    "your_saves_library": "Twoja biblioteka zapisów",
+    "ready_games": "Gotowe gry",
+    "games": "Gry",
+    "add_game": "Dodaj grę"
+  },
+  "settings_page": {
+    "title": "Ustawienia",
+    "display": {
+      "label": "Ekran zrzutów ekranu",
+      "description": "Wybierz ekran do przechwytywania zrzutów ekranu"
+    },
+    "autosaves": {
+      "label": "Autozapisywanie",
+      "description": "Tworzy automatyczne zapisy, gdy gra jest uruchomiona"
+    },
+    "autosaves_interval": {
+      "label": "Częstotliwość automatycznego zapisu",
+      "description": "Przerwa czasowa pomiędzy automatycznymi zapisami"
+    },
+    "start_in_tray": {
+      "label": "Uruchom zminimalizowane",
+      "description": "Uruchamia aplikację w zasobniku"
+    }
+  },
+  "game_settings_page": {
+    "page_title": "Dodaj grę",
+    "block_title_settings": "Ustawienia gry",
+    "block_title_save_config": "Zapisz konfigurację",
+    "choose_save_folder_warning": "Należy wybrać folder zapisów",
+    "path_to_game": {
+      "label": "Ścieżka lub plik wykonywalny",
+      "description": "Ścieżka lub plik wykonywalny"
+    },
+    "auto_detect": {
+      "label": "Automatycznie wykryć grę?",
+      "description": "Czy automatycznie wykrywać grę"
+    },
+    "auto_detect_method": {
+      "label": "Wykryj automatycznie",
+      "description": "Gry zostaną wykryte automatycznie za pomocą wybranego sklepu z grami"
+    },
+    "saves_config_type": {
+      "label": "Typ",
+      "options": {
+        "simple": "Prosty",
+        "advanced": "Zaawansowany"
+      },
+      "description_simple": "Prosty - łatwa konfiguracja, ponieważ wymagany jest tylko folder, ale może mieć większy rozmiar",
+      "description_advanced": "Zaawansowany - dla zapalonych graczy 💪😎💪, którzy chcą pominąć niepotrzebne pliki i zaoszczędzić trochę miejsca"
+    },
+    "saves_config_folder": {
+      "label": "Folder zapisów",
+      "description": "Ścieżka folderu zapisów"
+    },
+    "include_all": {
+      "label": "Uwzględnij wszystkie pliki",
+      "description_on": "Uwzględnij wszystkie pliki i użyj listy wykluczeń, aby pominąć pliki",
+      "description_off": "Uwzględnij tylko wybrane pliki i pomiń pliki z listy wykluczeń"
+    },
+    "files_preview": {
+      "all_label": "Pliki",
+      "result_label": "Wynik - pliki, które zostaną zapisane"
+    },
+    "errors": {
+      "no_association_with_steam": "Brak powiązania z ID sklepu Steam",
+      "game_not_found": "Nie znaleziono gry, otwórz ponownie aplikację",
+      "game_not_associated": "Gra nie powiązana z żadnym ze sklepów, wyłącz automatyczne wykrywanie gry"
+    }
+  },
+  "game_saves_page": {
+    "online_games_warning": "Wygląda na to, że jest to gra sieciowa, więc manipulowanie zapisami może spowodować bana/shadow bana, a żeby go uniknąć należy WYLOGOWAĆ SIĘ z sesji online przed wczytaniem",
+    "favorites_list_label": "Ulubione",
+    "saves_history_list_label": "Oś czasu"
+  },
+  "include_exclude_actions_component": {
+    "in": "w",
+    "or_use_pattern": "lub użyj wzoru",
+    "everywhere": "wszędzie",
+    "and_all_folders_below": "i wszystkie podfoldery",
+    "empty_warning_include_all_on": "Wybierz pliki lub foldery do uwzględnienia",
+    "empty_warning_include_all_off": "Wybierz pliki lub foldery do wykluczenia lub uwzględnienia",
+    "include_file_or_folder": "Uwzględnij",
+    "exclude_file_or_folder": "Wyklucz",
+    "include": {
+      "label": "Lista uwzględnionych",
+      "disabled_reason": "Wymagane tylko wtedy, gdy opcja 'Uwzględnij wszystkie pliki' jest wyłączona"
+    },
+    "exclude": {
+      "label": "Lista wykluczeń"
+    }
+  },
+  "list_input_component": {
+    "remove_all": "usuń wszystkie"
+  },
+  "stats_component": {
+    "saves_count": "{{count}} zapisów",
+    "autosaves_count": "{{count}} automatycznych zapisów",
+    "manual_saves_count": "{{count}} ręcznych zapisów"
+  },
+  "game_card_component": {
+    "no_saves": "brak zapisów"
+  },
+  "save_point_card": {
+    "manual_save": "Ręczny zapis",
+    "autosave": "Automatyczny zapis",
+    "no_tags": "Brak znaczników..."
+  }
 }
