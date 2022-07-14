@@ -59,3 +59,8 @@ export const getCustomGameExePath = (
   }
   return null;
 };
+
+export const getGamePathOnly = (game: TGame): string | undefined => {
+  const path = game.gamePath?.[PLATFORM]?.path;
+  return path;
+};

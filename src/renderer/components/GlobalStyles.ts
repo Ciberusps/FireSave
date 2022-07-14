@@ -1,5 +1,6 @@
 import { css, createGlobalStyle } from "styled-components";
 import checkBoxStyles from "react-checkbox-tree/lib/react-checkbox-tree.css";
+import toastifyStyles from "react-toastify/dist/ReactToastify.css";
 
 import Fonts from "../utils/fonts";
 
@@ -79,6 +80,7 @@ const reactCheckboxStyles = css`
 const GlobalStyles = createGlobalStyle`
   ${Fonts}
   ${checkBoxStyles}
+  ${toastifyStyles}
   ${scollbarStyles}
   ${toasterStyles}
   ${reactCheckboxStyles}

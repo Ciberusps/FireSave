@@ -1,5 +1,7 @@
 import { toast, TypeOptions } from "react-toastify";
 
+import { TOASTER_DEFAULT_AUTO_CLOSE } from "./config";
+
 export type TIntent = Exclude<TypeOptions, "default">;
 
 type TAddProps = {
@@ -7,21 +9,10 @@ type TAddProps = {
   intent: TIntent;
 };
 
-const defaultAutoClose = 5000;
-
-const init = () => {
-  toast.configure({
-    newestOnTop: true,
-    hideProgressBar: true,
-    autoClose: defaultAutoClose,
-    position: "bottom-right",
-  });
-};
-
 const add = (props: TAddProps) => {
   const { content, intent } = props;
 
-  let autoClose = defaultAutoClose;
+  let autoClose = TOASTER_DEFAULT_AUTO_CLOSE;
   if (intent === "success") {
     autoClose = 2500;
   }
@@ -30,7 +21,6 @@ const add = (props: TAddProps) => {
 };
 
 const Toaster = {
-  init,
   add,
 };
 

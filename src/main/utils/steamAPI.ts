@@ -1,7 +1,7 @@
 import axios from "axios";
 
 type TFetchGamesStoreInfoRes = {
-  result: { [gameId: string]: TSteamAppStoreInfo };
+  result: { [steamAppId: string]: TSteamAppStoreInfo };
   isTimelimitExceeded: boolean;
 };
 
@@ -15,11 +15,12 @@ export const fetchGamesStoreInfo = async (
 
     const res = (
       await axios.get<TFetchGamesStoreInfoRes>(
-        `https://steam-api-cached.ciberus.gg/api/getAppsDetails?${searchParams.toString()}`
+        `https://steam-api-cached.vercel.app/api/getAppsDetails?${searchParams.toString()}`
       )
     ).data;
     return res;
   } catch (err) {
+    console.error(err);
     return null;
   }
 };

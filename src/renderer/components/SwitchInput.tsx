@@ -9,6 +9,7 @@ type TTransform = {
 };
 
 type TProp = {
+  label?: string;
   value: string;
 };
 
@@ -48,7 +49,7 @@ const SwitchInput = <T extends FieldValues>(props: TProps<T>) => {
                     isSelected={field.value === property.value}
                     onClick={() => field.onChange(property.value)}
                   >
-                    {property.value}
+                    {property.label || property.value}
                   </SwitchButton>
                 ))}
 

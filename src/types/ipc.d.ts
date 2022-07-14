@@ -2,6 +2,11 @@ import { OpenDialogOptions } from "electron";
 
 declare global {
   namespace IPC {
+    type THandlerResult = {
+      success: boolean;
+      message?: string;
+    };
+
     type TGetQuotaRes = {
       totalMB: number;
       availableMB: number;
@@ -43,7 +48,10 @@ declare global {
 
     type TGamesApi = {
       createCustomGame: (payload: TCreateCustomGamePayload) => Promise<void>;
-      editGame: (gameId: string, payload: TEditGamePayload) => Promise<boolean>;
+      editGame: (
+        gameId: string,
+        payload: TEditGamePayload
+      ) => Promise<THandlerResult>;
       removeGame: (id: string) => Promise<boolean>;
       runGame: (id: string) => Promise<void>;
     };

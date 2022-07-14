@@ -4,6 +4,7 @@ import { ThemeContext } from "styled-components";
 import * as ICONS from "./icons";
 
 const sizes = {
+  extraSmall: 16,
   small: 20,
   medium: 26,
   large: 30,

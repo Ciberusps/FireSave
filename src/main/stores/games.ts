@@ -21,6 +21,7 @@ const gamesStore = new ElectronStore<TGamesStore>({
   name: "games",
   defaults: {
     games: {},
+    steamGamesStoreInfo: {},
     savePoints: {},
     tags: DEFAULT_TAGS_LIST,
   },
@@ -53,6 +54,43 @@ const gamesStore = new ElectronStore<TGamesStore>({
           gamePath.path = FileSystem.normalizeUpath(gamePath.path);
         }
       });
+      store.set("games", games);
+    },
+    "0.7.0": (store) => {
+      let games = store.store.games;
+
+      Object.entries(games).forEach(([, game]) => {
+        // @ts-ignore
+        if (game?.steam?.storeInfo) {
+          store.set(
+            `steamGamesStoreInfo.${game.steamAppId}`,
+            // @ts-ignore
+            game.steam.storeInfo
+          );
+        }
+
+        // @ts-ignore
+        if (!game.steamAppId && game?.steam?.appId) {
+          // @ts-ignore
+          game.steamAppId = game.steam.appId;
+        }
+        const savePoints = store.store.savePoints?.[game.id];
+        if (savePoints && Object.values(savePoints)?.length >= 1) {
+          game.isSettupedAtLeastOnce = true;
+        }
+
+        // @ts-ignore
+        delete game.steam;
+        // @ts-ignore
+        delete game.isCreatedAutomatically;
+
+        if (game.steamAppId) {
+          game.detectionType = "steam";
+        } else {
+          game.detectionType = "manual";
+        }
+      });
+
       store.set("games", games);
     },
   },

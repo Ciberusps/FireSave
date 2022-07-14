@@ -35,6 +35,7 @@ import { useGamesStore, useSettingsStore } from "../../../utils/stores";
 const folderColor = "#ffd970";
 
 type TGameForm = {
+  detectionType: TGameDetectionType;
   gamePath: TFolderOrFilesRaw;
   savesConfig: TSavesConfig & {
     saveFolder: TFolderOrFilesRaw;
@@ -80,6 +81,7 @@ const GameSettingsPage = () => {
   const { control, watch, handleSubmit, register, setValue } =
     useForm<TGameForm>({
       defaultValues: {
+        detectionType: game?.detectionType,
         gamePath: game?.gamePath?.[PLATFORM],
         savesConfig: {
           type: "simple",
@@ -94,6 +96,7 @@ const GameSettingsPage = () => {
       },
     });
 
+  const detectionTypeWatch = watch("detectionType");
   const typeWatch = watch("savesConfig.type");
   const saveFolderWatch = watch("savesConfig.saveFolder");
   const saveFullFolderWatch = watch("savesConfig.saveFullFolder", true);
@@ -186,10 +189,20 @@ const GameSettingsPage = () => {
     try {
       if (isEditing && game) {
         // TODO: так делать нерпавильно нужно вынести в main process заполнение платформы
-        window.api.editGame(game.id, {
+        const result = await window.api.editGame(game.id, {
           isValid: true,
           savesConfig: { [PLATFORM]: data.savesConfig },
         });
+        if (result.success) {
+          Toaster.add({ intent: "success", content: "Game updated" });
+          navigate("/");
+        }
+        if (!result.success) {
+          Toaster.add({
+            intent: "error",
+            content: result.message,
+          });
+        }
       } else {
         if (!data.gamePath || !data.savesConfig) {
           // TODO: show error
@@ -199,8 +212,8 @@ const GameSettingsPage = () => {
           gamePath: data.gamePath,
           savesConfig: data.savesConfig,
         });
+        navigate("/");
       }
-      navigate("/");
     } catch (err) {
       Toaster.add({
         intent: "error",
@@ -216,13 +229,35 @@ const GameSettingsPage = () => {
       <h3>{isEditing ? "You need to setup saves config first" : ""}</h3>
 
       <FormBlock onSubmit={handleSubmit(onSubmit)}>
+        {/* TODO: detection type should be displayed if
+        - steam game moving to custom game
+        */}
+        {game?.isSettupedAtLeastOnce && game.detectionType === "steam" && (
+          <SwitchInput<TGameForm>
+            control={control}
+            name="detectionType"
+            values={[
+              { label: "steam", value: "steam" },
+              { label: "manual", value: "manual" },
+            ]}
+            label="Detection type"
+            description={
+              <>
+                Choose auto detection type
+                <br />- {"steam - game path will be autodetected using steam"}
+                <br />- custom - you need to setup game path manually
+              </>
+            }
+          />
+        )}
+
         <FolderOrFilesInput<TGameForm>
           control={control}
           name="gamePath"
-          label="Game exe file"
+          label="Game path or exe file"
           description={<Description>Path to game exe</Description>}
           property={"openFile"}
-          isDisabled={isEditing && game?.isCreatedAutomatically}
+          isDisabled={isEditing && detectionTypeWatch !== "manual"}
         />
 
         <SwitchInput<TGameForm>

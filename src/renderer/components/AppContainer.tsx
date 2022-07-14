@@ -10,12 +10,12 @@ import LoadingPage from "../pages/loading";
 import SettingsPage from "../pages/settings";
 import GameSettingsPage from "../pages/games/[id]/settings";
 
+import i18n, { setupI18n } from "../utils/i18n";
 import {
   useSettingsStore,
   loadStores,
   subscribeOnStoresChanges,
 } from "../utils/stores";
-import i18n, { setupI18n } from "../utils/i18n";
 
 Modal.setAppElement("#root");
 

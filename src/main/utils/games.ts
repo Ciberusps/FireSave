@@ -9,6 +9,7 @@ import Processes from "./processes";
 import Stores from "../stores";
 import FileSystem from "../utils/fileSystem";
 import { PLATFORM } from "./config";
+import { getGamePathOnly } from ".";
 
 const generateUniqGameId = (limit = 10): string | null => {
   let result = null;
@@ -25,10 +26,15 @@ const generateUniqGameId = (limit = 10): string | null => {
   return result;
 };
 
-const createSteamGame = async (
+const gamesToShortList = (games: TGame[]): string[] => {
+  return games.map((g) => `name "${g.name}" | id "${g.id}"`);
+};
+
+const convertSteamAppToGame = (
   steamApp: ISteamApp,
+  // TODO: remove this paramter?
   storeInfo?: TSteamAppStoreInfo
-): Promise<void> => {
+): TGame | undefined => {
   // probably check that game not exist, dont know how to do it
   const id = generateUniqGameId();
   if (!id) {
@@ -42,9 +48,12 @@ const createSteamGame = async (
   const newGame: TGame = {
     id,
     name,
+    detectionType: "steam",
     isValid: false,
+    isGamePathValid: false,
+    isSaveConfigValid: false,
+    isSettupedAtLeastOnce: false,
     isPlaingNow: false,
-    isCreatedAutomatically: true,
     // name but probably installDir better, mb for steamgames prefix "steam__" can be done or for others "nonsteam__"
     savePointsFolderName: steamApp.manifest.name,
     savesStats: { total: 0, auto: 0, manual: 0 },
@@ -52,78 +61,241 @@ const createSteamGame = async (
     gamePath: {
       [PLATFORM]: { path: FileSystem.normalizeUpath(steamApp.path) },
     },
-    steam: {
-      appId: steamApp.appId,
-      storeInfo,
-    },
+    steamAppId: steamApp.appId,
   };
 
-  Stores.Games.set(`games.${id}`, newGame);
+  return newGame;
 };
 
-const fillSteamGames = async () => {
+const autoDetectSteamGames = async (): Promise<TGame[]> => {
+  console.info("[games.ts/autoDetectSteamGames()] Try auto-detect steam games");
+  const result: TGame[] = [];
   try {
-    const games = Stores.Games.get("games");
     const steamInfo = await findSteam();
-    if (!steamInfo?.libraries) return;
-
-    const gamesToUpdate: { game: TGame; steamApp: ISteamApp }[] = [];
-    const gamesToCreate: ISteamApp[] = [];
+    if (!steamInfo?.libraries) {
+      throw new Error(
+        `[games.ts/autoDetectSteamGames()] No steam "libraries" found`
+      );
+    }
 
     for (const lib of steamInfo.libraries) {
-      for (const app of lib.apps) {
-        const game = Object.values(games).find(
-          (g) => g.steam?.appId === app.appId
-        );
-
-        if (game) {
-          Stores.Games.set(
-            `games.${game.id}.gamePath.${PLATFORM}.path`,
-            FileSystem.normalizeUpath(app.path)
-          );
-          if (!game.steam?.storeInfo || !game.imageUrl) {
-            // TODO: report why game is not valid
-            gamesToUpdate.push({ game, steamApp: app });
-          }
-        } else {
-          gamesToCreate.push(app);
+      for (const steamApp of lib.apps) {
+        const autoDetectedSteamGame = convertSteamAppToGame(steamApp);
+        if (autoDetectedSteamGame) {
+          result.push(autoDetectedSteamGame);
         }
       }
     }
+  } catch (err) {
+    console.error(err);
+  }
+  console.log(
+    "[games.ts/autoDetectSteamGames()] Auto-detected steam games",
+    gamesToShortList(result)
+  );
+  return result;
+};
 
-    if (Boolean(gamesToCreate.length) || Boolean(gamesToUpdate.length)) {
-      const appIds = [
-        ...gamesToCreate.map((g) => g.appId),
-        ...gamesToUpdate.map((g) => g.steamApp.appId),
-      ];
-      const gamesStoreInfo = await SteamAPI.fetchGamesStoreInfo(appIds);
-      if (!gamesStoreInfo) return;
+type TAutoDetectedGames = {
+  all: TGame[];
+  steam: TGame[];
+  custom: TGame[];
+};
 
-      for (const game of gamesToUpdate) {
-        if (game.game.steam?.appId) {
-          const storeInfo = gamesStoreInfo.result?.[game.game.steam?.appId];
-          if (storeInfo) {
-            Stores.Games.set(
-              `games.${game.game.id}.steam.storeInfo`,
-              storeInfo
-            );
-            Stores.Games.set(
-              `games.${game.game.id}.imageUrl`,
-              storeInfo.header_image
-            );
-          }
-        }
-      }
+const autoDetectGames = async (): Promise<TAutoDetectedGames> => {
+  let result: TAutoDetectedGames = {
+    all: [],
+    steam: [],
+    custom: [],
+  };
+  try {
+    const steamGames = await autoDetectSteamGames();
+    result.all = [...steamGames];
+    result.steam = steamGames;
+  } catch (err) {
+    console.error(err);
+  }
 
-      for (const steamApp of gamesToCreate) {
-        const storeInfo = gamesStoreInfo.result?.[steamApp.appId];
-        if (storeInfo) {
-          createSteamGame(steamApp, storeInfo);
-        } else {
-          // TODO: report why cant create game
+  return result;
+};
+
+const validateSteamGamePath = (
+  game: TGame,
+  autoDetectedSteamGame: TGame | undefined
+): boolean => {
+  let result = false;
+  if (!autoDetectedSteamGame) return result;
+
+  const gamePath = getGamePathOnly(game);
+  const steamGamePath = getGamePathOnly(game);
+
+  if (
+    game.detectionType === "steam" &&
+    gamePath &&
+    steamGamePath &&
+    FileSystem.isPathsEqual(steamGamePath, gamePath)
+  ) {
+    result = true;
+  }
+
+  return result;
+};
+
+const validateCustomGamePath = async (game: TGame): Promise<boolean> => {
+  let result = false;
+
+  // TOOD: check exe file also? getCustomGamePath()?
+  const gamePath = game.gamePath?.[PLATFORM]?.path;
+  if (!gamePath || gamePath.length <= 1) return result;
+
+  result = await FileSystem.isPathExist(gamePath);
+
+  return result;
+};
+
+const validateSaveConfig = async (game: TGame): Promise<boolean> => {
+  let result = false;
+
+  const savesFolderPath = game.savesConfig?.[PLATFORM]?.saveFolder?.path;
+  if (!savesFolderPath || savesFolderPath?.length <= 1) return result;
+
+  result = await FileSystem.isPathExist(savesFolderPath);
+  return result;
+};
+
+const validateGame = async (
+  game: TGame,
+  autoDetectedGames: TAutoDetectedGames
+): Promise<TGame> => {
+  const steamAppId = game.steamAppId;
+  const isSteamGame = Boolean(steamAppId);
+  const isCustomPartyGame = !isSteamGame;
+
+  game.isValid = false;
+  game.isGamePathValid = false;
+  game.isSaveConfigValid = false;
+
+  if (isSteamGame) {
+    const autoDetectedSteamGame = autoDetectedGames.steam.find(
+      (g) => g.steamAppId === steamAppId
+    );
+    game.isGamePathValid = validateSteamGamePath(game, autoDetectedSteamGame);
+    game.isSaveConfigValid = await validateSaveConfig(game);
+  }
+
+  if (isCustomPartyGame) {
+    game.isGamePathValid = await validateCustomGamePath(game);
+    game.isSaveConfigValid = await validateSaveConfig(game);
+  }
+
+  game.isValid = game.isGamePathValid && game.isSaveConfigValid;
+
+  console.info(
+    `[games.ts/validateGames()] Game "${game.name}"(id: "${game.id}") is valid? ${game.isValid}`
+  );
+
+  return game;
+};
+
+const validateGames = async (
+  games: TGame[],
+  autoDetectedGames: TAutoDetectedGames
+): Promise<TGame[]> => {
+  const validateGamesPromises = games.map((game) =>
+    validateGame(game, autoDetectedGames)
+  );
+  const validatedGames = await Promise.all(validateGamesPromises);
+
+  for (const game of validatedGames) {
+    // if steam game.gamePath not valid, update from autoDetected games
+    if (game.steamAppId && game.detectionType === "steam") {
+      const autoDetectedSteamGame = autoDetectedGames.steam.find(
+        (g) => g.steamAppId === game.steamAppId
+      );
+      if (autoDetectedSteamGame) {
+        const newGamePath = autoDetectedSteamGame.gamePath?.[PLATFORM];
+        if (newGamePath) {
+          game.isGamePathValid = true;
+          game.gamePath = {
+            ...game.gamePath,
+            [PLATFORM]: newGamePath,
+          };
         }
       }
     }
+  }
+  return validatedGames;
+};
+
+const fetchSteamGamesStoreInfo = async (autoDetectedSteamGames: TGame[]) => {
+  const steamStoreInfoAppIds = Object.keys(
+    Stores.Games.store.steamGamesStoreInfo
+  );
+  const steamStoreInfoAppIdsToFetch: number[] = [];
+
+  for (const game of autoDetectedSteamGames) {
+    if (
+      game.steamAppId &&
+      !steamStoreInfoAppIds.includes(game.steamAppId.toString())
+    ) {
+      steamStoreInfoAppIdsToFetch.push(game.steamAppId);
+    }
+  }
+  const gamesStoreInfo = await SteamAPI.fetchGamesStoreInfo(
+    steamStoreInfoAppIdsToFetch
+  );
+  if (!gamesStoreInfo) return;
+
+  Object.entries(gamesStoreInfo.result).forEach(
+    ([steamAppId, steamStoreInfo]) => {
+      Stores.Games.set(`steamGamesStoreInfo.${steamAppId}`, steamStoreInfo);
+    }
+  );
+};
+
+const verifyGames = async () => {
+  try {
+    let games = Stores.Games.store.games;
+
+    const settupedGames = Object.values(games).filter(
+      (game) => !game.isSettupedAtLeastOnce
+    );
+    for (const game of settupedGames) {
+      delete games[game.id];
+    }
+
+    const autoDetectedGames = await autoDetectGames();
+
+    const gamesList = Object.values(Stores.Games.store.games) || [];
+    const settupedGamesPaths = gamesList
+      .filter((g) => g.isSettupedAtLeastOnce)
+      .map((game) => getGamePathOnly(game));
+    const installedGamesMap: { [gameId: string]: TGame } = {};
+    autoDetectedGames.all
+      .filter((g) => {
+        return !settupedGamesPaths.includes(getGamePathOnly(g));
+      })
+      .forEach((game) => {
+        installedGamesMap[game.id] = game;
+      });
+
+    games = { ...games, ...installedGamesMap };
+    Stores.Games.set("games", games);
+
+    try {
+      const validatedGames = await validateGames(
+        Object.values(games),
+        autoDetectedGames
+      );
+      for (const game of validatedGames) {
+        Stores.Games.set(`games.${game.id}`, game);
+      }
+    } catch (err) {
+      console.error(`[games.ts/verifyGames] Error validating games: `);
+      console.error(err);
+    }
+
+    await fetchSteamGamesStoreInfo(autoDetectedGames.steam);
   } catch (err) {
     console.error(err);
   }
@@ -144,9 +316,12 @@ const createCustomGame = async (
     const newGame: TGame = {
       id,
       name,
+      detectionType: "manual",
       isValid: true,
+      isGamePathValid: true,
+      isSaveConfigValid: true,
+      isSettupedAtLeastOnce: true,
       isPlaingNow: false,
-      isCreatedAutomatically: false,
       // name but probably installDir better, mb for steamgames prefix "steam__" can be done or for others "nonsteam__"
       savePointsFolderName: name.replace(".exe", ""),
       savesStats: { total: 0, auto: 0, manual: 0 },
@@ -188,9 +363,12 @@ const updateRunningGames = async () => {
 };
 
 const Games = {
+  // TODO: create steam game
   // create,
   createCustomGame,
-  fillSteamGames,
+  autoDetectGames,
+  verifyGames,
+  validateGame,
   updateRunningGames,
   // TODO:
   // getValidAndRunningGames

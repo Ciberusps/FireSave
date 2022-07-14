@@ -5,15 +5,21 @@ import Image from "./Image";
 import Stats from "./Stats";
 import Button from "./Button";
 
+import { useGamesStore } from "../utils/stores";
+import { getGameImage } from "../utils/common";
+
 type TProps = {
   game: TGame;
 };
 
 const GameHeader = (props: TProps) => {
   const { game } = props;
+  const steamStoreInfo = useGamesStore((state) =>
+    game.steamAppId ? state.steamGamesStoreInfo?.[game.steamAppId] : undefined
+  );
 
   const name = game?.name || "Unknown game";
-  const imgSrc = game.imageUrl;
+  const imgSrc = getGameImage({ game, steamStoreInfo });
 
   const onSave = async () => {
     await window.api.makeSavePoint(game.id);
