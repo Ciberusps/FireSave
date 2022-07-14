@@ -1,5 +1,175 @@
 {
-  "Settings": "Settings",
-  "Games": "Games",
-  "Add game": "Add game"
+  "steam": "Steam",
+  "button": {
+    "settings": "Ajustes",
+    "save": {
+      "label": "Guardar"
+    },
+    "run": "Ejecutar",
+    "load": {
+      "label": "Cargar",
+      "tooltip": "Hacer copia de seguridad y cargar este punto de guardado"
+    },
+    "reveal_in_file_explorer": {
+      "label": "Revelar en el explorador de archivos"
+    },
+    "add_to_favorites": {
+      "label": "Añadir a favoritos"
+    },
+    "remove_save": {
+      "label": "Eliminar guardado"
+    },
+    "open_saves_folder": {
+      "label": "Abrir carpeta de guardado"
+    },
+    "open_save_point_folder": {
+      "label": "Abrir carpeta de puntos de guardado"
+    }
+  },
+  "modal": {
+    "default_confirm": {
+      "yes": "Sí",
+      "no": "Cancelar"
+    },
+    "remove_save_point": {
+      "label": "Eliminar guardado",
+      "description": "¿Estás seguro de que quieres eliminar este guardado?"
+    },
+    "load_save_point": {
+      "label": "Cargar guardado",
+      "description": "El juego está siendo ejecutado actualmente\nCargar podría causar el que el juego se cuelgue\n¿Estás seguro de que quieres cargar este guardado?"
+    }
+  },
+  "dates": {
+    "last_save_n_ago": "útlimo guardado hace {{n}}"
+  },
+  "statuses": {
+    "is_valid": "El juego funciona correctamente",
+    "is_running": "El juego está siendo ejecutado",
+    "is_save_config_valid": "Save config setup required",
+    "is_in_saves_library_but_not_installed": "Instalar de steam o cambiar \"Detectar tipo\" en el manual"
+  },
+  "menu": {
+    "search_issues": "Buscar problemas",
+    "about_app": "&Acerca de",
+    "minimize_to_tray": "&Minimizar a la bandeja",
+    "reload": "&Recargar",
+    "exit": "&Salir",
+    "toggle_full_screen": "Alternar pantalla completa",
+    "bring_all_to_front": "Traer todo al frente",
+    "view": "&Ver",
+    "file": "&Archivo",
+    "validate_games": "&Recargar lista de juegos",
+    "help": "&Ayuda"
+  },
+  "home_page": {
+    "installed_games": "Juegos instalados",
+    "no_games_found": "Juegos no encontrados, puedes añadir uno nuevo",
+    "your_saves_library": "Librería de tus guardados",
+    "ready_games": "Juegos listos",
+    "games": "Juegos",
+    "add_game": "Añadir juego"
+  },
+  "settings_page": {
+    "title": "Ajustes",
+    "display": {
+      "label": "Display for screenshots",
+      "description": "Select the display to take screenshots from"
+    },
+    "autosaves": {
+      "label": "Autoguardados",
+      "description": "Hace autoguardados cuando el juego está siendo ejecutado"
+    },
+    "autosaves_interval": {
+      "label": "Intervalo de autoguardados",
+      "description": "Intervalo en minutos entre autoguardados"
+    },
+    "start_in_tray": {
+      "label": "Iniciar en la bandeja",
+      "description": "Inicia la aplicación en la bandeja"
+    }
+  },
+  "game_settings_page": {
+    "page_title": "Añadir juego",
+    "block_title_settings": "Ajustes del juego",
+    "block_title_save_config": "Guardar configuración",
+    "choose_save_folder_warning": "Elegir carpeta de guardado primero",
+    "path_to_game": {
+      "label": "Ruta o archivo exe",
+      "description": "Ruta o archivo exe"
+    },
+    "auto_detect": {
+      "label": "¿Autodetectar juego?",
+      "description": "La autodetección de juegos está activada"
+    },
+    "auto_detect_method": {
+      "label": "Auto-detect using",
+      "description": "Game will be auto-detected using selected games store"
+    },
+    "saves_config_type": {
+      "label": "Tipo",
+      "options": {
+        "simple": "Simple",
+        "advanced": "Avanzado"
+      },
+      "description_simple": "Simple - easy to setup, only folder required but can be heavier in size",
+      "description_advanced": "Advanced - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space"
+    },
+    "saves_config_folder": {
+      "label": "Carpeta de guardados",
+      "description": "Ruta para la carpeta de guardados"
+    },
+    "include_all": {
+      "label": "Incluir todos los archivos",
+      "description_on": "Include all files by default and use exclude list for exclusions",
+      "description_off": "Include files only selected files exclude files from exclude list"
+    },
+    "files_preview": {
+      "all_label": "Archivos",
+      "result_label": "Result - files that will be saved"
+    },
+    "errors": {
+      "no_association_with_steam": "No association with steam store appId",
+      "game_not_found": "Game not found, try reopen app",
+      "game_not_associated": "Game not associated with any store please disable auto-detect game"
+    }
+  },
+  "game_saves_page": {
+    "online_games_warning": "Looks like its online game, manipulation with saves can lead to ban/shadow ban, to avoid it LOG OUT from online session before loading",
+    "favorites_list_label": "Favoritos",
+    "saves_history_list_label": "Línea de tiempo"
+  },
+  "include_exclude_actions_component": {
+    "in": "en",
+    "or_use_pattern": "o usar patrón",
+    "everywhere": "por todas partes",
+    "and_all_folders_below": "y todas las carpetas de abajo",
+    "empty_warning_include_all_on": "Seleccionar archivos o carpetas para incluir",
+    "empty_warning_include_all_off": "Seleccionar archivos o carpetas para excluir o incluir",
+    "include_file_or_folder": "Incluir",
+    "exclude_file_or_folder": "Excluir",
+    "include": {
+      "label": "Lista de incluidos",
+      "disabled_reason": "Necessary only if 'Include all files' turned off"
+    },
+    "exclude": {
+      "label": "Lista de excluidos"
+    }
+  },
+  "list_input_component": {
+    "remove_all": "eliminar todo"
+  },
+  "stats_component": {
+    "saves_count": "{{count}} guardados",
+    "autosaves_count": "{{count}} autoguardados",
+    "manual_saves_count": "{{count}} guardados manuales"
+  },
+  "game_card_component": {
+    "no_saves": "no hay guardados aún"
+  },
+  "save_point_card": {
+    "manual_save": "Guardado manual",
+    "autosave": "Autoguardado",
+    "no_tags": "Sin etiquetas..."
+  }
 }

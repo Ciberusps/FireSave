@@ -1,5 +1,175 @@
 {
-  "Settings": "Settings",
-  "Games": "Games",
-  "Add game": "Add game"
+  "steam": "Steam",
+  "button": {
+    "settings": "Settings",
+    "save": {
+      "label": "Save"
+    },
+    "run": "Run",
+    "load": {
+      "label": "Load",
+      "tooltip": "Make backup and load this save point"
+    },
+    "reveal_in_file_explorer": {
+      "label": "Reveal in File Explorer"
+    },
+    "add_to_favorites": {
+      "label": "Add to favorites"
+    },
+    "remove_save": {
+      "label": "Remove save"
+    },
+    "open_saves_folder": {
+      "label": "Open saves folder"
+    },
+    "open_save_point_folder": {
+      "label": "Open save point folder"
+    }
+  },
+  "modal": {
+    "default_confirm": {
+      "yes": "Yes",
+      "no": "Cancel"
+    },
+    "remove_save_point": {
+      "label": "Remove save",
+      "description": "Are you sure you want to delete this save?"
+    },
+    "load_save_point": {
+      "label": "Load save",
+      "description": "Game is currently running\nLoading might cause game to crash\nAre you sure you want to load this save?"
+    }
+  },
+  "dates": {
+    "last_save_n_ago": "last save {{n}} ago"
+  },
+  "statuses": {
+    "is_valid": "Game works correctly",
+    "is_running": "Game is running",
+    "is_save_config_valid": "Save config setup required",
+    "is_in_saves_library_but_not_installed": "Install from steam or change \"Detect type\" on manual"
+  },
+  "menu": {
+    "search_issues": "Search Issues",
+    "about_app": "&About",
+    "minimize_to_tray": "&Minimize to tray",
+    "reload": "&Reload",
+    "exit": "&Exit",
+    "toggle_full_screen": "Toggle Full Screen",
+    "bring_all_to_front": "Bring All to Front",
+    "view": "&View",
+    "file": "&File",
+    "validate_games": "&Reload games list",
+    "help": "&Help"
+  },
+  "home_page": {
+    "installed_games": "Installed games",
+    "no_games_found": "No games found, you can add new one",
+    "your_saves_library": "Your Saves Library",
+    "ready_games": "Ready games",
+    "games": "Games",
+    "add_game": "Add game"
+  },
+  "settings_page": {
+    "title": "Settings",
+    "display": {
+      "label": "Display for screenshots",
+      "description": "Select the display to take screenshots from"
+    },
+    "autosaves": {
+      "label": "Autosaves",
+      "description": "Makes autosaves when game runned"
+    },
+    "autosaves_interval": {
+      "label": "Autosaves interval",
+      "description": "Interval in minutes between autosaves"
+    },
+    "start_in_tray": {
+      "label": "Start in Tray",
+      "description": "Starts the app in tray"
+    }
+  },
+  "game_settings_page": {
+    "page_title": "Add game",
+    "block_title_settings": "Game settings",
+    "block_title_save_config": "Save config",
+    "choose_save_folder_warning": "Choose saves folder first",
+    "path_to_game": {
+      "label": "Path or exe file",
+      "description": "Path or exe file"
+    },
+    "auto_detect": {
+      "label": "Auto-detect game?",
+      "description": "Is game auto-detection enabled"
+    },
+    "auto_detect_method": {
+      "label": "Auto-detect using",
+      "description": "Game will be auto-detected using selected games store"
+    },
+    "saves_config_type": {
+      "label": "Type",
+      "options": {
+        "simple": "Simple",
+        "advanced": "Advanced"
+      },
+      "description_simple": "Simple - easy to setup, only folder required but can be heavier in size",
+      "description_advanced": "Advanced - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space"
+    },
+    "saves_config_folder": {
+      "label": "Saves folder",
+      "description": "Path to saves folder"
+    },
+    "include_all": {
+      "label": "Include all files",
+      "description_on": "Include all files by default and use exclude list for exclusions",
+      "description_off": "Include files only selected files exclude files from exclude list"
+    },
+    "files_preview": {
+      "all_label": "Files",
+      "result_label": "Result - files that will be saved"
+    },
+    "errors": {
+      "no_association_with_steam": "No association with steam store appId",
+      "game_not_found": "Game not found, try reopen app",
+      "game_not_associated": "Game not associated with any store please disable auto-detect game"
+    }
+  },
+  "game_saves_page": {
+    "online_games_warning": "Looks like its online game, manipulation with saves can lead to ban/shadow ban, to avoid it LOG OUT from online session before loading",
+    "favorites_list_label": "Favorites",
+    "saves_history_list_label": "Timeline"
+  },
+  "include_exclude_actions_component": {
+    "in": "in",
+    "or_use_pattern": "or use pattern",
+    "everywhere": "everywhere",
+    "and_all_folders_below": "and all folders below",
+    "empty_warning_include_all_on": "Select files or folders to include",
+    "empty_warning_include_all_off": "Select files or folders to exclude or include",
+    "include_file_or_folder": "Include",
+    "exclude_file_or_folder": "Exclude",
+    "include": {
+      "label": "Include list",
+      "disabled_reason": "Necessary only if 'Include all files' turned off"
+    },
+    "exclude": {
+      "label": "Exclude list"
+    }
+  },
+  "list_input_component": {
+    "remove_all": "remove all"
+  },
+  "stats_component": {
+    "saves_count": "{{count}} saves",
+    "autosaves_count": "{{count}} autosaves",
+    "manual_saves_count": "{{count}} manual saves"
+  },
+  "game_card_component": {
+    "no_saves": "no saves yet"
+  },
+  "save_point_card": {
+    "manual_save": "Manual save",
+    "autosave": "Autosave",
+    "no_tags": "No tags..."
+  }
 }
