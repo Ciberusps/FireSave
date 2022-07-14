@@ -1,6 +1,5 @@
 import globby from "globby";
 import upath from "upath";
-// @ts-ignore
 import VDF from "simple-vdf";
 import { URL } from "url";
 
@@ -26,7 +25,7 @@ export const getAssetPath = (...paths: string[]): string =>
   upath.join(ASSETS_PATH, ...paths);
 
 export const parseVdf = <T>(file: string): T => {
-  return VDF.parse(file) as T;
+  return VDF.parse<T>(file);
 };
 
 export const getGlobby = async (
