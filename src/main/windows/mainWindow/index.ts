@@ -91,8 +91,8 @@ class MainWindow extends BrowserWindow {
   }
 
   quitApp() {
-    app.quit();
     this.permitQuit = true;
+    app.quit();
   }
 
   onMaximize() {
