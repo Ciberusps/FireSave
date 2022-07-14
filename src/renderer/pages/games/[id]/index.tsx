@@ -20,6 +20,13 @@ const GamePage = () => {
   const savesFolder = usePersistentStore((state) => state.savesFolder);
   const game = useGamesStore((state) => id && state.games[id]);
   const saves = useGamesStore((state) => id && state.savePoints[id]);
+  const steamStoreInfo = useGamesStore(
+    (state) =>
+      id &&
+      game &&
+      game.steamAppId &&
+      state.steamGamesStoreInfo[game.steamAppId]
+  );
 
   if (!game) return <div>error</div>;
 
@@ -30,9 +37,11 @@ const GamePage = () => {
 
   const gameSavesPath = path.join(savesFolder, game.savePointsFolderName);
 
-  const isOnlineGame = game?.steam?.storeInfo?.categories
-    ?.map((c) => c.description)
-    .some((c) => ONLINE_GAMES_STEAM_CATEGORIES.includes(c));
+  const isOnlineGame =
+    steamStoreInfo &&
+    steamStoreInfo?.categories
+      ?.map((c) => c.description)
+      .some((c) => ONLINE_GAMES_STEAM_CATEGORIES.includes(c));
 
   return (
     <Layout contentStyles={{ padding: 0 }}>

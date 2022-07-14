@@ -31,6 +31,8 @@ export const DEFAULT_STORES_PATH = path.normalize(
   path.join(APP_ROOT_PATH, "FireSave_Data")
 );
 
+export const DEFAULT_LOG_FILE_PATH = path.join(DEFAULT_STORES_PATH, "main.log");
+
 export const APP_VERSION = app.getVersion();
 
 export const PLATFORM = process.platform;

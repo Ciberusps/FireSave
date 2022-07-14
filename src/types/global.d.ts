@@ -51,6 +51,9 @@ declare global {
         [savePointId: string]: TSavePoint;
       };
     };
+    steamGamesStoreInfo: {
+      [steamAppId: string]: TSteamAppStoreInfo;
+    };
     tags: string[];
   };
 

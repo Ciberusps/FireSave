@@ -34,7 +34,7 @@ const Container = styled.div<TContainer>`
 `;
 
 const Name = styled.div`
-  width: 120px;
+  width: 170px;
   padding-right: 20px;
   font-style: normal;
   font-weight: bold;

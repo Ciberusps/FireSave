@@ -13,12 +13,18 @@ const IndexPage = () => {
   const games = useGamesStore((state) => Object.values(state.games));
 
   const validGames = useMemo(() => {
-    return games.filter((game) => game.isValid);
+    return games.filter((game) => game.isValid && game.isSettupedAtLeastOnce);
   }, [games]);
 
   const notValidGames = useMemo(() => {
-    return games.filter((game) => !game.isValid);
+    return games.filter((game) => !game.isValid && game.isSettupedAtLeastOnce);
   }, [games]);
+
+  const installedGames = useMemo(() => {
+    return games.filter((game) => !game.isValid && !game.isSettupedAtLeastOnce);
+  }, [games]);
+
+  console.log(games);
 
   return (
     <Layout>
@@ -43,9 +49,20 @@ const IndexPage = () => {
 
       {notValidGames.length > 0 && (
         <GamesContainer>
-          <h2>Setup required</h2>
+          <h2>Your Saves Library</h2>
           <Games>
             {notValidGames.map((game) => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </Games>
+        </GamesContainer>
+      )}
+
+      {installedGames.length > 0 && (
+        <GamesContainer>
+          <h2>Installed games</h2>
+          <Games>
+            {installedGames.map((game) => (
               <GameCard key={game.id} game={game} />
             ))}
           </Games>

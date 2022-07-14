@@ -1,17 +1,25 @@
 import { IAppManifest, ISteamApp } from "@ciberus/find-steam-app";
 
 declare global {
+  type TGameDetectionType = "steam" | "manual";
+
   type TGame = {
     id: string;
 
+    // should be changable in UI
+    // if "steam" used, game will be detected using steam(find-steam-app)
+    // if "custom" used, game wont try to auto-detect
+    detectionType: TGameDetectionType;
+
     // если нет пути до сейва, если нет пути до игры
     isValid: boolean;
+    isGamePathValid: boolean;
+    isSaveConfigValid: boolean;
+
+    isSettupedAtLeastOnce: boolean;
 
     // scheduler пусть заполняет эту поеботу раз в N минут
     isPlaingNow: boolean;
-
-    // если была создана при поиске steam'овских игр
-    isCreatedAutomatically: boolean;
 
     savePointsFolderName: string;
 
@@ -22,23 +30,15 @@ declare global {
       manual: number;
     };
 
+    /** @deprecated use Stores.Games.steamGamesStoreInfo for steam games */
     imageUrl?: string;
 
     // TODO: mb add tags from storeInfo and sort by it
     tags?: string;
 
-    // если игра steam'овская, то недавать возможности изменить path
-    steam?: {
-      appId: number;
+    steamAppId?: number;
 
-      storeInfo?: TSteamAppStoreInfo;
-
-      // чет неуверен что нужно манифест хранить его можно
-      // в любой момент узнать и там нет интересной инфы
-      // manifest: TPlatformSpecific<IAppManifest>;
-    };
-
-    // если нестимовская игра может меняться игроком
+    // can be change by user
     name?: string;
 
     // мне прям путь до exeшника неособо нужен

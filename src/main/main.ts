@@ -27,6 +27,7 @@ import {
   ASSETS_PATH,
   APP_VERSION,
   DEFAULT_STORES_PATH,
+  DEFAULT_LOG_FILE_PATH,
 } from "./utils/config";
 import "./handlers";
 import i18n from "./utils/i18n";
@@ -61,11 +62,14 @@ class Main {
   }
 
   initLogging() {
+    // clean up logs in dev mode
+    isDev && fs.writeFileSync(DEFAULT_LOG_FILE_PATH, "", "utf8");
+
     console.log = log.log;
     console.error = log.error;
     console.info = log.info;
-    log.transports.file.resolvePath = () =>
-      path.join(DEFAULT_STORES_PATH, "main.log");
+    log.transports.file.resolvePath = () => DEFAULT_LOG_FILE_PATH;
+
     Stores.Settings.set(
       "runtimeValues.DEFAULT_STORES_PATH",
       DEFAULT_STORES_PATH
@@ -138,7 +142,7 @@ class Main {
       IS_DEV: isDev,
     });
 
-    await Games.fillSteamGames();
+    await Games.verifyGames();
     Capture.verifyPrimaryDisplaySelected();
 
     Stores.Settings.set("runtimeValues.IS_MAIN_LOADING", false);

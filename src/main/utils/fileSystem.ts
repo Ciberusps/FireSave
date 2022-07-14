@@ -4,6 +4,8 @@ import upath from "upath";
 import fsExtra from "fs-extra";
 
 const isExist = (path: string) => fs.existsSync(path);
+const isPathExist = (path: string): Promise<boolean> =>
+  fsExtra.pathExists(path);
 
 const removeFileOrFolder = (pathString: string) => {
   if (isExist(pathString)) {
@@ -54,6 +56,7 @@ const FileSystem = {
   createDir,
   isDir,
   isExist,
+  isPathExist,
   isPathsEqual,
   normalize,
   normalizeUpath,

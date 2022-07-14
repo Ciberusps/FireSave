@@ -17,14 +17,29 @@ const GamesHandlers: TGamesHandlers = {
     Games.createCustomGame(payload);
   },
   editGame: async (_, gameId, payload) => {
-    const game = Stores.Games.store.games[gameId];
-    if (!game) return false;
-    Stores.Games.set(`games.${gameId}`, {
-      ...game,
-      ...payload,
-      // isValid
-    });
-    return true;
+    try {
+      const game = Stores.Games.store.games[gameId];
+      if (!game) throw new Error("Game not found");
+      const newGame = { ...game, ...payload };
+
+      const autoDetectedGames = await Games.autoDetectGames();
+      const validatedGame = await Games.validateGame(
+        newGame,
+        autoDetectedGames
+      );
+
+      if (!validatedGame.isGamePathValid) {
+        throw new Error("Game path not valid");
+      }
+      if (!validatedGame.isSaveConfigValid) {
+        throw new Error("Saves config not valid");
+      }
+      Stores.Games.set(`games.${gameId}`, validatedGame);
+      return { success: true };
+    } catch (err) {
+      console.error(err);
+      return { success: false, message: (err as any)?.message };
+    }
   },
   removeGame: async (_, id) => {
     // @ts-ignore
@@ -38,9 +53,9 @@ const GamesHandlers: TGamesHandlers = {
         throw new Error("Game not found");
       }
 
-      if (game.steam?.appId) {
-        shell.openExternal("steam://rungameid/" + game.steam.appId);
-      } else if (!game.isCreatedAutomatically) {
+      if (game.detectionType === "steam") {
+        shell.openExternal("steam://rungameid/" + game.steamAppId);
+      } else if (game.detectionType === "manual") {
         const exePath = getCustomGameExePath(game?.gamePath);
         if (exePath) {
           child.execFile(exePath);
@@ -50,6 +65,7 @@ const GamesHandlers: TGamesHandlers = {
       }
     } catch (err) {
       // TODO: toaster error
+      console.error(err);
     }
 
     [1000, 3000, 5000, 10000].forEach((ms) => {

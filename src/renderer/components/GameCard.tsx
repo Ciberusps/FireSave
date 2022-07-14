@@ -9,6 +9,7 @@ import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 
 import { useGamesStore } from "../utils/stores";
+import { getGameImage } from "../utils/common";
 
 type TProps = {
   game: TGame;
@@ -18,6 +19,9 @@ const GameCard = (props: TProps) => {
   const { game } = props;
 
   const gameSavePoints = useGamesStore((state) => state.savePoints[game.id]);
+  const steamStoreInfo = useGamesStore((state) =>
+    game.steamAppId ? state.steamGamesStoreInfo?.[game.steamAppId] : undefined
+  );
   const savePoints = gameSavePoints && Object.values(gameSavePoints);
 
   const lastSaveDate = useMemo(() => {
@@ -30,7 +34,7 @@ const GameCard = (props: TProps) => {
     () => lastSaveDate && formatDistance(lastSaveDate, new Date()),
     [lastSaveDate]
   );
-  const isSteamGame = game.isCreatedAutomatically;
+  const isSteamGame = game.steamAppId;
 
   return (
     <Container
@@ -40,15 +44,28 @@ const GameCard = (props: TProps) => {
       {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
 
       <ImageContainer>
-        {!game.isValid && (
-          <Tooltip text="Setup required">
-            <IsValidIcon>
-              <Icon size="small" icon="warning" color="black" />
-            </IsValidIcon>
+        {!game.isGamePathValid && game.detectionType === "steam" && (
+          <Tooltip
+            text={`Install from steam or change "Detect type" on manual`}
+          >
+            <IsGamePathValidIcon>
+              <Icon size="extraSmall" icon="download" color="white" />
+            </IsGamePathValidIcon>
+          </Tooltip>
+        )}
+        {!game.isSaveConfigValid && (
+          <Tooltip text="Save config setup required">
+            <IsSavesConfigValidIcon>
+              <Icon size="small" icon="save" color="black" />
+            </IsSavesConfigValidIcon>
           </Tooltip>
         )}
 
-        <Img width="100%" height={215} src={game?.imageUrl} />
+        <Img
+          width="100%"
+          height={215}
+          src={getGameImage({ game, steamStoreInfo })}
+        />
 
         <Badges>
           {isSteamGame ? <SteamBadge>steam</SteamBadge> : <Badge>custom</Badge>}
@@ -56,7 +73,7 @@ const GameCard = (props: TProps) => {
       </ImageContainer>
 
       <Description>
-        <GameName>{game?.steam?.storeInfo?.name || game.name}</GameName>
+        <GameName>{steamStoreInfo?.name || game.name}</GameName>
         <div>
           <Stats game={game} />
           <LastSave>
@@ -156,7 +173,7 @@ const RunningIcon = styled.div`
   right: 5px;
 `;
 
-const IsValidIcon = styled.div`
+const IsGamePathValidIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -165,9 +182,13 @@ const IsValidIcon = styled.div`
   right: 10px;
   width: 30px;
   height: 30px;
-  background: #e0bf00;
   border-radius: 30px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.75);
+  background: linear-gradient(90deg, #399aed, #245ecf);
+`;
+
+const IsSavesConfigValidIcon = styled(IsGamePathValidIcon)`
+  background: #e0bf00;
 `;
 
 export default GameCard;
