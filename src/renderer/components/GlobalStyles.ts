@@ -1,4 +1,5 @@
 import { css, createGlobalStyle } from "styled-components";
+import { transparentize } from "polished";
 import checkBoxStyles from "react-checkbox-tree/lib/react-checkbox-tree.css";
 import toastifyStyles from "react-toastify/dist/ReactToastify.css";
 
@@ -6,6 +7,7 @@ import Fonts from "../utils/fonts";
 
 const scollbarStyles = css`
   &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     background-color: ${({ theme }) => theme.background};
@@ -30,15 +32,24 @@ const scollbarStyles = css`
   }
 `;
 
+// Link on styles https://fkhadra.github.io/react-toastify/how-to-style
 const toasterStyles = css`
+  :root {
+    --toastify-color-info: ${({ theme }) => theme.purple};
+    --toastify-color-success: ${({ theme }) => theme.purple};
+    --toastify-color-warning: #f1c40f;
+    --toastify-color-error: #e74c3c;
+  }
+
   /* Toaster */
   .Toastify__toast {
     border-radius: 12px;
-    border: 2px solid ${({ theme }) => theme.feedback.info};
+    border: 1px solid ${({ theme }) => theme.feedback.info};
     padding: 6px;
     padding-left: 14px;
     font-family: "Roboto", sans-serif;
     font-size: 16px;
+    color: white;
   }
   .Toastify__toast-container {
     /* bottom: 5em; */
@@ -46,21 +57,24 @@ const toasterStyles = css`
   .Toastify__close-button {
     width: 19px;
     height: 19px;
+    > svg {
+      fill: white;
+    }
   }
   .Toastify__toast.Toastify__toast--error {
-    background: ${({ theme }) => theme.feedback.error};
+    background: ${({ theme }) => transparentize(0.8, theme.feedback.error)};
     border-color: ${({ theme }) => theme.feedback.error};
   }
   .Toastify__toast.Toastify__toast--info {
-    background: ${({ theme }) => theme.feedback.info};
+    background: ${({ theme }) => transparentize(0.8, theme.feedback.info)};
     border-color: ${({ theme }) => theme.feedback.info};
   }
   .Toastify__toast.Toastify__toast--success {
-    background: ${({ theme }) => theme.feedback.success};
+    background: ${({ theme }) => transparentize(0.8, theme.feedback.success)};
     border-color: ${({ theme }) => theme.feedback.success};
   }
   .Toastify__toast.Toastify__toast--warning {
-    background: ${({ theme }) => theme.feedback.warning};
+    background: ${({ theme }) => transparentize(0.8, theme.feedback.warning)};
     border-color: ${({ theme }) => theme.feedback.warning};
   }
 `;
@@ -94,7 +108,7 @@ const GlobalStyles = createGlobalStyle`
     font-family: "Roboto", sans-serif;
     font-size: 16px;
     font-weight: normal;
-    font-smoothing: antialiased;
+    font-smooth: antialiased;
 
     background: ${({ theme }) => theme.background};
 
