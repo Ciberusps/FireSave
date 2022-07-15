@@ -70,6 +70,9 @@ Check out [contribute guide][contribute]
 
 [contribute]: https://github.com/Ciberusps/FireSave/blob/main/CONTRIBUTING.md
 
+## About
+If you have problem contact me via [issues](https://github.com/Ciberusps/FireSave/issues), [telegram](https://t.me/Ciberus) or [email](mailto:ciberus.ps+github@gmail.com)
+
 ## Support
 
 You can boost up my motivation/development speed via [DonationAlerts](https://www.donationalerts.com/r/ciberusps)
