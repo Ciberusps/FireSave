@@ -10,7 +10,7 @@ type TProps = React.ImgHTMLAttributes<HTMLImageElement> & {
 };
 
 const Image = (props: TProps) => {
-  const { src, width, height, className, ...restProps } = props;
+  const { src, width, height, className, alt } = props;
   return (
     <LazyLoad
       height={height}
@@ -20,9 +20,8 @@ const Image = (props: TProps) => {
           width={width}
           height={height}
           src={placeholderImg}
-          alt={restProps.alt || ""}
+          alt={alt || ""}
           className={className}
-          {...restProps}
         />
       }
     >
@@ -30,9 +29,8 @@ const Image = (props: TProps) => {
         width={width}
         height={height}
         src={src || placeholderImg}
-        alt={restProps.alt || ""}
+        alt={alt || ""}
         className={className}
-        {...restProps}
       />
     </LazyLoad>
   );

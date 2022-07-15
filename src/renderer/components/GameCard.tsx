@@ -16,7 +16,7 @@ type TProps = {
 };
 
 const GameCard = (props: TProps) => {
-  const { game } = props;
+  const { game, ...restProps } = props;
 
   const gameSavePoints = useGamesStore((state) => state.savePoints[game.id]);
   const steamStoreInfo = useGamesStore((state) =>
@@ -40,6 +40,7 @@ const GameCard = (props: TProps) => {
     <Container
       to={game.isValid ? `/games/${game.id}` : `/games/${game.id}/settings`}
       isPlayingNow={game.isPlaingNow}
+      {...restProps}
     >
       {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
 

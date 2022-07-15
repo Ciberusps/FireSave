@@ -27,7 +27,7 @@ const Link = (props: TProps) => {
   }
 
   return (
-    <Container to={to} className={className} {...restProps}>
+    <Container to={to} className={className}>
       {children}
     </Container>
   );
