@@ -18,6 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import CheckboxTree from "react-checkbox-tree";
 
+import Form from "../../../components/Form";
 import Layout from "../../../components/Layout";
 import Button from "../../../components/Button";
 import FormBlock from "../../../components/FormBlock";
@@ -81,7 +82,7 @@ const GameSettingsPage = () => {
   const { control, watch, handleSubmit, register, setValue } =
     useForm<TGameForm>({
       defaultValues: {
-        detectionType: game?.detectionType,
+        detectionType: game?.detectionType || "manual",
         gamePath: game?.gamePath?.[PLATFORM],
         savesConfig: {
           type: "simple",
@@ -223,16 +224,15 @@ const GameSettingsPage = () => {
   };
 
   return (
-    <Layout>
+    <Layout contentStyles={{ height: "170vh" }}>
       <Header>{isEditing ? game?.name : "Add game"}</Header>
 
-      <h3>{isEditing ? "You need to setup saves config first" : ""}</h3>
-
-      <FormBlock onSubmit={handleSubmit(onSubmit)}>
+      <FormStyled onSubmit={handleSubmit(onSubmit)}>
         {/* TODO: detection type should be displayed if
         - steam game moving to custom game
         */}
-        {game?.isSettupedAtLeastOnce && game.detectionType === "steam" && (
+        <h3>{"Game settings"}</h3>
+        <FormBlock>
           <SwitchInput<TGameForm>
             control={control}
             name="detectionType"
@@ -248,126 +248,132 @@ const GameSettingsPage = () => {
                 <br />- custom - you need to setup game path manually
               </>
             }
+            isDisabled={!game?.isSettupedAtLeastOnce}
           />
-        )}
 
-        <FolderOrFilesInput<TGameForm>
-          control={control}
-          name="gamePath"
-          label="Game path or exe file"
-          description={<Description>Path to game exe</Description>}
-          property={"openFile"}
-          isDisabled={isEditing && detectionTypeWatch !== "manual"}
-        />
+          <FolderOrFilesInput<TGameForm>
+            control={control}
+            name="gamePath"
+            label="Path or exe file"
+            description={<Description>Path to game exe</Description>}
+            property={"openFile"}
+            isDisabled={isEditing && detectionTypeWatch !== "manual"}
+          />
+        </FormBlock>
 
-        <SwitchInput<TGameForm>
-          control={control}
-          name="savesConfig.type"
-          values={[{ value: "simple" }, { value: "advanced" }]}
-          label="Save config type"
-          description="'Simple' easy to setup only folder required but can be heavier in size, 'Advanced' - select folder and exclude unnecessary files"
-        />
+        <h3>{"Save config"}</h3>
+        <FormBlock>
+          <SwitchInput<TGameForm>
+            control={control}
+            name="savesConfig.type"
+            values={[{ value: "simple" }, { value: "advanced" }]}
+            label="Type"
+            description="'Simple' easy to setup only folder required but can be heavier in size, 'Advanced' - select folder and exclude unnecessary files"
+          />
 
-        <FolderOrFilesInput<TGameForm>
-          control={control}
-          name="savesConfig.saveFolder"
-          label="Saves folder"
-          description={<Description>Path to saves folder</Description>}
-          property={"openDirectory"}
-        />
+          <FolderOrFilesInput<TGameForm>
+            control={control}
+            name="savesConfig.saveFolder"
+            label="Saves folder"
+            description={<Description>Path to saves folder</Description>}
+            property={"openDirectory"}
+          />
 
-        {typeWatch === "advanced" && (
-          <>
-            <ToggleInput
-              label="Save full folder"
-              description={
-                <>
-                  Switch between include list and exclude list.
-                  <br /> - Checked - include all files by default and use
-                  exclude list for exclusions
-                  <br /> - Unchecked - include files only from include list and
-                  exclude files from exclude list
-                </>
-              }
-              {...register("savesConfig.saveFullFolder")}
-            />
-
-            {!saveFolderWatch && <div>Choose saves folder first</div>}
-            {saveFolderWatch && (
-              <TreesContainer>
-                <CheckboxTreeStyled>
-                  <div>Files</div>
-                  <br />
-
-                  <LoadingBlock isLoading={isLoadingFolderContent}>
-                    <CheckboxTree
-                      nodes={folderContentTree}
-                      icons={icons}
-                      checked={folderCheckedNodes}
-                      expanded={folderExpandedNodes}
-                      checkModel="all"
-                      // noCascade={false}
-                      expandOnClick={true}
-                      noCascade={true}
-                      showExpandAll={true}
-                      onClick={() => {}}
-                      onCheck={setFolderCheckedNodes}
-                      onExpand={setFolderExpandedNodes}
-                    />
-                  </LoadingBlock>
-                </CheckboxTreeStyled>
-
-                <CheckboxTreeStyled>
-                  <div>Result - files that will be saved</div>
-                  <br />
-
-                  <LoadingBlock isLoading={isLoadingResultContent}>
-                    <CheckboxTree
-                      nodes={resultContentTree}
-                      icons={icons}
-                      checked={folderCheckedNodes}
-                      expanded={folderExpandedNodes}
-                      checkModel="all"
-                      disabled={true}
-                      expandOnClick={true}
-                      noCascade={true}
-                    />
-                  </LoadingBlock>
-                </CheckboxTreeStyled>
-              </TreesContainer>
-            )}
-
-            <IncludeExcludeActions
-              checkedNodes={folderCheckedNodes}
-              saveFullFolder={saveFullFolderWatch}
-              onClickInclude={onClickInclude}
-              onClickExclude={onClickExclude}
-            />
-
-            <Lists>
-              <ListInput
-                type="include"
-                saveFullFolder={saveFullFolderWatch}
-                list={includeListWatch}
-                inputProps={register("savesConfig.includeList")}
-                onClickRemove={onClickRemoveInclude}
+          {typeWatch === "advanced" && (
+            <>
+              <ToggleInput
+                label="Save full folder"
+                description={
+                  <>
+                    Switch between include list and exclude list.
+                    <br /> - Checked - include all files by default and use
+                    exclude list for exclusions
+                    <br /> - Unchecked - include files only from include list
+                    and exclude files from exclude list
+                  </>
+                }
+                {...register("savesConfig.saveFullFolder")}
               />
 
-              <ListInput
-                type="exclude"
+              {!saveFolderWatch && <div>Choose saves folder first</div>}
+              {saveFolderWatch && (
+                <TreesContainer>
+                  <CheckboxTreeStyled>
+                    <div>Files</div>
+                    <br />
+
+                    <LoadingBlock isLoading={isLoadingFolderContent}>
+                      <CheckboxTree
+                        nodes={folderContentTree}
+                        icons={icons}
+                        checked={folderCheckedNodes}
+                        expanded={folderExpandedNodes}
+                        checkModel="all"
+                        // noCascade={false}
+                        expandOnClick={true}
+                        noCascade={true}
+                        showExpandAll={true}
+                        onClick={() => {}}
+                        onCheck={setFolderCheckedNodes}
+                        onExpand={setFolderExpandedNodes}
+                      />
+                    </LoadingBlock>
+                  </CheckboxTreeStyled>
+
+                  <CheckboxTreeStyled>
+                    <div>Result - files that will be saved</div>
+                    <br />
+
+                    <LoadingBlock isLoading={isLoadingResultContent}>
+                      <CheckboxTree
+                        nodes={resultContentTree}
+                        icons={icons}
+                        checked={folderCheckedNodes}
+                        expanded={folderExpandedNodes}
+                        checkModel="all"
+                        disabled={true}
+                        expandOnClick={true}
+                        noCascade={true}
+                      />
+                    </LoadingBlock>
+                  </CheckboxTreeStyled>
+                </TreesContainer>
+              )}
+
+              <IncludeExcludeActions
+                checkedNodes={folderCheckedNodes}
                 saveFullFolder={saveFullFolderWatch}
-                list={excludeListWatch}
-                inputProps={register("savesConfig.excludeList")}
-                onClickRemove={onClickRemoveExclude}
+                onClickInclude={onClickInclude}
+                onClickExclude={onClickExclude}
               />
-            </Lists>
-          </>
-        )}
+
+              <Lists>
+                <ListInput
+                  type="include"
+                  saveFullFolder={saveFullFolderWatch}
+                  list={includeListWatch}
+                  inputProps={register("savesConfig.includeList")}
+                  onClickRemove={onClickRemoveInclude}
+                />
+
+                <ListInput
+                  type="exclude"
+                  saveFullFolder={saveFullFolderWatch}
+                  list={excludeListWatch}
+                  inputProps={register("savesConfig.excludeList")}
+                  onClickRemove={onClickRemoveExclude}
+                />
+              </Lists>
+            </>
+          )}
+        </FormBlock>
 
         <CtaButtons>
-          <Button type="submit">Save</Button>
+          <Button type="submit" style={{ width: "170px" }}>
+            Save
+          </Button>
         </CtaButtons>
-      </FormBlock>
+      </FormStyled>
     </Layout>
   );
 };
@@ -405,10 +411,15 @@ const Header = styled.h1`
   margin-bottom: 20px;
 `;
 
+const FormStyled = styled(Form)`
+  margin-top: 20px;
+`;
+
 const Description = styled.div``;
 
 const CtaButtons = styled.div`
   display: flex;
+  align-self: flex-end;
 
   > {
     &:not(:first-child) {

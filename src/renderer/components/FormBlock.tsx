@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-type TProps = React.FormHTMLAttributes<HTMLFormElement> & {
+type TProps = React.FormHTMLAttributes<HTMLDivElement> & {
   children: any;
   className?: string;
 };
@@ -14,13 +14,14 @@ const FormBlock = (props: TProps) => {
   );
 };
 
-const Container = styled.form`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
   background: ${({ theme }) => theme.underlay};
   border-radius: 10px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.25);
+  margin-bottom: 30px;
 
   > * {
     padding-top: 10px;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import Form from "../components/Form";
 import Link from "../components/Link";
 import Button from "../components/Button";
 import Layout from "../components/Layout";
@@ -55,37 +56,41 @@ const SettingsPage = () => {
         <h1>{t("Settings")}</h1>
 
         <MainSettingsBlock onSubmit={handleSubmit(onSubmit)}>
-          <DisplaysInput
-            label="Display for screenshots"
-            description="Select the display to take screenshots from"
-            selectedDisplayId={watchSelectedDisplay?.id || -1}
-            displays={displays}
-            onChange={(newDisplay) => setValue("selectedDisplay", newDisplay)}
-          />
+          <FormBlock>
+            <DisplaysInput
+              label="Display for screenshots"
+              description="Select the display to take screenshots from"
+              selectedDisplayId={watchSelectedDisplay?.id || -1}
+              displays={displays}
+              onChange={(newDisplay) => setValue("selectedDisplay", newDisplay)}
+            />
 
-          <ToggleInput
-            label="Autosaves"
-            description="Makes autosaves when game runned"
-            {...register("isAutoSaveOn")}
-          />
+            <ToggleInput
+              label="Autosaves"
+              description="Makes autosaves when game runned"
+              {...register("isAutoSaveOn")}
+            />
 
-          <NumberInput
-            control={control}
-            min={1}
-            max={60}
-            name="autoSaveMinutes"
-            label="Autosaves interval"
-            description="Interval in minutes between autosaves"
-          />
+            <NumberInput
+              control={control}
+              min={1}
+              max={60}
+              name="autoSaveMinutes"
+              label="Autosaves interval"
+              description="Interval in minutes between autosaves"
+            />
 
-          <ToggleInput
-            label="Start in Tray"
-            description="Starts the app in tray"
-            {...register("isStartingInTray")}
-          />
+            <ToggleInput
+              label="Start in Tray"
+              description="Starts the app in tray"
+              {...register("isStartingInTray")}
+            />
+          </FormBlock>
 
           <CtaButtons>
-            <Button isSubmit>Save</Button>
+            <Button isSubmit style={{ width: "170px" }}>
+              Save
+            </Button>
           </CtaButtons>
         </MainSettingsBlock>
 
@@ -134,13 +139,13 @@ const WithLove = styled.div`
   line-height: 19px;
 `;
 
-const MainSettingsBlock = styled(FormBlock)`
+const MainSettingsBlock = styled(Form)`
   margin-top: 30px;
 `;
 
 const CtaButtons = styled.div`
   display: flex;
-  margin-top: 20px;
+  align-self: flex-end;
 
   > {
     &:not(:first-child) {
