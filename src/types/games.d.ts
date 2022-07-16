@@ -1,17 +1,15 @@
 import { IAppManifest, ISteamApp } from "@ciberus/find-steam-app";
 
 declare global {
-  type TGameDetectionType = "steam" | "manual";
+  type TGameDetectionMethod = "steam" | undefined;
 
   type TGame = {
     id: string;
 
-    // should be changable in UI
+    isAutoDetectionEnabled: boolean;
     // if "steam" used, game will be detected using steam(find-steam-app)
-    // if "custom" used, game wont try to auto-detect
-    detectionType: TGameDetectionType;
+    autoDetectionMethod: TGameDetectionMethod;
 
-    // если нет пути до сейва, если нет пути до игры
     isValid: boolean;
     isGamePathValid: boolean;
     isSaveConfigValid: boolean;

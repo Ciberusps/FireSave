@@ -85,9 +85,33 @@ const gamesStore = new ElectronStore<TGamesStore>({
         delete game.isCreatedAutomatically;
 
         if (game.steamAppId) {
+          // @ts-ignore
           game.detectionType = "steam";
         } else {
+          // @ts-ignore
           game.detectionType = "manual";
+        }
+      });
+
+      store.set("games", games);
+    },
+    "0.7.1": (store) => {
+      let games = store.store.games;
+
+      Object.entries(games).forEach(([, game]) => {
+        // @ts-ignore
+        if (game.detectionType === "steam") {
+          game.isAutoDetectionEnabled = true;
+        } else {
+          game.isAutoDetectionEnabled = false;
+        }
+        // @ts-ignore
+        if (game?.detectionType) {
+          game.autoDetectionMethod =
+            // @ts-ignore
+            game.detectionType !== "manual" ? game.detectionType : undefined;
+          // @ts-ignore
+          delete game?.detectionType;
         }
       });
 

@@ -110,7 +110,7 @@ const Description = styled.div`
 
 const Name = styled(Text)`
   font-size: 1.35rem;
-  font-weight: normal;
+  font-weight: bolder;
 `;
 
 const CtaButtons = styled.div`

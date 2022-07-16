@@ -48,7 +48,8 @@ const convertSteamAppToGame = (
   const newGame: TGame = {
     id,
     name,
-    detectionType: "steam",
+    isAutoDetectionEnabled: true,
+    autoDetectionMethod: "steam",
     isValid: false,
     isGamePathValid: false,
     isSaveConfigValid: false,
@@ -130,7 +131,8 @@ const validateSteamGamePath = (
   const steamGamePath = getGamePathOnly(game);
 
   if (
-    game.detectionType === "steam" &&
+    game.isAutoDetectionEnabled &&
+    game.autoDetectionMethod === "steam" &&
     gamePath &&
     steamGamePath &&
     FileSystem.isPathsEqual(steamGamePath, gamePath)
@@ -145,7 +147,7 @@ const validateCustomGamePath = async (game: TGame): Promise<boolean> => {
   let result = false;
 
   // TOOD: check exe file also? getCustomGamePath()?
-  const gamePath = game.gamePath?.[PLATFORM]?.path;
+  const gamePath = getGamePathOnly(game);
   if (!gamePath || gamePath.length <= 1) return result;
 
   result = await FileSystem.isPathExist(gamePath);
@@ -165,25 +167,23 @@ const validateSaveConfig = async (game: TGame): Promise<boolean> => {
 
 const validateGame = async (
   game: TGame,
-  autoDetectedGames: TAutoDetectedGames
+  autoDetectedGames: TAutoDetectedGames | undefined
 ): Promise<TGame> => {
   const steamAppId = game.steamAppId;
-  const isSteamGame = Boolean(steamAppId);
-  const isCustomPartyGame = !isSteamGame;
 
   game.isValid = false;
   game.isGamePathValid = false;
   game.isSaveConfigValid = false;
 
-  if (isSteamGame) {
-    const autoDetectedSteamGame = autoDetectedGames.steam.find(
+  if (game.isAutoDetectionEnabled && game.autoDetectionMethod === "steam") {
+    const autoDetectedSteamGame = autoDetectedGames?.steam.find(
       (g) => g.steamAppId === steamAppId
     );
     game.isGamePathValid = validateSteamGamePath(game, autoDetectedSteamGame);
     game.isSaveConfigValid = await validateSaveConfig(game);
   }
 
-  if (isCustomPartyGame) {
+  if (!game.isAutoDetectionEnabled) {
     game.isGamePathValid = await validateCustomGamePath(game);
     game.isSaveConfigValid = await validateSaveConfig(game);
   }
@@ -191,7 +191,7 @@ const validateGame = async (
   game.isValid = game.isGamePathValid && game.isSaveConfigValid;
 
   console.info(
-    `[games.ts/validateGames()] Game "${game.name}"(id: "${game.id}") is valid? ${game.isValid}`
+    `[games.ts/validateGame()] Game "${game.name}"(id: "${game.id}") is valid? ${game.isValid}`
   );
 
   return game;
@@ -208,7 +208,7 @@ const validateGames = async (
 
   for (const game of validatedGames) {
     // if steam game.gamePath not valid, update from autoDetected games
-    if (game.steamAppId && game.detectionType === "steam") {
+    if (game.isAutoDetectionEnabled && game.autoDetectionMethod === "steam") {
       const autoDetectedSteamGame = autoDetectedGames.steam.find(
         (g) => g.steamAppId === game.steamAppId
       );
@@ -301,44 +301,6 @@ const verifyGames = async () => {
   }
 };
 
-const createCustomGame = async (
-  payload: IPC.TCreateCustomGamePayload
-): Promise<void> => {
-  try {
-    // probably check that game not exist, dont know how to do it
-    const id = generateUniqGameId();
-    if (!id) {
-      throw new Error("Cant generate game id");
-    }
-
-    const name = payload.gamePath.files?.[0] || "Unknown";
-
-    const newGame: TGame = {
-      id,
-      name,
-      detectionType: "manual",
-      isValid: true,
-      isGamePathValid: true,
-      isSaveConfigValid: true,
-      isSettupedAtLeastOnce: true,
-      isPlaingNow: false,
-      // name but probably installDir better, mb for steamgames prefix "steam__" can be done or for others "nonsteam__"
-      savePointsFolderName: name.replace(".exe", ""),
-      savesStats: { total: 0, auto: 0, manual: 0 },
-      imageUrl: undefined,
-      gamePath: { [PLATFORM]: payload.gamePath },
-    };
-    Stores.Games.set(`games.${id}`, newGame);
-    console.info(
-      `[games.ts/createCustomGame] new game created: ${JSON.stringify(newGame)}`
-    );
-    // TODO: toaster game created
-  } catch (err) {
-    console.error(err);
-    // TODO: error handling
-  }
-};
-
 const updateRunningGames = async () => {
   const gamesList = Object.values(Stores.Games.store.games);
   const processes = await Processes.getProcessesList();
@@ -363,13 +325,11 @@ const updateRunningGames = async () => {
 };
 
 const Games = {
-  // TODO: create steam game
-  // create,
-  createCustomGame,
   autoDetectGames,
   verifyGames,
   validateGame,
   updateRunningGames,
+  generateUniqGameId,
   // TODO:
   // getValidAndRunningGames
 };

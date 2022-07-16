@@ -23,6 +23,7 @@ type TProps = Partial<LinkProps> & {
   isSelected?: boolean;
   className?: string;
   children?: React.ReactNode;
+  onClick?: () => void;
 };
 
 const Button = (props: TProps, ref: any) => {
@@ -38,6 +39,7 @@ const Button = (props: TProps, ref: any) => {
     isDisabled = false,
     isSubmit = false,
     className,
+    onClick,
     ...otherProps
   } = props;
 
@@ -55,9 +57,10 @@ const Button = (props: TProps, ref: any) => {
       size={size}
       variant={variant}
       isLoading={!!isLoading}
-      disabled={!!isDisabled}
+      isDisabled={isDisabled}
       className={className}
       tabIndex={0}
+      onClick={!isDisabled ? onClick : undefined}
       {...otherProps}
     >
       <TextStyled size={size} isLoading={isLoading} hasChildren={!!children}>
@@ -88,7 +91,7 @@ const height = "48px";
 
 type TContainer = Pick<HTMLProps<HTMLAnchorElement>, "href"> & {
   variant: TVariant;
-  disabled: boolean;
+  isDisabled: boolean;
   isLoading: boolean;
   size: TSize;
 };
@@ -105,8 +108,8 @@ const Container = styled.button<TContainer>`
 
   background: ${({ theme, variant }) =>
     variant === "primary" ? theme.purple : theme.darkOpacity};
-  color: ${({ disabled, theme }) =>
-    disabled ? theme.darkOpacity : theme.white};
+  color: ${({ isDisabled, theme }) =>
+    isDisabled ? theme.darkOpacity : theme.white};
   text-decoration: none;
 
   border: 0;
@@ -119,8 +122,8 @@ const Container = styled.button<TContainer>`
   &:hover,
   &.hover {
     text-decoration: none;
-    ${({ disabled, variant }) =>
-      !disabled &&
+    ${({ isDisabled, variant }) =>
+      !isDisabled &&
       css`
         background: ${({ theme }) =>
           variant === "primary" ? theme.purpleHovered : theme.purpleHovered};
@@ -135,19 +138,20 @@ const Container = styled.button<TContainer>`
   &:active,
   &.active {
     text-decoration: none;
-    ${({ disabled, variant }) =>
-      !disabled &&
+    ${({ isDisabled, variant }) =>
+      !isDisabled &&
       css`
         background: ${({ theme }) =>
           variant === "primary" ? theme.purpleHovered : theme.purpleHovered};
       `}
   }
 
-  ${({ disabled }) =>
-    disabled &&
+  ${({ isDisabled }) =>
+    isDisabled &&
     css`
       opacity: 0.5;
       color: ${({ theme }) => theme.white};
+      background: ${({ theme }) => theme.darkOpacity};
       cursor: not-allowed;
 
       ${TextStyled} {
@@ -172,7 +176,7 @@ const TextStyled = styled(Text)<TTextStyled>`
   font-weight: 600;
   font-size: ${({ size }) => (size === "normal" ? "18px" : "14px")};
   padding: ${({ size, hasChildren }) =>
-    size === "normal" ? "0 19px" : `5px ${hasChildren ? 20 : 5}px`};
+    size === "normal" ? "0 19px" : `5px ${hasChildren ? 20 : 10}px`};
   outline: none;
 `;
 
