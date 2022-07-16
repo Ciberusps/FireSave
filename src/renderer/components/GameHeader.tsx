@@ -4,7 +4,9 @@ import Text from "./Text";
 import Image from "./Image";
 import Stats from "./Stats";
 import Button from "./Button";
+import GameContextMenu from "./GameContextMenu";
 
+import useContextMenu from "../utils/useContextMenu";
 import { useGamesStore } from "../utils/stores";
 import { getGameImage } from "../utils/common";
 
@@ -17,6 +19,12 @@ const GameHeader = (props: TProps) => {
   const steamStoreInfo = useGamesStore((state) =>
     game.steamAppId ? state.steamGamesStoreInfo?.[game.steamAppId] : undefined
   );
+  const {
+    showContextMenu,
+    setShowContextMenu,
+    getReferenceClientRect,
+    onContextMenu,
+  } = useContextMenu();
 
   const name = game?.name || "Unknown game";
   const imgSrc = getGameImage({ game, steamStoreInfo });
@@ -34,18 +42,27 @@ const GameHeader = (props: TProps) => {
       <Info>
         <BackArrow to="/" icon="leftArrow" variant="secondary" />
 
-        <GameImage
-          width={150}
-          height={70}
-          isPlayingNow={game.isPlaingNow}
-          src={imgSrc}
-          alt={`Game ${name}`}
-        />
+        <GameContextMenu
+          game={game}
+          visible={showContextMenu}
+          getReferenceClientRect={getReferenceClientRect}
+          onRequestClose={() => setShowContextMenu(false)}
+        >
+          <ImageAndDescription onContextMenu={onContextMenu}>
+            <GameImage
+              width={150}
+              height={70}
+              isPlayingNow={game.isPlaingNow}
+              src={imgSrc}
+              alt={`Game ${name}`}
+            />
 
-        <Description>
-          <Name>{name}</Name>
-          <Stats game={game} />
-        </Description>
+            <Description>
+              <Name>{name}</Name>
+              <Stats game={game} />
+            </Description>
+          </ImageAndDescription>
+        </GameContextMenu>
       </Info>
 
       <CtaButtons>
@@ -88,6 +105,10 @@ const Info = styled.div`
 
 const BackArrow = styled(Button)`
   margin-right: 20px;
+`;
+
+const ImageAndDescription = styled.div`
+  display: flex;
 `;
 
 type TGameImage = {

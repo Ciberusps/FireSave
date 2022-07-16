@@ -1,17 +1,17 @@
 import { useMemo } from "react";
 import styled from "styled-components";
 import { formatDistance } from "date-fns";
-// import { transparentize } from "polished";
 
 import Icon from "./Icon";
 import Link from "./Link";
 import Stats from "./Stats";
 import Image from "./Image";
-// import Button from "./Button";
 import Tooltip from "./Tooltip";
 
+import useContextMenu from "../utils/useContextMenu";
 import { useGamesStore } from "../utils/stores";
 import { getGameImage } from "../utils/common";
+import GameContextMenu from "./GameContextMenu";
 
 type TProps = {
   game: TGame;
@@ -19,7 +19,12 @@ type TProps = {
 
 const GameCard = (props: TProps) => {
   const { game, ...restProps } = props;
-  // const theme = useTheme();
+  const {
+    showContextMenu,
+    setShowContextMenu,
+    getReferenceClientRect,
+    onContextMenu,
+  } = useContextMenu();
 
   const gameSavePoints = useGamesStore((state) => state.savePoints[game.id]);
   const steamStoreInfo = useGamesStore((state) =>
@@ -40,66 +45,70 @@ const GameCard = (props: TProps) => {
   const isSteamGame = game.steamAppId;
 
   return (
-    <Container
-      to={game.isValid ? `/games/${game.id}` : `/games/${game.id}/settings`}
-      isPlayingNow={game.isPlaingNow}
-      {...restProps}
+    <GameContextMenu
+      game={game}
+      visible={showContextMenu}
+      getReferenceClientRect={getReferenceClientRect}
+      onRequestClose={() => setShowContextMenu(false)}
     >
-      {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
+      <Container
+        to={game.isValid ? `/games/${game.id}` : `/games/${game.id}/settings`}
+        isPlayingNow={game.isPlaingNow}
+        onContextMenu={onContextMenu}
+        {...restProps}
+      >
+        {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
 
-      <ImageContainer>
-        {!game.isGamePathValid &&
-          game.isAutoDetectionEnabled &&
-          game.autoDetectionMethod === "steam" && (
-            <Tooltip
-              text={`Install from steam or change "Detect type" on manual`}
-            >
-              <IsGamePathValidIcon>
-                <Icon size="extraSmall" icon="download" color="white" />
-              </IsGamePathValidIcon>
+        <ImageContainer>
+          {!game.isGamePathValid &&
+            game.isAutoDetectionEnabled &&
+            game.autoDetectionMethod === "steam" && (
+              <Tooltip
+                text={`Install from steam or change "Detect type" on manual`}
+              >
+                <IsGamePathValidIcon>
+                  <Icon size="extraSmall" icon="download" color="white" />
+                </IsGamePathValidIcon>
+              </Tooltip>
+            )}
+          {!game.isSaveConfigValid && (
+            <Tooltip text="Save config setup required">
+              <IsSavesConfigValidIcon>
+                <Icon size="small" icon="save" color="black" />
+              </IsSavesConfigValidIcon>
             </Tooltip>
           )}
-        {!game.isSaveConfigValid && (
-          <Tooltip text="Save config setup required">
-            <IsSavesConfigValidIcon>
-              <Icon size="small" icon="save" color="black" />
-            </IsSavesConfigValidIcon>
-          </Tooltip>
-        )}
 
-        <Img
-          width="100%"
-          height={215}
-          src={getGameImage({ game, steamStoreInfo })}
-        />
+          <Img
+            width="100%"
+            height={215}
+            src={getGameImage({ game, steamStoreInfo })}
+          />
 
-        <Badges>
-          {isSteamGame ? <SteamBadge>steam</SteamBadge> : <Badge>custom</Badge>}
-        </Badges>
-      </ImageContainer>
+          <Badges>
+            {isSteamGame ? (
+              <SteamBadge>steam</SteamBadge>
+            ) : (
+              <Badge>custom</Badge>
+            )}
+          </Badges>
+        </ImageContainer>
 
-      <Description>
-        <div>
-          <GameName>{steamStoreInfo?.name || game.name}</GameName>
+        <Description>
           <div>
-            <Stats game={game} />
-            <LastSave>
-              {lastSaveDateFormatted
-                ? `last save ${lastSaveDateFormatted} ago`
-                : "no saves yet"}
-            </LastSave>
+            <GameName>{steamStoreInfo?.name || game.name}</GameName>
+            <div>
+              <Stats game={game} />
+              <LastSave>
+                {lastSaveDateFormatted
+                  ? `last save ${lastSaveDateFormatted} ago`
+                  : "no saves yet"}
+              </LastSave>
+            </div>
           </div>
-        </div>
-
-        {/* <Button
-          icon="settings"
-          variant="secondary"
-          size="small"
-          iconProps={{ color: transparentize(0.4, theme.white) }}
-          to={`/games/${game.id}/settings`}
-        /> */}
-      </Description>
-    </Container>
+        </Description>
+      </Container>
+    </GameContextMenu>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import LazyLoad from "react-lazyload";
 
 import placeholderImg from "../../../assets/images/placeholder.png";
@@ -9,7 +9,7 @@ type TProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   height: string | number;
 };
 
-const Image = (props: TProps) => {
+const Image = (props: TProps, ref: any) => {
   const { src, width, height, className, alt } = props;
   return (
     <LazyLoad
@@ -26,6 +26,7 @@ const Image = (props: TProps) => {
       }
     >
       <img
+        ref={ref}
         width={width}
         height={height}
         src={src || placeholderImg}
@@ -36,4 +37,4 @@ const Image = (props: TProps) => {
   );
 };
 
-export default Image;
+export default forwardRef<HTMLImageElement, TProps>(Image);

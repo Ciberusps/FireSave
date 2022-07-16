@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { Link as RouterLink, LinkProps } from "react-router-dom";
 import styled, { css } from "styled-components";
 
@@ -8,13 +9,14 @@ type TProps = LinkProps &
     className?: string;
   };
 
-const Link = (props: TProps) => {
-  const { to, children, className, ...restProps } = props;
+const Link = (props: TProps, ref: any) => {
+  const { to, children, className, onContextMenu, ...restProps } = props;
   delete restProps.isActive;
 
   if (to?.toString().startsWith("http")) {
     return (
       <ExternalLink
+        ref={ref}
         href={to.toString()}
         target="_blank"
         rel="noreferrer"
@@ -27,7 +29,12 @@ const Link = (props: TProps) => {
   }
 
   return (
-    <Container to={to} className={className}>
+    <Container
+      ref={ref}
+      to={to}
+      className={className}
+      onContextMenu={onContextMenu}
+    >
       {children}
     </Container>
   );
@@ -52,4 +59,4 @@ const ExternalLink = styled.a`
   ${linkStyles}
 `;
 
-export default Link;
+export default forwardRef<HTMLAnchorElement, TProps>(Link);
