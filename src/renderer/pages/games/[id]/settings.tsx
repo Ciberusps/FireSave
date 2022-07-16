@@ -185,6 +185,10 @@ const GameSettingsPage = () => {
     updateFormValues,
   ]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const onSubmit = async (data: TGameForm) => {
     console.log("NEW DATA", data);
     try {
@@ -224,7 +228,7 @@ const GameSettingsPage = () => {
   };
 
   return (
-    <Layout contentStyles={{ height: "170vh", alignItems: "center" }}>
+    <Layout contentStyles={{ alignItems: "center", paddingBottom: "400px" }}>
       <Container>
         <Header>{isEditing ? game?.name : "Add game"}</Header>
 
