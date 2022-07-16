@@ -1,11 +1,13 @@
 import { useMemo } from "react";
 import styled from "styled-components";
 import { formatDistance } from "date-fns";
+// import { transparentize } from "polished";
 
+import Icon from "./Icon";
 import Link from "./Link";
 import Stats from "./Stats";
 import Image from "./Image";
-import Icon from "./Icon";
+// import Button from "./Button";
 import Tooltip from "./Tooltip";
 
 import { useGamesStore } from "../utils/stores";
@@ -17,6 +19,7 @@ type TProps = {
 
 const GameCard = (props: TProps) => {
   const { game, ...restProps } = props;
+  // const theme = useTheme();
 
   const gameSavePoints = useGamesStore((state) => state.savePoints[game.id]);
   const steamStoreInfo = useGamesStore((state) =>
@@ -45,15 +48,17 @@ const GameCard = (props: TProps) => {
       {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
 
       <ImageContainer>
-        {!game.isGamePathValid && game.detectionType === "steam" && (
-          <Tooltip
-            text={`Install from steam or change "Detect type" on manual`}
-          >
-            <IsGamePathValidIcon>
-              <Icon size="extraSmall" icon="download" color="white" />
-            </IsGamePathValidIcon>
-          </Tooltip>
-        )}
+        {!game.isGamePathValid &&
+          game.isAutoDetectionEnabled &&
+          game.autoDetectionMethod === "steam" && (
+            <Tooltip
+              text={`Install from steam or change "Detect type" on manual`}
+            >
+              <IsGamePathValidIcon>
+                <Icon size="extraSmall" icon="download" color="white" />
+              </IsGamePathValidIcon>
+            </Tooltip>
+          )}
         {!game.isSaveConfigValid && (
           <Tooltip text="Save config setup required">
             <IsSavesConfigValidIcon>
@@ -74,15 +79,25 @@ const GameCard = (props: TProps) => {
       </ImageContainer>
 
       <Description>
-        <GameName>{steamStoreInfo?.name || game.name}</GameName>
         <div>
-          <Stats game={game} />
-          <LastSave>
-            {lastSaveDateFormatted
-              ? `last save ${lastSaveDateFormatted} ago`
-              : "no saves yet"}
-          </LastSave>
+          <GameName>{steamStoreInfo?.name || game.name}</GameName>
+          <div>
+            <Stats game={game} />
+            <LastSave>
+              {lastSaveDateFormatted
+                ? `last save ${lastSaveDateFormatted} ago`
+                : "no saves yet"}
+            </LastSave>
+          </div>
         </div>
+
+        {/* <Button
+          icon="settings"
+          variant="secondary"
+          size="small"
+          iconProps={{ color: transparentize(0.4, theme.white) }}
+          to={`/games/${game.id}/settings`}
+        /> */}
       </Description>
     </Container>
   );
@@ -149,7 +164,8 @@ const SteamBadge = styled(Badge)`
 const Description = styled.div`
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: flex-end;
   justify-content: space-between;
   margin-top: 12px;
   padding: 0px 20px;

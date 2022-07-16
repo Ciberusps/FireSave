@@ -17,7 +17,13 @@ declare global {
       savesConfig: TSavesConfig;
     };
 
-    type TEditGamePayload = Partial<TGame>;
+    type TEditGamePayload = Pick<
+      TGame,
+      "isAutoDetectionEnabled" | "autoDetectionMethod"
+    > & {
+      gamePath: TFolderOrFilesRaw;
+      savesConfig: TSavesConfig;
+    };
 
     type TGetGlobbyOptions = {
       path: string;
@@ -47,7 +53,9 @@ declare global {
     };
 
     type TGamesApi = {
-      createCustomGame: (payload: TCreateCustomGamePayload) => Promise<void>;
+      createCustomGame: (
+        payload: TCreateCustomGamePayload
+      ) => Promise<THandlerResult>;
       editGame: (
         gameId: string,
         payload: TEditGamePayload

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Controller, Control, FieldValues, FieldPath } from "react-hook-form";
 
 import Button from "./Button";
+import Tooltip from "./Tooltip";
 import InputWrapper from "./InputWrapper";
 
 type TTransform = {
@@ -9,8 +10,10 @@ type TTransform = {
 };
 
 type TProp = {
-  label?: string;
   value: string;
+  label: string;
+  isDisabled?: boolean;
+  whyIsDisabled?: string;
 };
 
 type TProps<T> = {
@@ -43,14 +46,20 @@ const SwitchInput = <T extends FieldValues>(props: TProps<T>) => {
             <>
               <Top>
                 {values.map((property) => (
-                  <SwitchButton
+                  <Tooltip
                     key={property.value}
-                    size="small"
-                    isSelected={field.value === property.value}
-                    onClick={() => field.onChange(property.value)}
+                    text={property.whyIsDisabled || ""}
+                    disabled={!property.isDisabled}
                   >
-                    {property.label || property.value}
-                  </SwitchButton>
+                    <SwitchButton
+                      size="small"
+                      isSelected={field.value === property.value}
+                      isDisabled={property.isDisabled}
+                      onClick={() => field.onChange(property.value)}
+                    >
+                      {property.label || property.value}
+                    </SwitchButton>
+                  </Tooltip>
                 ))}
 
                 <Input
@@ -91,6 +100,7 @@ const Input = styled.input`
 const SwitchButton = styled(Button)`
   background: ${({ theme, isSelected }) =>
     !isSelected ? theme.darkOpacity : theme.purple};
+  opacity: ${({ isDisabled }) => (isDisabled ? 0.5 : 1)};
 `;
 
 export default SwitchInput;

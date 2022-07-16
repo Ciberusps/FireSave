@@ -36,11 +36,10 @@ import { useGamesStore, useSettingsStore } from "../../../utils/stores";
 const folderColor = "#ffd970";
 
 type TGameForm = {
-  detectionType: TGameDetectionType;
+  isAutoDetectionEnabled: boolean;
+  autoDetectionType: TGameDetectionMethod;
   gamePath: TFolderOrFilesRaw;
-  savesConfig: TSavesConfig & {
-    saveFolder: TFolderOrFilesRaw;
-  };
+  savesConfig: TSavesConfig;
 };
 
 // TODO: globby size
@@ -62,6 +61,7 @@ const GameSettingsPage = () => {
 
   const isEditing = id !== "new";
   const game = id ? games[id] : undefined;
+  const isStoresAssociationsExists = [game?.steamAppId].every(Boolean);
 
   const icons = useMemo(
     () => ({
@@ -82,8 +82,9 @@ const GameSettingsPage = () => {
   const { control, watch, handleSubmit, register, setValue } =
     useForm<TGameForm>({
       defaultValues: {
-        detectionType: game?.detectionType || "manual",
-        gamePath: game?.gamePath?.[PLATFORM],
+        isAutoDetectionEnabled: game?.isAutoDetectionEnabled,
+        autoDetectionType: game?.autoDetectionMethod || undefined,
+        gamePath: { path: "", ...game?.gamePath?.[PLATFORM] },
         savesConfig: {
           type: "simple",
           saveFolder: {
@@ -97,7 +98,8 @@ const GameSettingsPage = () => {
       },
     });
 
-  const detectionTypeWatch = watch("detectionType");
+  const isAutoDetectionEnabledWatch = watch("isAutoDetectionEnabled");
+  const detectionTypeWatch = watch("autoDetectionType");
   const typeWatch = watch("savesConfig.type");
   const saveFolderWatch = watch("savesConfig.saveFolder");
   const saveFullFolderWatch = watch("savesConfig.saveFullFolder", true);
@@ -190,34 +192,40 @@ const GameSettingsPage = () => {
   }, []);
 
   const onSubmit = async (data: TGameForm) => {
-    console.log("NEW DATA", data);
     try {
       if (isEditing && game) {
-        // TODO: так делать нерпавильно нужно вынести в main process заполнение платформы
-        const result = await window.api.editGame(game.id, {
-          isValid: true,
-          savesConfig: { [PLATFORM]: data.savesConfig },
-        });
-        if (result.success) {
-          Toaster.add({ intent: "success", content: "Game updated" });
-          navigate("/");
-        }
-        if (!result.success) {
-          Toaster.add({
+        if (data.isAutoDetectionEnabled && !isStoresAssociationsExists) {
+          return Toaster.add({
             intent: "error",
-            content: result.message,
+            content:
+              "Game not associated with any store please disable auto-detect game",
           });
         }
-      } else {
-        if (!data.gamePath || !data.savesConfig) {
-          // TODO: show error
-          return;
-        }
-        window.api.createCustomGame({
+        const result = await window.api.editGame(game.id, {
+          isAutoDetectionEnabled: data.isAutoDetectionEnabled,
+          autoDetectionMethod: data.autoDetectionType,
           gamePath: data.gamePath,
           savesConfig: data.savesConfig,
         });
-        navigate("/");
+        Toaster.add({
+          intent: result.success ? "success" : "error",
+          content: result.message,
+        });
+        if (result.success) {
+          navigate("/");
+        }
+      } else {
+        const result = await window.api.createCustomGame({
+          gamePath: data.gamePath,
+          savesConfig: data.savesConfig,
+        });
+        Toaster.add({
+          intent: result.success ? "success" : "error",
+          content: result.message,
+        });
+        if (result.success) {
+          navigate("/");
+        }
       }
     } catch (err) {
       Toaster.add({
@@ -238,23 +246,36 @@ const GameSettingsPage = () => {
         */}
           <h3>{"Game settings"}</h3>
           <FormBlock>
-            <SwitchInput<TGameForm>
-              control={control}
-              name="detectionType"
-              values={[
-                { label: "steam", value: "steam" },
-                { label: "manual", value: "manual" },
-              ]}
-              label="Detection type"
-              description={
+            {/* TODO: for now available only if editing, until stores associations pull request made */}
+            {isEditing && isStoresAssociationsExists && (
+              <ToggleInput
+                label="Auto-detect game?"
+                description="Is game auto-detection enabled"
+                {...register("isAutoDetectionEnabled")}
+              />
+            )}
+
+            {isEditing &&
+              isStoresAssociationsExists &&
+              isAutoDetectionEnabledWatch && (
                 <>
-                  Choose auto detection type
-                  <br />- {"steam - game path will be autodetected using steam"}
-                  <br />- custom - you need to setup game path manually
+                  <SwitchInput<TGameForm>
+                    control={control}
+                    name="autoDetectionType"
+                    label="Auto-detect using"
+                    description="Game will be auto-detected using selected games store"
+                    isDisabled={!game?.isSettupedAtLeastOnce}
+                    values={[
+                      {
+                        label: "steam",
+                        value: "steam",
+                        isDisabled: !Boolean(game?.steamAppId),
+                        whyIsDisabled: "No association with steam store appId",
+                      },
+                    ]}
+                  />
                 </>
-              }
-              isDisabled={!game?.isSettupedAtLeastOnce}
-            />
+              )}
 
             <FolderOrFilesInput<TGameForm>
               control={control}
@@ -262,7 +283,7 @@ const GameSettingsPage = () => {
               label="Path or exe file"
               description={<Description>Path to game exe</Description>}
               property={"openFile"}
-              isDisabled={isEditing && detectionTypeWatch !== "manual"}
+              isDisabled={isEditing && isAutoDetectionEnabledWatch}
             />
           </FormBlock>
 
@@ -271,9 +292,16 @@ const GameSettingsPage = () => {
             <SwitchInput<TGameForm>
               control={control}
               name="savesConfig.type"
-              values={[{ value: "simple" }, { value: "advanced" }]}
+              values={[
+                { label: "Simple", value: "simple" },
+                { label: "Advanced", value: "advanced" },
+              ]}
               label="Type"
-              description="'Simple' easy to setup only folder required but can be heavier in size, 'Advanced' - select folder and exclude unnecessary files"
+              description={
+                typeWatch === "simple"
+                  ? "'Simple' easy to setup - only folder required but can be heavier in size"
+                  : "'Advanced' - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space for more saves"
+              }
             />
 
             <FolderOrFilesInput<TGameForm>
@@ -287,15 +315,12 @@ const GameSettingsPage = () => {
             {typeWatch === "advanced" && (
               <>
                 <ToggleInput
-                  label="Save full folder"
+                  label="Include all files"
                   description={
-                    <>
-                      Switch between include list and exclude list.
-                      <br /> - Checked - include all files by default and use
-                      exclude list for exclusions
-                      <br /> - Unchecked - include files only from include list
-                      and exclude files from exclude list
-                    </>
+                    saveFullFolderWatch
+                      ? `Include all files by default and use
+                      exclude list for exclusions`
+                      : `Include files only selected files exclude files from exclude list`
                   }
                   {...register("savesConfig.saveFullFolder")}
                 />

@@ -1,15 +1,15 @@
 import { useCallback } from "react";
-import Tippy from "@tippyjs/react/headless";
+import Tippy, { TippyProps } from "@tippyjs/react/headless";
 import styled from "styled-components";
 import { useSpring, motion } from "framer-motion";
 
-type TProps = {
+type TProps = TippyProps & {
   text: string;
   children: any;
 };
 
 const Tooltip = (props: TProps) => {
-  const { text, children } = props;
+  const { text, children, ...restProps } = props;
   const springConfig = { damping: 15, stiffness: 300 };
   const initialScale = 0.5;
   const opacity = useSpring(0, springConfig);
@@ -21,6 +21,7 @@ const Tooltip = (props: TProps) => {
   }, [scale, opacity]);
 
   const onHide = useCallback(
+    // @ts-ignore
     ({ unmount }) => {
       const cleanup = scale.onChange((value) => {
         if (value <= initialScale) {
@@ -45,6 +46,7 @@ const Tooltip = (props: TProps) => {
       animation
       onMount={onMount}
       onHide={onHide}
+      {...restProps}
     >
       {children}
     </Tippy>

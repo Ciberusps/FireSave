@@ -41,7 +41,7 @@ const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
             const newVal = await window.api.openDialog({
               properties: [property],
               filters,
-              defaultPath: field.value?.path,
+              defaultPath: field.value?.path || "",
             });
             if (newVal) {
               console.log(newVal);
