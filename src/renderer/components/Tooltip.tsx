@@ -4,14 +4,15 @@ import styled from "styled-components";
 import { useSpring, motion } from "framer-motion";
 
 type TProps = TippyProps & {
-  text: string;
+  text: React.ReactNode;
   children: any;
+  className?: string;
 };
 
 const Tooltip = (props: TProps) => {
-  const { text, children, ...restProps } = props;
+  const { text, children, className, ...restProps } = props;
   const springConfig = { damping: 15, stiffness: 300 };
-  const initialScale = 0.5;
+  const initialScale = 1;
   const opacity = useSpring(0, springConfig);
   const scale = useSpring(initialScale, springConfig);
 
@@ -39,7 +40,7 @@ const Tooltip = (props: TProps) => {
   return (
     <Tippy
       render={(attrs) => (
-        <Box style={{ scale, opacity }} {...attrs}>
+        <Box style={{ scale, opacity }} className={className} {...attrs}>
           {text}
         </Box>
       )}

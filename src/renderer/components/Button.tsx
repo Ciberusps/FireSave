@@ -9,7 +9,7 @@ import ActivityIndicator from "./ActivityIndicator";
 type TSize = "normal" | "small";
 type TVariant = "primary" | "secondary";
 
-type TProps = Partial<LinkProps> & {
+export type TButtonProps = Partial<LinkProps> & {
   variant?: TVariant;
   to?: To;
   size?: TSize;
@@ -22,11 +22,12 @@ type TProps = Partial<LinkProps> & {
   isSubmit?: boolean;
   isSelected?: boolean;
   className?: string;
+  textStyles?: React.CSSProperties;
   children?: React.ReactNode;
   onClick?: () => void;
 };
 
-const Button = (props: TProps, ref: any) => {
+const Button = (props: TButtonProps, ref: any) => {
   const {
     variant = "primary",
     children,
@@ -38,6 +39,7 @@ const Button = (props: TProps, ref: any) => {
     isLoading = false,
     isDisabled = false,
     isSubmit = false,
+    textStyles,
     className,
     onClick,
     ...otherProps
@@ -63,7 +65,12 @@ const Button = (props: TProps, ref: any) => {
       onClick={!isDisabled ? onClick : undefined}
       {...otherProps}
     >
-      <TextStyled size={size} isLoading={isLoading} hasChildren={!!children}>
+      <TextStyled
+        style={textStyles}
+        size={size}
+        isLoading={isLoading}
+        hasChildren={!!children}
+      >
         {icon && (
           <IconStyled
             icon={icon}
@@ -85,7 +92,7 @@ const Button = (props: TProps, ref: any) => {
   return content;
 };
 
-export default forwardRef<HTMLButtonElement, TProps>(Button);
+export default forwardRef<HTMLButtonElement, TButtonProps>(Button);
 
 const height = "48px";
 
@@ -117,7 +124,6 @@ const Container = styled.button<TContainer>`
   cursor: ${({ isLoading }) => (isLoading ? "progress" : "pointer")};
 
   padding: 0;
-  margin: 2px;
 
   &:hover,
   &.hover {

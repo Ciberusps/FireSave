@@ -24,8 +24,6 @@ const IndexPage = () => {
     return games.filter((game) => !game.isValid && !game.isSettupedAtLeastOnce);
   }, [games]);
 
-  console.log(games);
-
   return (
     <Layout>
       <Header>

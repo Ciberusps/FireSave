@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
-import Modal from "react-modal";
 import { I18nextProvider } from "react-i18next";
+import Modal from "react-modal";
 
 import IndexPage from "../pages";
 import GamePage from "../pages/games/[id]";
@@ -32,6 +32,12 @@ const AppContainer = () => {
       loadedStores.settingsStore.envs.RESOURCES_PATH,
       loadedStores.settingsStore.language
     );
+
+    // TODO: check if in production contextmenu also locked and dont have options
+    window.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
+
     setIsLoadingApp(false);
   }, []);
 
