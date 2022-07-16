@@ -21,18 +21,5 @@ const setupI18n = (resourcesPath: string, lng: string) => {
     });
 };
 
-// // @ts-ignore
-// window.api.i18nextElectronBackend.onLanguageChange((args) => {
-//   console.log("i18nextElectronBackend.onLanguageChange");
-//   console.log(args.lng);
-
-//   i18n.changeLanguage(args.lng, (error, t) => {
-//     console.log("i18nextElectronBackend.onLanguageChange", args.lng);
-//     if (error) {
-//       console.error(error);
-//     }
-//   });
-// });
-
 export default i18n;
 export { setupI18n };

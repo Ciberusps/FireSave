@@ -30,7 +30,7 @@ import {
   DEFAULT_LOG_FILE_PATH,
 } from "./utils/config";
 import "./handlers";
-import i18n from "./utils/i18n";
+import i18n, { setupI18n } from "./utils/i18n";
 import {
   STEAM_LANGUGE_TO_CODES_MAP,
   TSteamLanguage,
@@ -113,6 +113,14 @@ class Main {
     }
   }
 
+  async initI18n() {
+    i18n.on("initialized", async () => {
+      await this.updateLanguageFromSteam();
+      i18n.off("initialized");
+    });
+    setupI18n();
+  }
+
   async updateLanguageFromSteam() {
     const isSteamworksAvailable =
       Stores.Settings.store.envs.IS_STEAMWORKS_AVAILABLE;
@@ -121,8 +129,10 @@ class Main {
       const language = SteamworksSDK.getCurrentGameLanguage();
       const lng = STEAM_LANGUGE_TO_CODES_MAP[language as TSteamLanguage];
       await i18n.changeLanguage(lng);
-      console.info("[main.ts/updateLanguageFromSteam()] language updated", lng);
+
       Stores.Settings.set("language", i18n.language);
+
+      console.info("[main.ts/updateLanguageFromSteam()] language updated", lng);
     } catch (err) {
       console.error(err);
     }
@@ -130,7 +140,7 @@ class Main {
 
   async onReady() {
     this.initSteamworks();
-    this.updateLanguageFromSteam();
+    this.initI18n();
 
     Stores.Settings.set("version", APP_VERSION);
     Stores.Settings.set("runtimeValues.IS_MAIN_LOADING", true);

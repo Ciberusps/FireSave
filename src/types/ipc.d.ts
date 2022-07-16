@@ -90,7 +90,11 @@ declare global {
         i18nextElectronBackend: any;
       };
 
-    type THandler<T extends keyof IPC.TApi = keyof IPC.TApi> = (
+    type TApiWithExclusions = Omit<IPC.TApi, "i18nextElectronBackend">;
+
+    type THandler<
+      T extends keyof TApiWithExclusions = keyof TApiWithExclusions
+    > = (
       event: Electron.IpcMainInvokeEvent,
       ...args: Parameters<IPC.TApi[T]>
     ) => ReturnType<IPC.TApi[T]>;
