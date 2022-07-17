@@ -22,8 +22,6 @@ jobs:
         with:
           node-version: "16"
           cache: "npm"
-      - name: TEMPORARY - Install gdown for fetchSteamworksSdk.js
-        run: pip3 install gdown
       - name: Install dependencies
         run: npm install --legacy-peer-deps
       - name: Lint
@@ -39,8 +37,6 @@ jobs:
         with:
           node-version: "16"
           cache: "npm"
-      - name: TEMPORARY - Install gdown for fetchSteamworksSdk.js
-        run: pip3 install gdown
       - name: Install dependencies
         run: npm install --legacy-peer-deps
       - name: Lint Prettier
@@ -56,8 +52,6 @@ jobs:
         with:
           node-version: "16"
           cache: "npm"
-      - name: TEMPORARY - Install gdown for fetchSteamworksSdk.js
-        run: pip3 install gdown
       - name: Install dependencies
         run: npm install --legacy-peer-deps
       - name: Lint Types
@@ -73,8 +67,6 @@ jobs:
         with:
           node-version: "16"
           cache: "npm"
-      - name: TEMPORARY - Install gdown for fetchSteamworksSdk.js
-        run: pip3 install gdown
       - name: Install dependencies
         run: npm install --legacy-peer-deps
       - name: Test

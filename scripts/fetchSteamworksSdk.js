@@ -11,9 +11,6 @@ checkRequiredEnvs([
 ]);
 
 try {
-  exec(`gdown "${STEAMWORKS_SDK_GOOGLE_DRIVE_LINK}"`);
-  console.info("- [fetchSteamworksSdk] downloaded");
-
   exec(
     `npx 7z-wasm x steamworks_sdk.zip -o./release/app/node_modules/greenworks/deps/steamworks_sdk -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
   );

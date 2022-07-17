@@ -1,9 +1,10 @@
 name: Build/release
 
 on:
-  push:
-    tags:
-      - "*"
+  - push
+  # push:
+  #   tags:
+  #     - "*"
 
 jobs:
   release:
@@ -31,9 +32,6 @@ jobs:
         with:
           node-version: "16"
           cache: "npm"
-
-      - name: TEMPORARY - Install gdown for fetchSteamworksSdk.js
-        run: pip3 install gdown
 
       - name: Install dependencies
         run: |
