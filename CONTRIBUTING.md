@@ -26,7 +26,7 @@
 - download [steamworks sdk](https://partner.steamgames.com/downloads/list)
 - extract content from "sdk" folder to `/steamworks_sdk` folder
 - fill `STEAMWORKS_SDK_ARCHIVE_PASSWORD` in `.env`
-- run 7zip and create archive with password from `steamworks_sdk` folder
+- !IMPORTANT on macos create archive using official 7zip for macos, on windows it might be broken `./7zz a ./steamworks_sdk.zip steamworks_sdk/* -aoa -p{YOUR_PASSWORD} -y`
 - upload `steamworks-sdk.zip` to google drive, make it available to "anyone with the link"(not possible to place zip in git somehow zip brokes after being pushed to any remote same for gitlab and github)
 - fill `STEAMWORKS_SDK_GOOGLE_DRIVE_LINK` in `.env` via instructions in `.env.example`
 
