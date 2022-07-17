@@ -7,8 +7,10 @@ import Button from "./Button";
 import GameContextMenu from "./GameContextMenu";
 
 import useContextMenu from "../utils/useContextMenu";
+import useElectronApiRequest from "../utils/useElectronApiRequest";
 import { useGamesStore } from "../utils/stores";
 import { getGameImage } from "../utils/common";
+import { useCallback } from "react";
 
 type TProps = {
   game: TGame;
@@ -25,17 +27,19 @@ const GameHeader = (props: TProps) => {
     getReferenceClientRect,
     onContextMenu,
   } = useContextMenu();
+  const [runGame] = useElectronApiRequest(window.api.runGame);
+  const [makeSavePoint] = useElectronApiRequest(window.api.makeSavePoint);
 
   const name = game?.name || "Unknown game";
   const imgSrc = getGameImage({ game, steamStoreInfo });
 
-  const onSave = async () => {
-    await window.api.makeSavePoint(game.id);
-  };
+  const onSave = useCallback(() => {
+    makeSavePoint(game.id);
+  }, [game.id, makeSavePoint]);
 
-  const onPlayGame = async () => {
-    window.api.runGame(game.id);
-  };
+  const onPlayGame = useCallback(() => {
+    runGame(game.id);
+  }, [game.id, runGame]);
 
   return (
     <Container>

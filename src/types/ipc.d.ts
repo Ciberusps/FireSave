@@ -28,7 +28,7 @@ declare global {
       savesConfig: TSavesConfig;
     };
 
-    type TGetGlobbyOptions = {
+    type TGetFolderFilesTree = {
       path: string;
       includeList: string[];
       excludeList: string[];
@@ -36,7 +36,7 @@ declare global {
     };
 
     type TGetStore<T> = () => Promise<T>;
-    type TChangeStore<T> = (newStore: Partial<T>) => Promise<boolean>;
+    type TChangeStore<T> = (newStore: Partial<T>) => Promise<THandlerResult>;
     type TOnUpdateStore<T> = (
       event: (event: Electron.IpcRendererEvent, newStore: T) => void
     ) => void;
@@ -63,14 +63,20 @@ declare global {
         gameId: string,
         payload: TEditGamePayload
       ) => TPromiseHandlerResult;
-      removeGame: (id: string) => Promise<boolean>;
-      runGame: (id: string) => Promise<void>;
+      removeGame: (id: string) => TPromiseHandlerResult;
+      runGame: (id: string) => TPromiseHandlerResult;
     };
 
     type TSavePointsApi = {
-      makeSavePoint: (gameId: string) => Promise<void>;
-      loadSavePoint: (gameId: string, savePointId: string) => Promise<boolean>;
-      removeSavePoint: (gameId: string, savePointId: string) => Promise<void>;
+      makeSavePoint: (gameId: string) => TPromiseHandlerResult;
+      loadSavePoint: (
+        gameId: string,
+        savePointId: string
+      ) => TPromiseHandlerResult;
+      removeSavePoint: (
+        gameId: string,
+        savePointId: string
+      ) => TPromiseHandlerResult;
       changeSavePointTags: (
         gameId: string,
         savePointId: string,
@@ -80,22 +86,27 @@ declare global {
         gameId: string,
         savePointId: string,
         newName: string
-      ) => Promise<void>;
-      addToFavorite: (gameId: string, savePointId: string) => Promise<void>;
+      ) => TPromiseHandlerResult;
+      addToFavorite: (
+        gameId: string,
+        savePointId: string
+      ) => TPromiseHandlerResult;
     };
 
     type TApi = TStoresApi &
       TGamesApi &
       TSavePointsApi & {
-        getQuota: () => Promise<TGetQuotaRes>;
-        test: () => void;
-        getGlobby: (options: TGetGlobbyOptions) => Promise<any>;
+        getQuota: () => TPromiseHandlerResult<TGetQuotaRes>;
+        getFolderFilesTree: (
+          options: TGetFolderFilesTree
+        ) => TPromiseHandlerResult<TFilesTree>;
         revealInFileExplorer: (val: string) => TPromiseHandlerResult;
+        // TODO: remove?
         analyticsPageView: (url: string) => Promise<void>;
         openDialog: (
           options: OpenDialogOptions
         ) => TPromiseHandlerResult<TFolderOrFilesRaw>;
-        getDisplays: () => Promise<Electron.Display[]>;
+        getDisplays: () => TPromiseHandlerResult<Electron.Display[]>;
 
         // TODO: contribute typings to `i18next-electron-fs-backend` and add here
         i18nextElectronBackend: any;

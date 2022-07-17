@@ -5,6 +5,7 @@ import { StylesConfig, OnChangeValue } from "react-select";
 import { format, formatDistance } from "date-fns";
 import lodashDebounce from "lodash.debounce";
 import path from "path";
+import { transparentize } from "polished";
 
 import Text from "./Text";
 import Icon from "./Icon";
@@ -12,9 +13,10 @@ import Image from "./Image";
 import Button from "./Button";
 import DefaultConfirmModal from "./DefaultConfirmModal";
 
-import Toaster from "../utils/toaster";
-import { transparentize } from "polished";
-import { useGamesStore } from "renderer/utils/stores";
+import useElectronApiRequest, {
+  makeElectronApiRequest,
+} from "../utils/useElectronApiRequest";
+import { useGamesStore } from "../utils/stores";
 
 const DEFAULT_CARD_HEIGHT = 160;
 const MAX_IMG_WIDTH = (DEFAULT_CARD_HEIGHT * 16) / 9;
@@ -22,7 +24,8 @@ const CARD_BORDER_RADIUS = 10;
 
 const changeSavePointNameDebounced = lodashDebounce(
   (gameId: string, savePointId: string, newName: string) => {
-    window.api.changeSavePointName(gameId, savePointId, newName);
+    const makeReq = makeElectronApiRequest(window.api.changeSavePointName);
+    makeReq(gameId, savePointId, newName);
   },
   1000
 );
@@ -41,6 +44,9 @@ const SavePointCard = (props: TProps) => {
   const theme = useTheme();
   const [name, setName] = useState<string>(savePoint.name);
   const tags = useGamesStore((state) => state.tags);
+  const [removeSavePoint] = useElectronApiRequest(window.api.removeSavePoint);
+  const [loadSavePoint] = useElectronApiRequest(window.api.loadSavePoint);
+  const [addToFavorite] = useElectronApiRequest(window.api.addToFavorite);
   const [savePointToDelete, setSavePointToDelete] = useState<TSavePoint>();
   const [savePointToLoad, setSavePointToLoad] = useState<TSavePoint>();
 
@@ -117,28 +123,9 @@ const SavePointCard = (props: TProps) => {
     return format(date, "dd.MM.yyyy, HH:mm") + " - " + distance + " ago";
   })();
 
-  const loadSave = useCallback(
-    async (savePoint: TSavePoint) => {
-      const isLoaded = await window.api.loadSavePoint(game.id, savePoint.id);
-      if (isLoaded) {
-        Toaster.add({ content: "Saved & Loaded", intent: "success" });
-      } else {
-        Toaster.add({ content: "Load failed", intent: "error" });
-      }
-    },
-    [game.id]
-  );
-
   useEffect(() => {
     setName(savePoint.name);
   }, [savePoint.name]);
-
-  const removeSave = useCallback(
-    async (savePoint: TSavePoint) => {
-      await window.api.removeSavePoint(game.id, savePoint.id);
-    },
-    [game.id]
-  );
 
   const onChangeTags = useCallback(
     (newTags: OnChangeValue<TOption, true>) => {
@@ -161,8 +148,8 @@ const SavePointCard = (props: TProps) => {
   );
 
   const onAddToFavorite = useCallback(() => {
-    window.api.addToFavorite(game.id, savePoint.id);
-  }, [game.id, savePoint.id]);
+    addToFavorite(game.id, savePoint.id);
+  }, [game.id, savePoint.id, addToFavorite]);
 
   return (
     <Container
@@ -249,7 +236,7 @@ const SavePointCard = (props: TProps) => {
             onClick={() =>
               game.isPlaingNow
                 ? setSavePointToLoad(savePoint)
-                : loadSave(savePoint)
+                : loadSavePoint(game.id, savePoint.id)
             }
           >
             Load
@@ -268,7 +255,7 @@ const SavePointCard = (props: TProps) => {
         description="Are you sure you want to delete this save?"
         onRequestClose={(result) => {
           if (result && savePointToDelete) {
-            removeSave(savePointToDelete);
+            removeSavePoint(game.id, savePoint.id);
           }
           setSavePointToDelete(undefined);
         }}
@@ -287,8 +274,7 @@ const SavePointCard = (props: TProps) => {
         }
         onRequestClose={(result) => {
           if (result && savePointToLoad) {
-            console.log("load save");
-            loadSave(savePointToLoad);
+            loadSavePoint(game.id, savePoint.id);
           }
           setSavePointToLoad(undefined);
         }}

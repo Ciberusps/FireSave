@@ -108,9 +108,14 @@ const GamesHandlers: TGamesHandlers = {
     }
   },
   removeGame: async (_, id) => {
-    // @ts-ignore
-    Stores.Games.delete(`games.${id}`);
-    return true;
+    try {
+      // @ts-ignore
+      Stores.Games.delete(`games.${id}`);
+      return { success: true, message: "Game removed" };
+    } catch (err) {
+      console.error(err);
+      return { success: false, message: (err as any)?.message };
+    }
   },
   runGame: async (_, id) => {
     try {
@@ -129,16 +134,19 @@ const GamesHandlers: TGamesHandlers = {
           throw new Error("Game executable path not valid");
         }
       }
-    } catch (err) {
-      // TODO: toaster error
-      console.error(err);
-    }
 
-    [1000, 3000, 5000, 10000].forEach((ms) => {
-      setTimeout(() => {
-        Games.updateRunningGames();
-      }, ms);
-    });
+      [1000, 3000, 5000, 10000].forEach((ms) => {
+        setTimeout(() => {
+          console.log("[games.ts/runGame()] Games.updateRunningGames");
+          Games.updateRunningGames().catch(console.error);
+        }, ms);
+      });
+
+      return { success: true, message: "Game started" };
+    } catch (err) {
+      console.error(err);
+      return { success: false, message: (err as any)?.message };
+    }
   },
 };
 

@@ -280,6 +280,7 @@ const verifyGames = async () => {
       });
 
     games = { ...games, ...installedGamesMap };
+    // TODO: not set all, remove not required(Stores.Games.delete) and update old(Stores.Games.set)
     Stores.Games.set("games", games);
 
     try {

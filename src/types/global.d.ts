@@ -1,4 +1,5 @@
 import { TSteamLanguageCode } from "../common/steamLangCodesMap";
+import { TLeaf } from "../main/utils/globTree";
 
 declare global {
   interface Window {
@@ -63,4 +64,6 @@ declare global {
   };
 
   type TPlatformSpecific<T> = Partial<{ [key in NodeJS.Platform]: T }>;
+
+  type TFilesTree = TLeaf[];
 }
