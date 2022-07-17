@@ -1,7 +1,9 @@
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ContextMenu, { TContextMenuProps } from "./ContextMenu";
-import { useCallback } from "react";
+
+import useElectronApiRequest from "../utils/useElectronApiRequest";
 
 type TProps = Omit<TContextMenuProps, "items" | "onClickOutside"> & {
   game: TGame;
@@ -12,16 +14,18 @@ type TProps = Omit<TContextMenuProps, "items" | "onClickOutside"> & {
 const GameContextMenu = (props: TProps) => {
   const { game, children, onRequestClose, ...restProps } = props;
   const navigate = useNavigate();
+  const [runGame] = useElectronApiRequest(window.api.runGame);
+  const [makeSavePoint] = useElectronApiRequest(window.api.makeSavePoint);
 
   const onSaveGame = useCallback(() => {
-    window.api.makeSavePoint(game.id);
+    makeSavePoint(game.id);
     onRequestClose();
-  }, [game.id, onRequestClose]);
+  }, [game.id, makeSavePoint, onRequestClose]);
 
   const onRunGame = useCallback(() => {
-    window.api.runGame(game.id);
+    runGame(game.id);
     onRequestClose();
-  }, [game.id, onRequestClose]);
+  }, [game.id, runGame, onRequestClose]);
 
   const onOpenSettings = useCallback(() => {
     navigate(`/games/${game.id}/settings`);

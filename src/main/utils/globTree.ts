@@ -1,40 +1,40 @@
-export type TNode = {
+export type TLeaf = {
   value: string;
   label: string;
-  children?: TNode[];
+  children?: TLeaf[];
   disabled?: boolean;
 };
 
-const globToTreeRecursive = (tree: any, glob: string): void => {
-  const parts = glob.split("/");
-  let current = tree;
-  for (let i = 0; i <= parts.length; i++) {
-    const part = parts[i];
-    if (i === parts.length - 1) {
-      current[part] = part;
-    } else if (!current[part]) {
-      current[part] = {};
-    }
-    current = current[part];
-  }
-};
+// const globToTreeRecursive = (tree: any, glob: string): void => {
+//   const parts = glob.split("/");
+//   let current = tree;
+//   for (let i = 0; i <= parts.length; i++) {
+//     const part = parts[i];
+//     if (i === parts.length - 1) {
+//       current[part] = part;
+//     } else if (!current[part]) {
+//       current[part] = {};
+//     }
+//     current = current[part];
+//   }
+// };
 
-const globToTree = (globs: string[]): any => {
-  const tree = {};
+// const globToTree = (globs: string[]): any => {
+//   const tree = {};
 
-  for (const glob of globs) {
-    globToTreeRecursive(tree, glob);
-  }
+//   for (const glob of globs) {
+//     globToTreeRecursive(tree, glob);
+//   }
 
-  return tree;
-};
+//   return tree;
+// };
 
-const globToNodeRecursive = (tree: TNode[], glob: string): void => {
+const globToNodeRecursive = (tree: TLeaf[], glob: string): void => {
   const parts = glob.split("/");
   // console.log({ parts, glob });
 
   let part = parts[0];
-  let current: TNode;
+  let current: TLeaf;
 
   const currentCandidate = tree.find((n) => n.value === part);
   // console.log({ currentCandidate });
@@ -74,8 +74,8 @@ const globToNodeRecursive = (tree: TNode[], glob: string): void => {
   }
 };
 
-const globToNodes = (globs: string[]): TNode[] => {
-  const tree: TNode[] = [];
+const globToFilesTree = (globs: string[]): TLeaf[] => {
+  const tree: TLeaf[] = [];
 
   const globsSorted = globs.sort((a, b) => b.length - a.length);
   // console.log({ globsSorted });
@@ -86,4 +86,4 @@ const globToNodes = (globs: string[]): TNode[] => {
   return tree;
 };
 
-export { globToTree, globToNodes };
+export { globToFilesTree };

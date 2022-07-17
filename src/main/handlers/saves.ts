@@ -15,21 +15,52 @@ type TSavesHandlers = {
 
 const SavesHandlers: TSavesHandlers = {
   makeSavePoint: async (_, gameId) => {
-    // TODO: dont create screenshot if game not runned
-    Saves.makeSavePoint(gameId, "manual");
+    try {
+      Saves.makeSavePoint(gameId, "manual");
+      return { success: true, message: "Save point created" };
+    } catch (err) {
+      console.error(err);
+      return {
+        success: false,
+        message: "Load failed " + (err as any)?.message,
+      };
+    }
   },
   loadSavePoint: async (_, gameId, savePointId) => {
-    return Saves.loadSavePoint(gameId, savePointId);
+    try {
+      Saves.loadSavePoint(gameId, savePointId);
+      return { success: true, message: "Saved backup and Loaded" };
+    } catch (err) {
+      console.error(err);
+      return {
+        success: false,
+        message: "Load failed " + (err as any)?.message,
+      };
+    }
   },
   removeSavePoint: async (_, gameId, savePointId) => {
-    Saves.removeSavePoint(gameId, savePointId);
+    try {
+      Saves.removeSavePoint(gameId, savePointId);
+      return { success: true, message: "Save point removed" };
+    } catch (err) {
+      console.error(err);
+      return { success: false, message: (err as any)?.message };
+    }
   },
   getQuota: async () => {
-    const cloudQuota = await SteamworksSDK.getCloudQuota();
-    return {
-      totalMB: cloudQuota.totalBytes / 1000 / 1000,
-      availableMB: cloudQuota.availableBytes / 1000 / 1000,
-    };
+    try {
+      const cloudQuota = await SteamworksSDK.getCloudQuota();
+      return {
+        success: true,
+        result: {
+          totalMB: cloudQuota.totalBytes / 1000 / 1000,
+          availableMB: cloudQuota.availableBytes / 1000 / 1000,
+        },
+      };
+    } catch (err) {
+      console.log(err);
+      return { success: false, message: (err as any)?.message };
+    }
   },
   changeSavePointTags: async (_, gameId, savePointId, newTags) => {
     try {
@@ -68,12 +99,12 @@ const SavesHandlers: TSavesHandlers = {
       if (typeof newName !== "string") {
         throw new Error("New save point name not valid");
       }
-
       Stores.Games.set(`savePoints.${gameId}.${savePointId}.name`, newName);
-      // TODO: toaster success
+
+      return { success: true, message: "Save point name changed" };
     } catch (err) {
-      // TODO: toaster error
       console.error(err);
+      return { success: false, message: (err as any)?.message };
     }
   },
   addToFavorite: async (_, gameId, savePointId) => {
@@ -85,9 +116,10 @@ const SavesHandlers: TSavesHandlers = {
         `savePoints.${gameId}.${savePointId}.isFavorite`,
         savePoint.isFavorite ? false : true
       );
+      return { success: true, message: "Save point added to favorites" };
     } catch (err) {
-      // TODO: toaster error
       console.error(err);
+      return { success: false, message: (err as any)?.message };
     }
   },
 };

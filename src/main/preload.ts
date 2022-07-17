@@ -42,8 +42,7 @@ const savePontsApi: IPC.TSavePointsApi = {
 
 const api: IPC.TApi = {
   getQuota: defaultInvokeFunction("getQuota"),
-  test: defaultInvokeFunction("test"),
-  getGlobby: defaultInvokeFunction("getGlobby"),
+  getFolderFilesTree: defaultInvokeFunction("getFolderFilesTree"),
   revealInFileExplorer: defaultInvokeFunction("revealInFileExplorer"),
   analyticsPageView: defaultInvokeFunction("analyticsPageView"),
   openDialog: defaultInvokeFunction("openDialog"),

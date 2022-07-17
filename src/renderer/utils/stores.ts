@@ -37,6 +37,7 @@ export const useSettingsStore = create<TSettingsStore>(() => ({
 export const useGamesStore = create<TGamesStore>(() => ({
   games: {},
   savePoints: {},
+  steamGamesStoreInfo: {},
   tags: [],
 }));
 

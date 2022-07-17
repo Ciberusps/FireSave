@@ -29,7 +29,7 @@ export const parseVdf = <T>(file: string): T => {
 };
 
 export const getGlobby = async (
-  options: IPC.TGetGlobbyOptions
+  options: IPC.TGetFolderFilesTree
 ): Promise<string[]> => {
   const { path, includeList, excludeList, isAbsolutePaths = false } = options;
   const patterns = [

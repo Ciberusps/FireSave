@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled, { useTheme } from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { DeepPartial, useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFile,
@@ -30,9 +30,8 @@ import FolderOrFilesInput from "../../../components/FolderOrFilesInput";
 import IncludeExcludeActions from "../../../components/IncludeExcludeActions";
 
 import Toaster from "../../../utils/toaster";
-import { globToNodes, TNode } from "../../../utils/globTree";
+import useElectronApiRequest from "../../../utils/useElectronApiRequest";
 import { useGamesStore, useSettingsStore } from "../../../utils/stores";
-import useElectronApiRequest from "renderer/utils/useElectronApiRequest";
 
 const folderColor = "#ffd970";
 
@@ -50,6 +49,16 @@ const GameSettingsPage = () => {
   const games = useGamesStore((state) => state.games);
   const PLATFORM = useSettingsStore((state) => state.envs.PLATFORM);
   const theme = useTheme();
+  const { id } = useParams<{ id: string }>();
+
+  const [folderContentTree, setFolderContentTree] = useState<TFilesTree>([]);
+  const [folderCheckedNodes, setFolderCheckedNodes] = useState<string[]>([]);
+  const [folderExpandedNodes, setFolderExpandedNodes] = useState<string[]>([]);
+  const [isLoadingFolderContent, setIsLoadingFolderContent] = useState(false);
+
+  const [resultContentTree, setResultContentTree] = useState<TFilesTree>([]);
+  const [isLoadingResultContent, setIsLoadingResultContent] = useState(false);
+
   const [editGame] = useElectronApiRequest(window.api.editGame, {
     onSuccess: () => {
       navigate("/");
@@ -63,15 +72,24 @@ const GameSettingsPage = () => {
       },
     }
   );
-  const { id } = useParams<{ id: string }>();
-
-  const [folderContentTree, setFolderContentTree] = useState<TNode[]>([]);
-  const [folderCheckedNodes, setFolderCheckedNodes] = useState<string[]>([]);
-  const [folderExpandedNodes, setFolderExpandedNodes] = useState<string[]>([]);
-  const [isLoadingFolderContent, setIsLoadingFolderContent] = useState(false);
-
-  const [resultContentTree, setResultContentTree] = useState<TNode[]>([]);
-  const [isLoadingResultContent, setIsLoadingResultContent] = useState(false);
+  const [getFolderFilesTree] = useElectronApiRequest(
+    window.api.getFolderFilesTree,
+    {
+      onComplete: () => setIsLoadingFolderContent(false),
+      onSuccess: (res) => {
+        setFolderContentTree(res);
+      },
+    }
+  );
+  const [getResultFolderFilesTree] = useElectronApiRequest(
+    window.api.getFolderFilesTree,
+    {
+      onComplete: () => setIsLoadingResultContent(false),
+      onSuccess: (res) => {
+        setResultContentTree(res);
+      },
+    }
+  );
 
   const isEditing = id !== "new";
   const game = id ? games[id] : undefined;
@@ -93,24 +111,27 @@ const GameSettingsPage = () => {
     [theme]
   );
 
-  const { control, watch, handleSubmit, register, setValue } =
-    useForm<TGameForm>({
-      defaultValues: {
-        isAutoDetectionEnabled: game?.isAutoDetectionEnabled,
-        autoDetectionType: game?.autoDetectionMethod || undefined,
-        gamePath: { path: "", ...game?.gamePath?.[PLATFORM] },
-        savesConfig: {
-          type: "simple",
-          saveFolder: {
-            path: "",
-          },
-          saveFullFolder: true,
-          includeList: [],
-          excludeList: [],
-          ...game?.savesConfig?.[PLATFORM],
+  const defaultValues = useMemo<DeepPartial<TGameForm>>(
+    () => ({
+      isAutoDetectionEnabled: game?.isAutoDetectionEnabled,
+      autoDetectionType: game?.autoDetectionMethod || undefined,
+      gamePath: { path: "", ...game?.gamePath?.[PLATFORM] },
+      savesConfig: {
+        type: "simple",
+        saveFolder: {
+          path: "",
         },
+        saveFullFolder: true,
+        includeList: [],
+        excludeList: [],
+        ...game?.savesConfig?.[PLATFORM],
       },
-    });
+    }),
+    []
+  );
+
+  const { control, watch, handleSubmit, register, setValue } =
+    useForm<TGameForm>({ defaultValues });
 
   const isAutoDetectionEnabledWatch = watch("isAutoDetectionEnabled");
   const saveConfigTypeWatch = watch("savesConfig.type");
@@ -118,40 +139,6 @@ const GameSettingsPage = () => {
   const saveFullFolderWatch = watch("savesConfig.saveFullFolder", true);
   const includeListWatch = watch("savesConfig.includeList", []);
   const excludeListWatch = watch("savesConfig.excludeList", []);
-
-  const updateFormValues = useCallback(async () => {
-    const path = saveFolderWatch?.path;
-    if (!path) return;
-
-    const newFolderContentTree = await getContentTree(
-      path,
-      ["**/*"],
-      [],
-      setIsLoadingFolderContent
-    );
-    if (newFolderContentTree) {
-      setFolderContentTree(newFolderContentTree);
-    }
-
-    const newResultContentTree = await getContentTree(
-      path,
-      [...(saveFullFolderWatch ? ["**/*"] : []), ...includeListWatch],
-      excludeListWatch,
-      setIsLoadingResultContent
-    );
-    if (newResultContentTree) {
-      setResultContentTree(newResultContentTree);
-    }
-  }, [
-    saveFolderWatch,
-    saveFullFolderWatch,
-    includeListWatch,
-    excludeListWatch,
-    setFolderContentTree,
-    setIsLoadingFolderContent,
-    setResultContentTree,
-    setIsLoadingResultContent,
-  ]);
 
   const onClickInclude = useCallback(
     (keys: string[]) => () => {
@@ -190,19 +177,45 @@ const GameSettingsPage = () => {
     [excludeListWatch, setValue]
   );
 
-  useEffect(() => {
-    updateFormValues();
-  }, [
-    saveFolderWatch,
-    saveFullFolderWatch,
-    includeListWatch,
-    excludeListWatch,
-    updateFormValues,
-  ]);
+  const updateTrees = (value: DeepPartial<TGameForm>) => {
+    const savesConfig = value.savesConfig;
+    const path = savesConfig?.saveFolder?.path;
+
+    if (path) {
+      setIsLoadingFolderContent(true);
+      getFolderFilesTree({
+        path,
+        includeList: ["**/*"],
+        excludeList: [],
+      });
+
+      setIsLoadingResultContent(true);
+      getResultFolderFilesTree({
+        path,
+        includeList: [
+          ...(savesConfig.saveFullFolder ? ["**/*"] : []),
+          ...(savesConfig.includeList || []),
+        ],
+        excludeList: savesConfig.excludeList,
+      });
+    }
+  };
 
   useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (name && name.startsWith("savesConfig") && value.savesConfig) {
+        updateTrees(value);
+      }
+    });
+    return () => subscription.unsubscribe();
+    // eslint-disable-next-line
+  }, [watch]);
+
+  useEffect(() => {
+    updateTrees(defaultValues);
     window.scrollTo(0, 0);
-  }, []);
+    // eslint-disable-next-line
+  }, [defaultValues]);
 
   const onSubmit = (data: TGameForm) => {
     try {
@@ -406,33 +419,6 @@ const GameSettingsPage = () => {
       </Container>
     </Layout>
   );
-};
-
-const getContentTree = async (
-  path: string,
-  includeList: string[] = [],
-  excludeList: string[] = [],
-  setLoading: (loading: boolean) => void
-): Promise<TNode[] | undefined> => {
-  try {
-    setLoading(true);
-    let globbyRes = await window.api.getGlobby({
-      path,
-      includeList,
-      excludeList,
-    });
-    console.log({ globbyRes });
-    const newTree = globToNodes(globbyRes);
-    console.log({ newTree });
-    return newTree;
-  } catch (err) {
-    console.error(err);
-    // @ts-ignore
-    Toaster.add({ intent: "error", message: err });
-    return;
-  } finally {
-    setLoading(false);
-  }
 };
 
 export default GameSettingsPage;

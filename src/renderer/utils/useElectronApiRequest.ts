@@ -5,6 +5,7 @@ import Toaster from "./toaster";
 type TElectronApiFunction = (...args: any[]) => IPC.TPromiseHandlerResult;
 
 type TUseElectronApiRequestOptions = {
+  onComplete?: (...args: any[]) => void;
   onSuccess?: (...args: any[]) => void;
   onError?: (...args: any[]) => void;
 };
@@ -20,6 +21,8 @@ const makeElectronApiRequest =
       intent: res.success ? "success" : "error",
       content: res.message,
     });
+    console.log("EBAT");
+    options?.onComplete && options.onComplete();
     if (res.success && options?.onSuccess) {
       options.onSuccess(res.result);
     }
@@ -32,12 +35,10 @@ const useElectronApiRequest = (
   apiFunction: TElectronApiFunction,
   options?: TUseElectronApiRequestOptions
 ) => {
-  const makeRequest = useCallback(
-    async (...args: any[]) => {
-      makeElectronApiRequest(apiFunction, options)(...args);
-    },
-    [apiFunction, options]
-  );
+  const makeRequest = useCallback(async (...args: any[]) => {
+    makeElectronApiRequest(apiFunction, options)(...args);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return [makeRequest];
 };

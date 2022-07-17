@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,7 @@ import NumberInput from "../components/NumberInput";
 import DisplaysInput from "renderer/components/DisplaysInput";
 
 import { useSettingsStore } from "../utils/stores";
+import useElectronApiRequest from "renderer/utils/useElectronApiRequest";
 
 type TSettingsForm = Pick<
   TSettingsStore,
@@ -23,6 +24,10 @@ const SettingsPage = () => {
   const { t } = useTranslation();
   const settingsStore = useSettingsStore();
   const [displays, setDisplays] = useState<Electron.Display[]>([]);
+  const [getDisplays] = useElectronApiRequest(window.api.getDisplays, {
+    onSuccess: (res) => setDisplays(res || []),
+  });
+  const [changeSettings] = useElectronApiRequest(window.api.changeSettings);
 
   const { control, register, handleSubmit, setValue, watch } =
     useForm<TSettingsForm>({
@@ -36,13 +41,8 @@ const SettingsPage = () => {
   const watchSelectedDisplay = watch("selectedDisplay");
 
   const onSubmit = (data: TSettingsForm) => {
-    window.api.changeSettings(data);
+    changeSettings(data);
   };
-
-  const getDisplays = useCallback(async () => {
-    const newDisplays = await window.api.getDisplays();
-    setDisplays(newDisplays || []);
-  }, [setDisplays]);
 
   useEffect(() => {
     getDisplays();

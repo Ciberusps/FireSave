@@ -4,7 +4,8 @@ import { Controller, Control, FieldValues, FieldPath } from "react-hook-form";
 import Button from "./Button";
 import InputWrapper from "./InputWrapper";
 import RevealInFileExplorerButton from "./RevealInFileExplorerButton";
-import { makeElectronApiRequest } from "renderer/utils/useElectronApiRequest";
+
+import { makeElectronApiRequest } from "../utils/useElectronApiRequest";
 
 type TTransform = {
   input: (value: TFolderOrFilesRaw) => string;
