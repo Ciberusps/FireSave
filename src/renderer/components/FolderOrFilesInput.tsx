@@ -4,6 +4,7 @@ import { Controller, Control, FieldValues, FieldPath } from "react-hook-form";
 import Button from "./Button";
 import InputWrapper from "./InputWrapper";
 import RevealInFileExplorerButton from "./RevealInFileExplorerButton";
+import { makeElectronApiRequest } from "renderer/utils/useElectronApiRequest";
 
 type TTransform = {
   input: (value: TFolderOrFilesRaw) => string;
@@ -38,17 +39,17 @@ const FolderOrFilesInput = <T extends FieldValues>(props: TProps<T>) => {
         control={control}
         render={({ field }) => {
           const onChooseClick = async () => {
-            const newVal = await window.api.openDialog({
+            const makeRequest = makeElectronApiRequest(window.api.openDialog, {
+              onSuccess: (newVal) => {
+                console.log(newVal);
+                field.onChange(newVal);
+              },
+            });
+            makeRequest({
               properties: [property],
               filters,
               defaultPath: field.value?.path,
             });
-            if (newVal) {
-              console.log(newVal);
-              field.onChange(newVal);
-            } else {
-              //TODO: error
-            }
           };
 
           return (

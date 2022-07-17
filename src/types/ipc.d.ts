@@ -2,10 +2,13 @@ import { OpenDialogOptions } from "electron";
 
 declare global {
   namespace IPC {
-    type THandlerResult = {
+    type THandlerResult<T = unknown> = {
       success: boolean;
+      result?: T;
       message?: string;
     };
+
+    type TPromiseHandlerResult<T = unknown> = Promise<THandlerResult<T>>;
 
     type TGetQuotaRes = {
       totalMB: number;
@@ -55,11 +58,11 @@ declare global {
     type TGamesApi = {
       createCustomGame: (
         payload: TCreateCustomGamePayload
-      ) => Promise<THandlerResult>;
+      ) => TPromiseHandlerResult;
       editGame: (
         gameId: string,
         payload: TEditGamePayload
-      ) => Promise<THandlerResult>;
+      ) => TPromiseHandlerResult;
       removeGame: (id: string) => Promise<boolean>;
       runGame: (id: string) => Promise<void>;
     };
@@ -87,11 +90,11 @@ declare global {
         getQuota: () => Promise<TGetQuotaRes>;
         test: () => void;
         getGlobby: (options: TGetGlobbyOptions) => Promise<any>;
-        revealInFileExplorer: (val: string) => Promise<void>;
+        revealInFileExplorer: (val: string) => TPromiseHandlerResult;
         analyticsPageView: (url: string) => Promise<void>;
         openDialog: (
           options: OpenDialogOptions
-        ) => Promise<TFolderOrFilesRaw | null>;
+        ) => TPromiseHandlerResult<TFolderOrFilesRaw>;
         getDisplays: () => Promise<Electron.Display[]>;
 
         // TODO: contribute typings to `i18next-electron-fs-backend` and add here

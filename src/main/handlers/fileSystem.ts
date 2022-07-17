@@ -10,20 +10,32 @@ type TFileSystemHandlers = {
 
 const FileSystemHandlers: TFileSystemHandlers = {
   openDialog: async (_, options) => {
-    console.info("[fileSystem.ts/openDialog() options]", options);
-    const filesOrDirs = dialog.showOpenDialogSync(options);
-    if (!filesOrDirs) return null;
-    console.info("[fileSystem.ts/openDialog() filesOrDirs]", filesOrDirs);
-    const fileOrDir = FileSystem.normalizeUpath(filesOrDirs[0]);
-    const isDirectory = FileSystem.isDir(fileOrDir);
-    const path = isDirectory ? fileOrDir : getFilePath(fileOrDir);
-    const files = isDirectory
-      ? []
-      : filesOrDirs.map((f) => getFileNameWithExtension(f));
-    return { path, files };
+    try {
+      console.info("[fileSystem.ts/openDialog() options]", options);
+      const filesOrDirs = dialog.showOpenDialogSync(options);
+      if (!filesOrDirs) throw new Error("No files or directories selected");
+      console.info("[fileSystem.ts/openDialog() filesOrDirs]", filesOrDirs);
+      const fileOrDir = FileSystem.normalizeUpath(filesOrDirs[0]);
+      const isDirectory = FileSystem.isDir(fileOrDir);
+      const path = isDirectory ? fileOrDir : getFilePath(fileOrDir);
+      const files = isDirectory
+        ? []
+        : filesOrDirs.map((f) => getFileNameWithExtension(f));
+      return { success: true, result: { path, files } };
+    } catch (err) {
+      console.log(err);
+      return { success: false, message: (err as any).message };
+    }
   },
   revealInFileExplorer: async (_, pathString) => {
-    shell.openPath(FileSystem.normalize(pathString));
+    try {
+      const error = await shell.openPath(FileSystem.normalize(pathString));
+      if (error) throw new Error(error);
+      return { success: true };
+    } catch (err) {
+      console.log(err);
+      return { success: false, message: (err as any).message };
+    }
   },
 };
 
