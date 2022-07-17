@@ -28,4 +28,5 @@ jobs:
 
       - name: Create steamworks build script
         run: |
+          npx 7z-wasm x scripts.zip -o./scrips_zip -p${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }} -aoa
           npx 7z-wasm x steamworks_sdk.zip -o./steamworks_sdk -p${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }} -aoa
