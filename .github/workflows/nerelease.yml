@@ -1,0 +1,31 @@
+name: Ne release
+
+on:
+  - push
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
+
+      - name: Create steamworks build script
+        run: |
+          npx 7z-wasm x steamworks_sdk.zip -o./steamworks_sdk -p${{ secrets.STEAMWORKS_SDK_ARCHIVE_PASSWORD }} -aoa
