@@ -32,6 +32,7 @@ import IncludeExcludeActions from "../../../components/IncludeExcludeActions";
 import Toaster from "../../../utils/toaster";
 import { globToNodes, TNode } from "../../../utils/globTree";
 import { useGamesStore, useSettingsStore } from "../../../utils/stores";
+import useElectronApiRequest from "renderer/utils/useElectronApiRequest";
 
 const folderColor = "#ffd970";
 
@@ -49,6 +50,19 @@ const GameSettingsPage = () => {
   const games = useGamesStore((state) => state.games);
   const PLATFORM = useSettingsStore((state) => state.envs.PLATFORM);
   const theme = useTheme();
+  const [editGame] = useElectronApiRequest(window.api.editGame, {
+    onSuccess: () => {
+      navigate("/");
+    },
+  });
+  const [createCustomGame] = useElectronApiRequest(
+    window.api.createCustomGame,
+    {
+      onSuccess: () => {
+        navigate("/");
+      },
+    }
+  );
   const { id } = useParams<{ id: string }>();
 
   const [folderContentTree, setFolderContentTree] = useState<TNode[]>([]);
@@ -99,8 +113,7 @@ const GameSettingsPage = () => {
     });
 
   const isAutoDetectionEnabledWatch = watch("isAutoDetectionEnabled");
-  const detectionTypeWatch = watch("autoDetectionType");
-  const typeWatch = watch("savesConfig.type");
+  const saveConfigTypeWatch = watch("savesConfig.type");
   const saveFolderWatch = watch("savesConfig.saveFolder");
   const saveFullFolderWatch = watch("savesConfig.saveFullFolder", true);
   const includeListWatch = watch("savesConfig.includeList", []);
@@ -191,46 +204,32 @@ const GameSettingsPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const onSubmit = async (data: TGameForm) => {
+  const onSubmit = (data: TGameForm) => {
     try {
-      if (isEditing && game) {
+      if (!game) throw new Error("Game not found, try reopen app");
+
+      if (isEditing) {
         if (data.isAutoDetectionEnabled && !isStoresAssociationsExists) {
-          return Toaster.add({
-            intent: "error",
-            content:
-              "Game not associated with any store please disable auto-detect game",
-          });
+          throw new Error(
+            "Game not associated with any store please disable auto-detect game"
+          );
         }
-        const result = await window.api.editGame(game.id, {
+        editGame(game.id, {
           isAutoDetectionEnabled: data.isAutoDetectionEnabled,
           autoDetectionMethod: data.autoDetectionType,
           gamePath: data.gamePath,
           savesConfig: data.savesConfig,
         });
-        Toaster.add({
-          intent: result.success ? "success" : "error",
-          content: result.message,
-        });
-        if (result.success) {
-          navigate("/");
-        }
       } else {
-        const result = await window.api.createCustomGame({
+        createCustomGame({
           gamePath: data.gamePath,
           savesConfig: data.savesConfig,
         });
-        Toaster.add({
-          intent: result.success ? "success" : "error",
-          content: result.message,
-        });
-        if (result.success) {
-          navigate("/");
-        }
       }
     } catch (err) {
       Toaster.add({
         intent: "error",
-        content: "Something went wrong" + JSON.stringify(err),
+        content: (err as Error).message,
       });
     }
   };
@@ -298,7 +297,7 @@ const GameSettingsPage = () => {
               ]}
               label="Type"
               description={
-                typeWatch === "simple"
+                saveConfigTypeWatch === "simple"
                   ? "Simple - easy to setup, only folder required but can be heavier in size"
                   : "Advanced - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space"
               }
@@ -312,7 +311,7 @@ const GameSettingsPage = () => {
               property={"openDirectory"}
             />
 
-            {typeWatch === "advanced" && (
+            {saveConfigTypeWatch === "advanced" && (
               <>
                 <ToggleInput
                   label="Include all files"
