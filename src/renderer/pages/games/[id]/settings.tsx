@@ -299,8 +299,8 @@ const GameSettingsPage = () => {
               label="Type"
               description={
                 typeWatch === "simple"
-                  ? "'Simple' easy to setup - only folder required but can be heavier in size"
-                  : "'Advanced' - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space for more saves"
+                  ? "Simple - easy to setup, only folder required but can be heavier in size"
+                  : "Advanced - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space"
               }
             />
 
