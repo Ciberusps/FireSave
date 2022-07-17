@@ -1,4 +1,3 @@
-import faker from "@faker-js/faker";
 import copy from "recursive-copy";
 import { format } from "date-fns";
 import { nanoid } from "nanoid";
@@ -9,6 +8,7 @@ import Capture from "./capture";
 import FileSystem from "./fileSystem";
 import { PLATFORM, SCREENSHOTS_FOLDER_NAME } from "./config";
 import { getGlobby } from ".";
+import { getRandomCharacterName } from "./gamesCharactersNames";
 
 const getOrCreateSavesFolder = (game: TGame): string => {
   const savesFolderPath = FileSystem.joinUpath(
@@ -99,7 +99,7 @@ const makeSavePoint = async (
 
   const savePointData: TSavePoint = {
     id: newSavePointId,
-    name: faker.random.words(2),
+    name: getRandomCharacterName(),
     date: new Date().toISOString(),
     folderName: newSaveFolderName,
     type,
