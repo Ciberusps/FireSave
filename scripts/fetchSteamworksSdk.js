@@ -12,7 +12,7 @@ checkRequiredEnvs([
 
 try {
   exec(
-    `npx 7z-wasm x steamworks_sdk.zip -o./release/app/node_modules/greenworks/deps/steamworks_sdk -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
+    `npx 7z-wasm x steamworks_sdk_test.zip -o./release/app/node_modules/greenworks/deps/steamworks_sdk -p${STEAMWORKS_SDK_ARCHIVE_PASSWORD} -aoa`
   );
   console.info("- [fetchSteamworksSdk] unzipped for greenworks");
 } catch (err) {
