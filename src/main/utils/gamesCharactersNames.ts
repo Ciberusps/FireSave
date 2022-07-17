@@ -68,6 +68,11 @@ const gamesCharactersNames = [
     "Molly O'Shea",
     "Pearson",
     "Jack Marston",
+
+    // Activision https://en.wikipedia.org/wiki/Category:Activision_characters
+    "Alex Mason",
+    "Captain Price",
+    "Spyro",
   ],
 
   // Resident Evil
@@ -628,9 +633,6 @@ const gamesCharactersNames = [
     "Clarity Potion",
     "Aegis of the Immortal",
   ],
-
-  // Activision https://en.wikipedia.org/wiki/Category:Activision_characters
-  ["Alex Mason", "Captain Price", "Spyro"],
 
   // Overwatch https://playoverwatch.com/en-gb/heroes/
   [
