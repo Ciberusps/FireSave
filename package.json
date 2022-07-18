@@ -19,10 +19,10 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:prettier": "cross-var prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md}",
     "lint:types": "tsc --noEmit",
+    "lint:licenses": "node ./scripts/lintLicenses.js",
     "test": "jest",
     "bump:version": "node scripts/bumpVersion.js",
-    "docs:scrap-greenworks": "node ./scripts/scrapGreensworksDocs.js",
-    "check:steam-licenses": "npx license-checker > steam-licenses.json --exclude MIT,ISC,Apache-2.0,BSD-3-Clause,WTFPL,CC-BY-4.0,0BSD,Python-2.0,Zlib,BSD-2-Clause,Unlicense"
+    "docs:scrap-greenworks": "node ./scripts/scrapGreensworksDocs.js"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -95,6 +95,7 @@
     "husky": "^7.0.4",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
+    "license-checker": "^25.0.1",
     "lint-staged": "^12.3.7",
     "opencollective-postinstall": "^2.0.3",
     "prettier": "^2.6.2",

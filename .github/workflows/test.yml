@@ -63,6 +63,23 @@ jobs:
       - name: Lint Types
         run: npm run lint:types
 
+  licenses-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
+      - name: TEMPORARY - Install gdown for fetchSteamworksSdk.js
+        run: pip3 install gdown
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: Test
+        run: npm run lint:licenses
+
   test:
     runs-on: ubuntu-latest
     steps:
