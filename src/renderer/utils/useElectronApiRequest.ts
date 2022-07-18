@@ -21,7 +21,6 @@ const makeElectronApiRequest =
       intent: res.success ? "success" : "error",
       content: res.message,
     });
-    console.log("EBAT");
     options?.onComplete && options.onComplete();
     if (res.success && options?.onSuccess) {
       options.onSuccess(res.result);

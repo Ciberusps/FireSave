@@ -99,6 +99,10 @@ const GlobalStyles = createGlobalStyle`
   ${toasterStyles}
   ${reactCheckboxStyles}
 
+  :root {
+    white-space: pre-line;
+  }
+
   body * {
     box-sizing: border-box;
   }
@@ -149,7 +153,9 @@ const GlobalStyles = createGlobalStyle`
     display: flex;
   }
 
-
+  .ReactModal__Overlay {
+    z-index: 10;
+  }
 
   &::selection {
     background: ${({ theme }) => theme.purple};

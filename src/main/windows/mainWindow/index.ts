@@ -2,7 +2,6 @@ import { app, BrowserWindow, shell } from "electron";
 import isDev from "electron-is-dev";
 
 import Stores from "../../stores";
-import MenuBuilder from "./menu";
 
 import AppTray from "../../utils/tray";
 import { resolveHtmlPath } from "../../utils";
@@ -53,9 +52,6 @@ class MainWindow extends BrowserWindow {
     this.on("close", this.onClose.bind(this));
 
     this.loadURL(resolveHtmlPath("index.html"));
-
-    const menuBuilder = new MenuBuilder(this);
-    menuBuilder.buildMenu();
 
     // Open urls in the user's browser
     this.webContents.setWindowOpenHandler((edata) => {

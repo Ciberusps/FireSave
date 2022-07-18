@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 type TProps = {
   game: TGame;
@@ -7,11 +8,24 @@ type TProps = {
 
 const Stats = (props: TProps) => {
   const { game, className } = props;
+  const { t } = useTranslation();
   return (
     <Container className={className}>
-      <Stat>{game.savesStats.total} saves</Stat>
-      <Stat>{game.savesStats.auto} autosaves</Stat>
-      <Stat>{game.savesStats.manual} manual saves</Stat>
+      <Stat>
+        {t("stats_component.saves_count", {
+          count: game.savesStats.total,
+        })}
+      </Stat>
+
+      <Stat>
+        {t("stats_component.autosaves_count", { count: game.savesStats.auto })}
+      </Stat>
+
+      <Stat>
+        {t("stats_component.manual_saves_count", {
+          count: game.savesStats.manual,
+        })}
+      </Stat>
     </Container>
   );
 };

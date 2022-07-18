@@ -22,7 +22,7 @@ const AboutPage = () => {
         <FAQStyled
           items={[
             {
-              title: "How to add game?",
+              title: `How to add "custom" game?`,
               description: (
                 <>
                   <Description>1. Add game</Description>

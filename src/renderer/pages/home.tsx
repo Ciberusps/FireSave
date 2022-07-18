@@ -1,14 +1,14 @@
+import { useMemo } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 
-import GameCard from "../components/GameCard";
 import Button from "../components/Button";
 import Layout from "../components/Layout";
+import GameCard from "../components/GameCard";
 
 import { useGamesStore } from "../utils/stores";
-import { useMemo } from "react";
 
-const IndexPage = () => {
+const HomePage = () => {
   const { t } = useTranslation();
   const games = useGamesStore((state) => Object.values(state.games));
 
@@ -27,16 +27,16 @@ const IndexPage = () => {
   return (
     <Layout>
       <Header>
-        <h1>{t("Games")}</h1>
+        <h1>{t("home_page.games")}</h1>
 
         <Button icon="add" to="/games/new/settings">
-          {t("Add game")}
+          {t("home_page.add_game")}
         </Button>
       </Header>
 
       {validGames.length > 0 && (
         <GamesContainer>
-          <h2>Ready games</h2>
+          <h2>{t("home_page.ready_games")}</h2>
           <Games>
             {validGames.map((game) => (
               <GameCard key={game.id} game={game} />
@@ -47,7 +47,7 @@ const IndexPage = () => {
 
       {notValidGames.length > 0 && (
         <GamesContainer>
-          <h2>Your Saves Library</h2>
+          <h2>{t("home_page.your_saves_library")}</h2>
           <Games>
             {notValidGames.map((game) => (
               <GameCard key={game.id} game={game} />
@@ -58,7 +58,7 @@ const IndexPage = () => {
 
       {installedGames.length > 0 && (
         <GamesContainer>
-          <h2>Installed games</h2>
+          <h2>{t("home_page.installed_games")}</h2>
           <Games>
             {installedGames.map((game) => (
               <GameCard key={game.id} game={game} />
@@ -68,7 +68,7 @@ const IndexPage = () => {
       )}
 
       {validGames.length === 0 && notValidGames.length === 0 && (
-        <NoGames>No games found, you can add new one</NoGames>
+        <NoGames>{t("home_page.no_games_found")}</NoGames>
       )}
     </Layout>
   );
@@ -98,4 +98,4 @@ const NoGames = styled.div`
   margin-top: 30px;
 `;
 
-export default IndexPage;
+export default HomePage;

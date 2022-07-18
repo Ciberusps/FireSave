@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import styled from "styled-components";
 import parsePath from "parse-filepath";
 import groupBy from "lodash.groupby";
+import { useTranslation } from "react-i18next";
 
 import Button from "./Button";
 
@@ -11,15 +12,16 @@ type TButtonsResult = {
 };
 
 type TProps = {
-  saveFullFolder: boolean;
+  includeAll: boolean;
   checkedNodes: string[];
   onClickInclude: (keys: string[]) => () => void;
   onClickExclude: (keys: string[]) => () => void;
 };
 
+// TODO: probably needs rework for better localization
 const IncludeExcludeActions = (props: TProps) => {
-  const { saveFullFolder, checkedNodes, onClickInclude, onClickExclude } =
-    props;
+  const { includeAll, checkedNodes, onClickInclude, onClickExclude } = props;
+  const { t } = useTranslation();
 
   const { includeButtons, excludeButtons } = useMemo(() => {
     const result: TButtonsResult = {
@@ -29,21 +31,18 @@ const IncludeExcludeActions = (props: TProps) => {
 
     result.excludeButtons.push(
       <ButtonStyled onClick={onClickExclude(checkedNodes)}>
-        {/* Exclude file(s)/folder(s) */}
-        {/* Exclude only files/folders */}
-        Exclude file/folder
+        {t("include_exclude_actions_component.exclude_file_or_folder")}
       </ButtonStyled>
     );
-    if (!saveFullFolder) {
+    if (!includeAll) {
       result.includeButtons.push(
         <ButtonStyled onClick={onClickInclude(checkedNodes)}>
-          Include file/folder
+          {t("include_exclude_actions_component.include_file_or_folder")}
         </ButtonStyled>
       );
     }
 
     const parsedFiles = checkedNodes.map((key) => parsePath(key));
-    // console.log({ parsedFiles });
     if (!parsedFiles.length) return result;
 
     const filesWithExt = parsedFiles.filter((p) => !!p.ext);
@@ -51,10 +50,12 @@ const IncludeExcludeActions = (props: TProps) => {
 
     const groupedByDir = groupBy(filesWithExt, "dir");
 
-    const OrTextEl = <OrText>or use pattern</OrText>;
+    const OrTextEl = (
+      <OrText>{t("include_exclude_actions_component.or_use_pattern")}</OrText>
+    );
 
     result.excludeButtons.push(OrTextEl);
-    !saveFullFolder && result.includeButtons.push(OrTextEl);
+    !includeAll && result.includeButtons.push(OrTextEl);
 
     Object.keys(groupedByDir).forEach((dir) => {
       const files = groupedByDir[dir];
@@ -70,21 +71,25 @@ const IncludeExcludeActions = (props: TProps) => {
 
         const excludeFolderText = (
           <>
-            <TextHighlight>*{fileExt}</TextHighlight> in{" "}
+            <TextHighlight>*{fileExt}</TextHighlight>{" "}
+            {t("include_exclude_actions_component.in")}{" "}
             <TextHighlight>{dirNameText}</TextHighlight>
           </>
         );
         const excludeAllText = (
           <>
-            <TextHighlight>*{fileExt}</TextHighlight> in{" "}
+            <TextHighlight>*{fileExt}</TextHighlight>{" "}
+            {t("include_exclude_actions_component.in")}{" "}
             <TextHighlight>{dirNameText}</TextHighlight>
-            <span>and all folders below</span>
+            <span>
+              {t("include_exclude_actions_component.and_all_folders_below")}
+            </span>
           </>
         );
         const excludeAllByFileTypeText = (
           <>
             <TextHighlight> *{fileExt}</TextHighlight>
-            <span>everywhere</span>
+            <span>{t("include_exclude_actions_component.everywhere")}</span>
           </>
         );
 
@@ -95,26 +100,29 @@ const IncludeExcludeActions = (props: TProps) => {
               title={`Exclude '${onlyInFolderKey}'`}
               onClick={onClickExclude([onlyInFolderKey])}
             >
-              Exclude {excludeFolderText}
+              {t("include_exclude_actions_component.exclude_file_or_folder")}{" "}
+              {excludeFolderText}
             </ButtonStyled>
             <ButtonStyled
               size="small"
               title={`Exclude '${inFolderAndAllFoldersBelowKey}'`}
               onClick={onClickExclude([inFolderAndAllFoldersBelowKey])}
             >
-              Exclude {excludeAllText}
+              {t("include_exclude_actions_component.exclude_file_or_folder")}{" "}
+              {excludeAllText}
             </ButtonStyled>
             <ButtonStyled
               size="small"
               title={`Exclude '${allByFileTypeKey}'`}
               onClick={onClickExclude([allByFileTypeKey])}
             >
-              Exclude {excludeAllByFileTypeText}
+              {t("include_exclude_actions_component.exclude_file_or_folder")}{" "}
+              {excludeAllByFileTypeText}
             </ButtonStyled>
           </div>
         );
 
-        if (!saveFullFolder) {
+        if (!includeAll) {
           result.includeButtons.push(
             <div key={result.includeButtons.length}>
               <ButtonStyled
@@ -122,7 +130,8 @@ const IncludeExcludeActions = (props: TProps) => {
                 title={`Include '${onlyInFolderKey}'`}
                 onClick={onClickInclude([onlyInFolderKey])}
               >
-                Include {excludeFolderText}
+                {t("include_exclude_actions_component.include_file_or_folder")}{" "}
+                {excludeFolderText}
               </ButtonStyled>
 
               <ButtonStyled
@@ -130,7 +139,8 @@ const IncludeExcludeActions = (props: TProps) => {
                 title={`Include '${inFolderAndAllFoldersBelowKey}'`}
                 onClick={onClickInclude([inFolderAndAllFoldersBelowKey])}
               >
-                Include {excludeAllText}
+                {t("include_exclude_actions_component.include_file_or_folder")}{" "}
+                {excludeAllText}
               </ButtonStyled>
 
               <ButtonStyled
@@ -138,7 +148,8 @@ const IncludeExcludeActions = (props: TProps) => {
                 title={`Include '${allByFileTypeKey}'`}
                 onClick={onClickInclude([allByFileTypeKey])}
               >
-                Include {excludeAllByFileTypeText}
+                {t("include_exclude_actions_component.include_file_or_folder")}{" "}
+                {excludeAllByFileTypeText}
               </ButtonStyled>
             </div>
           );
@@ -147,10 +158,18 @@ const IncludeExcludeActions = (props: TProps) => {
     });
 
     return result;
-  }, [checkedNodes, saveFullFolder, onClickInclude, onClickExclude]);
+  }, [checkedNodes, includeAll, t, onClickInclude, onClickExclude]);
 
   if (checkedNodes.length === 0) {
-    return <div>Select files/folders to include/exclude</div>;
+    return (
+      <div>
+        {t(
+          includeAll
+            ? "include_exclude_actions_component.empty_warning_include_all_on"
+            : "include_exclude_actions_component.empty_warning_include_all_off"
+        )}
+      </div>
+    );
   }
 
   return (
