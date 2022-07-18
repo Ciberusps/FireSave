@@ -6,6 +6,7 @@ import { format, formatDistance } from "date-fns";
 import lodashDebounce from "lodash.debounce";
 import path from "path";
 import { transparentize } from "polished";
+import { useTranslation } from "react-i18next";
 
 import Text from "./Text";
 import Icon from "./Icon";
@@ -41,6 +42,7 @@ type TProps = {
 
 const SavePointCard = (props: TProps) => {
   const { game, gameSavesPath, savePoint, className } = props;
+  const { t } = useTranslation();
   const theme = useTheme();
   const [name, setName] = useState<string>(savePoint.name);
   const tags = useGamesStore((state) => state.tags);
@@ -168,7 +170,10 @@ const SavePointCard = (props: TProps) => {
           width={MAX_IMG_WIDTH}
           height={DEFAULT_CARD_HEIGHT}
         />
-        <AddToFavorites title="Add to Favorites" onClick={onAddToFavorite}>
+        <AddToFavorites
+          title={t("save_point_card.add_to_favorites")}
+          onClick={onAddToFavorite}
+        >
           <AddToFavoritesIcon
             icon={savePoint.isFavorite ? "starSolid" : "starSolid"}
             size="small"
@@ -187,13 +192,17 @@ const SavePointCard = (props: TProps) => {
               onChange={onChangeName}
             />
             <Type>
-              {savePoint?.type === "manual" ? "Manual save" : "Autosave"}{" "}
+              {t(
+                savePoint?.type === "manual"
+                  ? "save_point_card.manual_save"
+                  : "save_point_card.autosave"
+              )}{" "}
               {savePoint.saveNumberByType && " - " + savePoint.saveNumberByType}
             </Type>
           </Description>
 
           <CreatableSelect
-            placeholder="no tags..."
+            placeholder={t("save_point_card.no_tags")}
             isMulti
             isClearable
             closeMenuOnSelect={false}
@@ -231,7 +240,7 @@ const SavePointCard = (props: TProps) => {
 
         <CTAButtons>
           <Button
-            title="Make backup save and load this save point"
+            title={t("button.load.tooltip")}
             icon="upload"
             onClick={() =>
               game.isPlaingNow
@@ -239,7 +248,7 @@ const SavePointCard = (props: TProps) => {
                 : loadSavePoint(game.id, savePoint.id)
             }
           >
-            Load
+            {t("button.load.label")}
           </Button>
           <Button
             icon="close"
@@ -251,8 +260,8 @@ const SavePointCard = (props: TProps) => {
 
       <DefaultConfirmModal
         isOpen={!!savePointToDelete}
-        title="Remove save"
-        description="Are you sure you want to delete this save?"
+        title={t("modal.remove_save_point.label")}
+        description={t("modal.remove_save_point.description")}
         onRequestClose={(result) => {
           if (result && savePointToDelete) {
             removeSavePoint(game.id, savePoint.id);
@@ -263,15 +272,8 @@ const SavePointCard = (props: TProps) => {
 
       <DefaultConfirmModal
         isOpen={!!savePointToLoad}
-        title="Load save"
-        description={
-          <>
-            Game is currently running.
-            <br /> Loading might cause game to crash.
-            <br />
-            Are you sure you want to load this save?
-          </>
-        }
+        title={t("modal.load_save_point.label")}
+        description={t("modal.load_save_point.description")}
         onRequestClose={(result) => {
           if (result && savePointToLoad) {
             loadSavePoint(game.id, savePoint.id);
@@ -296,7 +298,7 @@ const Container = styled.div<TContainer>`
   border-radius: ${CARD_BORDER_RADIUS}px;
   margin-bottom: 15px;
   position: relative;
-  filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.75));
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.75);
   border: 1px solid
     ${({ isFavorite }) => (isFavorite ? "#ca9849" : "transparent")};
 `;

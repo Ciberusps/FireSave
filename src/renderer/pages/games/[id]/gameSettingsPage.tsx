@@ -17,6 +17,7 @@ import {
   faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import CheckboxTree from "react-checkbox-tree";
+import { useTranslation } from "react-i18next";
 
 import Icon from "../../../components/Icon";
 import Form from "../../../components/Form";
@@ -51,6 +52,7 @@ const GameSettingsPage = () => {
   const games = useGamesStore((state) => state.games);
   const PLATFORM = useSettingsStore((state) => state.envs.PLATFORM);
   const theme = useTheme();
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
 
   const [folderContentTree, setFolderContentTree] = useState<TFilesTree>([]);
@@ -222,13 +224,11 @@ const GameSettingsPage = () => {
 
   const onSubmit = (data: TGameForm) => {
     try {
-      if (!game) throw new Error("Game not found, try reopen app");
+      if (!game) throw new Error(t("errors.game_not_found"));
 
       if (isEditing) {
         if (data.isAutoDetectionEnabled && !isStoresAssociationsExists) {
-          throw new Error(
-            "Game not associated with any store please disable auto-detect game"
-          );
+          throw new Error(t("errors.game_not_associated"));
         }
         editGame(game.id, {
           isAutoDetectionEnabled: data.isAutoDetectionEnabled,
@@ -254,12 +254,12 @@ const GameSettingsPage = () => {
     <Layout contentStyles={{ alignItems: "center", paddingBottom: "400px" }}>
       <Container>
         <Header>
-          {isEditing ? game?.name : "Add game"}
+          {isEditing ? game?.name : t("game_settings_page.page_title")}
 
           {game?.isValid && (
             <StatusBadge
               background={theme.purple}
-              tooltipText="Game works correctly"
+              tooltipText={t("statuses.is_valid")}
               style={{ width: 40, height: 40, marginLeft: 15 }}
             >
               <Icon icon="check" size="large" />
@@ -271,13 +271,13 @@ const GameSettingsPage = () => {
           {/* TODO: detection type should be displayed if
         - steam game moving to custom game
         */}
-          <h3>{"Game settings"}</h3>
+          <h3>{t("game_settings_page.block_title_settings")}</h3>
           <FormBlock>
             {/* TODO: for now available only if editing, until stores associations pull request made */}
             {isEditing && isStoresAssociationsExists && (
               <ToggleInput
-                label="Auto-detect game?"
-                description="Is game auto-detection enabled"
+                label={t("game_settings_page.auto_detect.label")}
+                description={t("game_settings_page.auto_detect.description")}
                 {...register("isAutoDetectionEnabled")}
               />
             )}
@@ -289,15 +289,19 @@ const GameSettingsPage = () => {
                   <SwitchInput<TGameForm>
                     control={control}
                     name="autoDetectionType"
-                    label="Auto-detect using"
-                    description="Game will be auto-detected using selected games store"
+                    label={t("game_settings_page.auto_detect_method.label")}
+                    description={t(
+                      "game_settings_page.auto_detect_method.description"
+                    )}
                     isDisabled={!game?.isSettupedAtLeastOnce}
                     values={[
                       {
-                        label: "steam",
+                        label: t("steam"),
                         value: "steam",
                         isDisabled: !Boolean(game?.steamAppId),
-                        whyIsDisabled: "No association with steam store appId",
+                        whyIsDisabled: t(
+                          "game_settings_page.error_no_association_with_steam"
+                        ),
                       },
                     ]}
                   />
@@ -307,56 +311,82 @@ const GameSettingsPage = () => {
             <FolderOrFilesInput<TGameForm>
               control={control}
               name="gamePath"
-              label="Path or exe file"
-              description={<Description>Path to game exe</Description>}
+              label={t("game_settings_page.path_to_game.label")}
+              description={
+                <Description>
+                  {t("game_settings_page.path_to_game.description")}
+                </Description>
+              }
               property={"openFile"}
               isDisabled={isEditing && isAutoDetectionEnabledWatch}
             />
           </FormBlock>
 
-          <h3>{"Save config"}</h3>
+          <h3>{t("game_settings_page.block_title_save_config")}</h3>
           <FormBlock>
             <SwitchInput<TGameForm>
               control={control}
               name="savesConfig.type"
               values={[
-                { label: "Simple", value: "simple" },
-                { label: "Advanced", value: "advanced" },
+                {
+                  label: t(
+                    "game_settings_page.saves_config_type.options.simple"
+                  ),
+                  value: "simple",
+                },
+                {
+                  label: t(
+                    "game_settings_page.saves_config_type.options.advanced"
+                  ),
+                  value: "advanced",
+                },
               ]}
-              label="Type"
+              label={t("game_settings_page.saves_config_type.label")}
               description={
                 saveConfigTypeWatch === "simple"
-                  ? "Simple - easy to setup, only folder required but can be heavier in size"
-                  : "Advanced - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space"
+                  ? t("game_settings_page.saves_config_type.description_simple")
+                  : t(
+                      "game_settings_page.saves_config_type.description_advanced"
+                    )
               }
             />
 
             <FolderOrFilesInput<TGameForm>
               control={control}
               name="savesConfig.saveFolder"
-              label="Saves folder"
-              description={<Description>Path to saves folder</Description>}
+              label={t("game_settings_page.saves_config_folder.label")}
+              description={
+                <Description>
+                  {t("game_settings_page.saves_config_folder.description")}
+                </Description>
+              }
               property={"openDirectory"}
             />
 
             {saveConfigTypeWatch === "advanced" && (
               <>
                 <ToggleInput
-                  label="Include all files"
+                  label={t("game_settings_page.include_all.label")}
                   description={
                     saveFullFolderWatch
-                      ? `Include all files by default and use
-                      exclude list for exclusions`
-                      : `Include files only selected files exclude files from exclude list`
+                      ? t("game_settings_page.include_all.description_on")
+                      : t("game_settings_page.include_all.description_off")
                   }
                   {...register("savesConfig.saveFullFolder")}
                 />
 
-                {!saveFolderWatch && <div>Choose saves folder first</div>}
+                {!saveFolderWatch.path.length && (
+                  <div>
+                    {t("game_settings_page.choose_save_folder_warning")}
+                  </div>
+                )}
+
                 {saveFolderWatch && (
                   <TreesContainer>
                     <CheckboxTreeStyled>
-                      <div>Files</div>
+                      <div>
+                        {t("game_settings_page.files_preview.all_label")}
+                      </div>
                       <br />
 
                       <LoadingBlock isLoading={isLoadingFolderContent}>
@@ -378,7 +408,9 @@ const GameSettingsPage = () => {
                     </CheckboxTreeStyled>
 
                     <CheckboxTreeStyled>
-                      <div>Result - files that will be saved</div>
+                      <div>
+                        {t("game_settings_page.files_preview.result_label")}
+                      </div>
                       <br />
 
                       <LoadingBlock isLoading={isLoadingResultContent}>
@@ -399,26 +431,31 @@ const GameSettingsPage = () => {
 
                 <IncludeExcludeActions
                   checkedNodes={folderCheckedNodes}
-                  saveFullFolder={saveFullFolderWatch}
+                  includeAll={saveFullFolderWatch}
                   onClickInclude={onClickInclude}
                   onClickExclude={onClickExclude}
                 />
 
                 <Lists>
                   <ListInput
-                    type="include"
-                    saveFullFolder={saveFullFolderWatch}
-                    list={includeListWatch}
-                    inputProps={register("savesConfig.includeList")}
-                    onClickRemove={onClickRemoveInclude}
-                  />
-
-                  <ListInput
                     type="exclude"
-                    saveFullFolder={saveFullFolderWatch}
+                    title={t("include_exclude_actions_component.exclude.label")}
+                    isDisabled={false}
                     list={excludeListWatch}
                     inputProps={register("savesConfig.excludeList")}
                     onClickRemove={onClickRemoveExclude}
+                  />
+
+                  <ListInput
+                    type="include"
+                    title={t("include_exclude_actions_component.include.label")}
+                    list={includeListWatch}
+                    isDisabled={saveFullFolderWatch}
+                    disabledReason={t(
+                      "include_exclude_actions_component.include.disabled_reason"
+                    )}
+                    inputProps={register("savesConfig.includeList")}
+                    onClickRemove={onClickRemoveInclude}
                   />
                 </Lists>
               </>
@@ -427,7 +464,7 @@ const GameSettingsPage = () => {
 
           <CtaButtons>
             <Button type="submit" style={{ width: "170px" }}>
-              Save
+              {t("button.save.label")}
             </Button>
           </CtaButtons>
         </FormStyled>

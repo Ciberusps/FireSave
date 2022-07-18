@@ -1,37 +1,42 @@
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useTranslation } from "react-i18next";
 
 import Button from "./Button";
 
 type TProps = {
   type: "include" | "exclude";
+  title: string;
   inputProps: any;
   list: string[];
-  saveFullFolder: boolean;
+  isDisabled: boolean;
+  disabledReason?: string;
   onClickRemove: (keys: string[]) => () => void;
 };
 
 const ListInput = (props: TProps) => {
-  const { type, inputProps, list, saveFullFolder, onClickRemove } = props;
-
-  const showIncludesNotRequired = type === "include" && saveFullFolder;
+  const { title, inputProps, list, isDisabled, disabledReason, onClickRemove } =
+    props;
+  const { t } = useTranslation();
 
   return (
-    <Content>
+    <Content isDisabled={isDisabled}>
       <HeaderContainer>
-        <Header>{type === "include" ? "Include list" : "Exclude list"}</Header>
-        <Button size="small" onClick={onClickRemove([...list])}>
-          remove all
+        <Header>{title}</Header>
+        <Button
+          size="small"
+          isDisabled={isDisabled}
+          onClick={onClickRemove([...list])}
+        >
+          {t("list_input_component.remove_all")}
         </Button>
       </HeaderContainer>
 
       <List>
-        {showIncludesNotRequired
-          ? "Necessary only if 'Save full folder' turned off"
-          : !list?.length && "No files"}
+        {isDisabled ? disabledReason : !list?.length && "No files"}
 
-        {!showIncludesNotRequired &&
+        {!isDisabled &&
           list?.map((file) => (
             <Item key={file}>
               <RemoveButton icon={faClose} onClick={onClickRemove([file])} />
@@ -47,11 +52,16 @@ const ListInput = (props: TProps) => {
 
 export default ListInput;
 
-const Content = styled.div`
+type TContent = {
+  isDisabled: boolean;
+};
+const Content = styled.div<TContent>`
   flex: 1;
   display: flex;
   flex-direction: column;
   margin: 10px;
+  opacity: ${({ isDisabled }) => (isDisabled ? 0.5 : 1)};
+  cursor: ${({ isDisabled }) => (isDisabled ? "not-allowed" : "unset")};
 `;
 
 const HeaderContainer = styled.div`

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import styled, { useTheme } from "styled-components";
 import { formatDistance } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 import Icon from "./Icon";
 import Link from "./Link";
@@ -19,6 +20,7 @@ type TProps = {
 
 const GameCard = (props: TProps) => {
   const { game, ...restProps } = props;
+  const { t } = useTranslation();
   const theme = useTheme();
   const {
     showContextMenu,
@@ -65,25 +67,27 @@ const GameCard = (props: TProps) => {
               game.autoDetectionMethod === "steam" && (
                 <StatusBadge
                   background="linear-gradient(90deg, #399aed, #245ecf)"
-                  tooltipText={`Install from steam or change "Detect type" on manual`}
+                  tooltipText={t(
+                    "statuses.is_in_saves_library_but_not_installed"
+                  )}
                 >
-                  <Icon size="extraSmall" icon="download" color="white" />
+                  <Icon icon="download" size="extraSmall" color="white" />
                 </StatusBadge>
               )}
 
             {!game.isSaveConfigValid && (
               <StatusBadge
                 background="#e0bf00"
-                tooltipText="Save config setup required"
+                tooltipText={t("statuses.is_save_config_valid")}
               >
-                <Icon size="small" icon="save" color="black" />
+                <Icon icon="save" size="small" color="black" />
               </StatusBadge>
             )}
 
             {game.isValid && (
               <StatusBadge
                 background={theme.purple}
-                tooltipText="Game works correctly"
+                tooltipText={t("statuses.is_valid")}
               >
                 <Icon icon="check" size="small" />
               </StatusBadge>
@@ -92,9 +96,9 @@ const GameCard = (props: TProps) => {
             {game.isPlaingNow && (
               <StatusBadge
                 background="linear-gradient(#6fd61d, #38bf3c)"
-                tooltipText="Game is running"
+                tooltipText={t("statusses.is_running")}
               >
-                <Icon icon="play" size="extraSmall" />
+                <Icon icon="play" size="small" />
               </StatusBadge>
             )}
           </Statuses>
@@ -121,8 +125,8 @@ const GameCard = (props: TProps) => {
               <Stats game={game} />
               <LastSave>
                 {lastSaveDateFormatted
-                  ? `last save ${lastSaveDateFormatted} ago`
-                  : "no saves yet"}
+                  ? t("dates.last_save_n_ago", { n: lastSaveDateFormatted })
+                  : t("game_card_component.no_saves")}
               </LastSave>
             </div>
           </div>

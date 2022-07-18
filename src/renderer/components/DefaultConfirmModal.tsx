@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 
 import Modal from "./Modal";
 import Button from "./Button";
@@ -12,6 +13,8 @@ type TProps = {
 
 const DefaultConfirmModal = (props: TProps) => {
   const { title, description, isOpen, onRequestClose } = props;
+  const { t } = useTranslation();
+
   return (
     <ModalStyled isOpen={isOpen} onRequestClose={() => onRequestClose()}>
       <Title>{title}</Title>
@@ -19,10 +22,12 @@ const DefaultConfirmModal = (props: TProps) => {
       <Description>{description}</Description>
 
       <Actions>
-        <DeleteButton onClick={() => onRequestClose(true)}>Yes</DeleteButton>
+        <DeleteButton onClick={() => onRequestClose(true)}>
+          {t("modal.default_confirm.yes")}
+        </DeleteButton>
 
         <CloseButton variant="secondary" onClick={() => onRequestClose(false)}>
-          Cancel
+          {t("modal.default_confirm.no")}
         </CloseButton>
       </Actions>
     </ModalStyled>

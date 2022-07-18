@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import ContextMenu, { TContextMenuProps } from "./ContextMenu";
 
@@ -14,6 +15,7 @@ type TProps = Omit<TContextMenuProps, "items" | "onClickOutside"> & {
 const GameContextMenu = (props: TProps) => {
   const { game, children, onRequestClose, ...restProps } = props;
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [runGame] = useElectronApiRequest(window.api.runGame);
   const [makeSavePoint] = useElectronApiRequest(window.api.makeSavePoint);
 
@@ -36,17 +38,17 @@ const GameContextMenu = (props: TProps) => {
     <ContextMenu
       items={[
         {
-          title: "Save",
+          title: t("button.save.label"),
           icon: "save",
           onClick: onSaveGame,
         },
         {
-          title: "Run",
+          title: t("button.run"),
           icon: "play",
           onClick: onRunGame,
         },
         {
-          title: "Settings",
+          title: t("button.settings"),
           icon: "settings",
           onClick: onOpenSettings,
         },

@@ -6,6 +6,7 @@ import {
 
 // To add language here first check that STEAM_LANGUGE_TO_CODES_MAP codes format is `xx-XX`
 export const LANGUAGES_WHITELIST: TSteamLanguage[] = [
+  "english",
   "russian",
   "schinese",
   "french",

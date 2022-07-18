@@ -1,4 +1,6 @@
+import { useCallback } from "react";
 import styled, { useTheme } from "styled-components";
+import { useTranslation } from "react-i18next";
 
 import Icon from "./Icon";
 import Text from "./Text";
@@ -12,7 +14,6 @@ import useContextMenu from "../utils/useContextMenu";
 import useElectronApiRequest from "../utils/useElectronApiRequest";
 import { useGamesStore } from "../utils/stores";
 import { getGameImage } from "../utils/common";
-import { useCallback } from "react";
 
 type TProps = {
   game: TGame;
@@ -20,6 +21,7 @@ type TProps = {
 
 const GameHeader = (props: TProps) => {
   const { game } = props;
+  const { t } = useTranslation();
   const theme = useTheme();
   const steamStoreInfo = useGamesStore((state) =>
     game.steamAppId ? state.steamGamesStoreInfo?.[game.steamAppId] : undefined
@@ -70,7 +72,7 @@ const GameHeader = (props: TProps) => {
                 {game.isValid && (
                   <StatusBadge
                     background={theme.purple}
-                    tooltipText="Game works correctly"
+                    tooltipText={t("statuses.is_valid")}
                     style={{ width: 18, height: 18, marginLeft: 8 }}
                   >
                     <Icon icon="check" size="extraSmall" />
@@ -85,7 +87,7 @@ const GameHeader = (props: TProps) => {
 
       <CtaButtons>
         <Button icon="save" onClick={onSave}>
-          Save
+          {t("button.save.label")}
         </Button>
 
         {!game.isPlaingNow && <PlayButton icon="play" onClick={onPlayGame} />}
@@ -109,8 +111,8 @@ const Container = styled.div`
   position: sticky;
   padding: 0px 25px;
   top: 0px;
-  backdrop-filter: blur(10px);
   z-index: 1;
+  backdrop-filter: blur(10px);
   box-shadow: 0px 10px 6px -6px rgba(0, 0, 0, 0.75);
   border-bottom: 1px solid rgba(0, 0, 0, 0.75);
 `;

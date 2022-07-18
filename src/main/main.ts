@@ -13,13 +13,15 @@ import log from "electron-log";
 import isDev from "electron-is-dev";
 import * as backend from "i18next-electron-fs-backend";
 
+import i18n, { setupI18n } from "./utils/i18n";
+import Games from "./utils/games";
 import Stores from "./stores";
 import Capture from "./utils/capture";
 import Scheduler from "./utils/scheduler";
 import Shortcuts from "./utils/shortcuts";
 import MainWindow from "./windows/mainWindow";
 import SteamworksSDK from "./utils/steamworksSDK";
-import Games from "./utils/games";
+import MenuBuilder from "./windows/mainWindow/menu";
 import { getAssetPath } from "./utils";
 import {
   PLATFORM,
@@ -30,7 +32,6 @@ import {
   DEFAULT_LOG_FILE_PATH,
 } from "./utils/config";
 import "./handlers";
-import i18n, { setupI18n } from "./utils/i18n";
 import {
   STEAM_LANGUGE_TO_CODES_MAP,
   TSteamLanguage,
@@ -41,6 +42,7 @@ const isDebug =
 
 class Main {
   private mainWindow: MainWindow | null = null;
+  private menuBuilder: MenuBuilder | undefined = undefined;
 
   constructor() {
     this.initLogging();
@@ -132,6 +134,8 @@ class Main {
 
       Stores.Settings.set("language", i18n.language);
 
+      this.menuBuilder?.buildMenu();
+
       console.info("[main.ts/updateLanguageFromSteam()] language updated", lng);
     } catch (err) {
       console.error(err);
@@ -203,6 +207,9 @@ class Main {
         devTools: isDev,
       },
     });
+
+    this.menuBuilder = new MenuBuilder(this.mainWindow);
+    this.menuBuilder.buildMenu();
 
     backend.mainBindings(ipcMain, this.mainWindow, fs);
 

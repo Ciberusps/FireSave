@@ -28,8 +28,8 @@ const Container = styled.div<Pick<TStatusBadgeProps, "background">>`
   justify-content: center;
   align-items: center;
   margin: 2.5px;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: 30px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.75);
   background: ${({ background }) => background};

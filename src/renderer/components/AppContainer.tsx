@@ -3,12 +3,12 @@ import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import { I18nextProvider } from "react-i18next";
 import Modal from "react-modal";
 
-import IndexPage from "../pages";
-import GamePage from "../pages/games/[id]";
+import HomePage from "../pages/home";
+import GameSavesPage from "../pages/games/[id]/gameSavesPage";
 import AboutPage from "../pages/about";
 import LoadingPage from "../pages/loading";
 import SettingsPage from "../pages/settings";
-import GameSettingsPage from "../pages/games/[id]/settings";
+import GameSettingsPage from "../pages/games/[id]/gameSettingsPage";
 
 import i18n, { setupI18n } from "../utils/i18n";
 import {
@@ -56,10 +56,10 @@ const AppContainer = () => {
       <Router>
         <Routes>
           <>
-            <Route path="/" element={<IndexPage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/games/:id" element={<GamePage />} />
+            <Route path="/games/:id" element={<GameSavesPage />} />
             <Route path="/games/:id/settings" element={<GameSettingsPage />} />
           </>
         </Routes>

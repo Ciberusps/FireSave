@@ -1,6 +1,7 @@
 import path from "path";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import Alert from "../../../components/Alert";
 import Layout from "../../../components/Layout";
@@ -15,8 +16,9 @@ const ONLINE_GAMES_STEAM_CATEGORIES = [
   "Online Co-op",
 ];
 
-const GamePage = () => {
+const GameSavesPage = () => {
   const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
   const savesFolder = usePersistentStore((state) => state.savesFolder);
   const game = useGamesStore((state) => id && state.games[id]);
   const saves = useGamesStore((state) => id && state.savePoints[id]);
@@ -28,10 +30,8 @@ const GamePage = () => {
       state.steamGamesStoreInfo[game.steamAppId]
   );
 
-  if (!game) return <div>error</div>;
-
   const savePoints = ((saves && Object.values(saves)) || []).reverse();
-  if (!savePoints) return <div>error</div>;
+  if (!game || !savePoints) return <div>error</div>;
 
   const favoriteSavePoints = savePoints.filter((save) => save.isFavorite);
 
@@ -50,11 +50,13 @@ const GamePage = () => {
       <SavePoints>
         {isOnlineGame && (
           <OnlineGameAlert variant="info">
-            {`Looks like its online game, manipulation with saves can lead to ban/shadow ban, to avoid it LOG OUT from online session before loading`}
+            {t(`game_saves_page.online_games_warning`)}
           </OnlineGameAlert>
         )}
 
-        {favoriteSavePoints.length > 0 && <h2>Favorites</h2>}
+        {favoriteSavePoints.length > 0 && (
+          <h2>{t("game_saves_page.favorites_list_label")}</h2>
+        )}
         {favoriteSavePoints?.map((point) => (
           <SavePointCard
             key={point.id}
@@ -64,7 +66,9 @@ const GamePage = () => {
           />
         ))}
 
-        {favoriteSavePoints.length > 0 && <h2>Timeline</h2>}
+        {favoriteSavePoints.length > 0 && (
+          <h2>{t("game_saves_page.saves_history_list_label")}</h2>
+        )}
         {savePoints?.map((point) => (
           <SavePointCard
             key={point.id}
@@ -81,7 +85,7 @@ const GamePage = () => {
 const SavePoints = styled.div`
   display: flex;
   flex-direction: column;
-  position: relative;
+  /* position: relative; */
   /* margin-top: 40px; */
   align-items: center;
   align-self: center;
@@ -95,4 +99,4 @@ const OnlineGameAlert = styled(Alert)`
   margin-bottom: 20px;
 `;
 
-export default GamePage;
+export default GameSavesPage;
