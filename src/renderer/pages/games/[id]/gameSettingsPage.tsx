@@ -17,6 +17,7 @@ import {
   faSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import CheckboxTree from "react-checkbox-tree";
+import { useTranslation } from "react-i18next";
 
 import Icon from "../../../components/Icon";
 import Form from "../../../components/Form";
@@ -51,6 +52,7 @@ const GameSettingsPage = () => {
   const games = useGamesStore((state) => state.games);
   const PLATFORM = useSettingsStore((state) => state.envs.PLATFORM);
   const theme = useTheme();
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
 
   const [folderContentTree, setFolderContentTree] = useState<TFilesTree>([]);
@@ -254,7 +256,7 @@ const GameSettingsPage = () => {
     <Layout contentStyles={{ alignItems: "center", paddingBottom: "400px" }}>
       <Container>
         <Header>
-          {isEditing ? game?.name : "Add game"}
+          {isEditing ? game?.name : t("game_settings_page.page_title")}
 
           {game?.isValid && (
             <StatusBadge
@@ -271,13 +273,15 @@ const GameSettingsPage = () => {
           {/* TODO: detection type should be displayed if
         - steam game moving to custom game
         */}
-          <h3>{"Game settings"}</h3>
+          <h3>{t("game_settings_page.block_title_settings")}</h3>
           <FormBlock>
             {/* TODO: for now available only if editing, until stores associations pull request made */}
             {isEditing && isStoresAssociationsExists && (
               <ToggleInput
-                label="Auto-detect game?"
-                description="Is game auto-detection enabled"
+                label={t("game_settings_page.input_label_auto_detect")}
+                description={t(
+                  "game_settings_page.input_description_auto_detect"
+                )}
                 {...register("isAutoDetectionEnabled")}
               />
             )}
@@ -289,15 +293,21 @@ const GameSettingsPage = () => {
                   <SwitchInput<TGameForm>
                     control={control}
                     name="autoDetectionType"
-                    label="Auto-detect using"
-                    description="Game will be auto-detected using selected games store"
+                    label={t(
+                      "game_settings_page.input_label_auto_detect_method"
+                    )}
+                    description={t(
+                      "game_settings_page.input_description_auto_detect_method"
+                    )}
                     isDisabled={!game?.isSettupedAtLeastOnce}
                     values={[
                       {
-                        label: "steam",
+                        label: t("steam"),
                         value: "steam",
                         isDisabled: !Boolean(game?.steamAppId),
-                        whyIsDisabled: "No association with steam store appId",
+                        whyIsDisabled: t(
+                          "game_settings_page.error_no_association_with_steam"
+                        ),
                       },
                     ]}
                   />
@@ -307,14 +317,18 @@ const GameSettingsPage = () => {
             <FolderOrFilesInput<TGameForm>
               control={control}
               name="gamePath"
-              label="Path or exe file"
-              description={<Description>Path to game exe</Description>}
+              label={t("game_settings_page.input_path_to_game_label")}
+              description={
+                <Description>
+                  {t("game_settings_page.input_description_path_to_game")}
+                </Description>
+              }
               property={"openFile"}
               isDisabled={isEditing && isAutoDetectionEnabledWatch}
             />
           </FormBlock>
 
-          <h3>{"Save config"}</h3>
+          <h3>{t("game_settings_page.block_title_save_config")}</h3>
           <FormBlock>
             <SwitchInput<TGameForm>
               control={control}
@@ -323,36 +337,50 @@ const GameSettingsPage = () => {
                 { label: "Simple", value: "simple" },
                 { label: "Advanced", value: "advanced" },
               ]}
-              label="Type"
+              label={t("game_settings_page.input_label_saves_config_type")}
               description={
                 saveConfigTypeWatch === "simple"
-                  ? "Simple - easy to setup, only folder required but can be heavier in size"
-                  : "Advanced - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space"
+                  ? t(
+                      "game_settings_page.input_description_saves_config_type_simple"
+                    )
+                  : t(
+                      "game_settings_page.input_description_saves_config_type_advanced"
+                    )
               }
             />
 
             <FolderOrFilesInput<TGameForm>
               control={control}
               name="savesConfig.saveFolder"
-              label="Saves folder"
-              description={<Description>Path to saves folder</Description>}
+              label={t("game_settings_page.input_label_saves_config_folder")}
+              description={
+                <Description>
+                  {t(
+                    "game_settings_page.input_description_saves_config_folder"
+                  )}
+                </Description>
+              }
               property={"openDirectory"}
             />
 
             {saveConfigTypeWatch === "advanced" && (
               <>
                 <ToggleInput
-                  label="Include all files"
+                  label={t("game_settings_page.input_label_include_all")}
                   description={
                     saveFullFolderWatch
-                      ? `Include all files by default and use
-                      exclude list for exclusions`
-                      : `Include files only selected files exclude files from exclude list`
+                      ? t("game_settings_page.input_description_include_all_on")
+                      : t(
+                          "game_settings_page.input_description_include_all_off"
+                        )
                   }
                   {...register("savesConfig.saveFullFolder")}
                 />
 
-                {!saveFolderWatch && <div>Choose saves folder first</div>}
+                {!saveFolderWatch.path.length && (
+                  <div>{t("game_settings_page.test")}</div>
+                )}
+
                 {saveFolderWatch && (
                   <TreesContainer>
                     <CheckboxTreeStyled>

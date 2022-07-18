@@ -1,6 +1,69 @@
 {
   "Settings": "Settings",
-  "Games": "Games",
   "Add game": "Add game",
-  "Help": "Help"
+  "save_button": "Save",
+  "run_button": "Run",
+  "settings_button": "Settings",
+  "steam": "Steam",
+
+  "menu_search_issues": "Search Issues",
+  "menu_about_app": "&About",
+  "menu_minimize_to_tray": "&Minimize to tray",
+  "menu_reload": "&Reload",
+  "menu_exit": "&Exit",
+  "menu_toggle_full_screen": "Toggle Full Screen",
+  "menu_bring_all_to_front": "Bring All to Front",
+  "menu_view": "&View",
+  "menu_file": "&File",
+  "menu_validate_games": "&Reload games list",
+  "menu_help": "&Help",
+
+  "home_page_installed_games": "Installed games",
+  "home_page_no_games_found": "No games found, you can add new one",
+  "home_page_your_saves_library": "Your Saves Library",
+  "home_page_ready_games": "Ready games",
+  "home_page_games": "Games",
+  "home_page_add_game": "Add game",
+
+  "settings_page_title": "Settings",
+  "settings_page_input_label_display": "Display for screenshots",
+  "settings_page_input_description_display": "Select the display to take screenshots from",
+  "settings_page_input_label_autosaves": "Autosaves",
+  "settings_page_input_description_autosaves": "Makes autosaves when game runned",
+  "settings_page_input_label_autosaves_interval": "Autosaves interval",
+  "settings_page_input_description_autosaves_interval": "Interval in minutes between autosaves",
+  "settings_page_input_label_start_in_tray": "Start in Tray",
+  "settings_page_input_description_start_in_tray": "Starts the app in tray",
+
+  "game_settings_page": {
+    "page_title": "Add game",
+    "block_title_settings": "Game settings",
+    "block_title_save_config": "Save config",
+
+    "input_label_path_to_game": "Path or exe file",
+    "input_description_path_to_game": "Path or exe file",
+
+    "input_label_auto_detect": "Auto-detect game?",
+    "input_description_auto_detect": "Is game auto-detection enabled",
+
+    "input_label_auto_detect_method": "Auto-detect using",
+    "input_description_auto_detect_method": "Game will be auto-detected using selected games store",
+
+    "input_label_saves_config_type": "Type",
+    "input_description_saves_config_type_simple": "Simple - easy to setup, only folder required but can be heavier in size",
+    "input_description_saves_config_type_advanced": "Advanced - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space",
+
+    "input_label_saves_config_folder": "Saves folder",
+    "input_description_saves_config_folder": "Path to saves folder",
+
+    "input_label_include_all": "Include all files",
+    "input_description_include_all_on": "Include all files by default and use exclude list for exclusions",
+    "input_description_include_all_off": "Include files only selected files exclude files from exclude list",
+
+    "input_label_": "",
+    "input_description_": "",
+
+    "test": "Choose saves folder first",
+    "error_no_association_with_steam": "No association with steam store appId"
+  }
 }

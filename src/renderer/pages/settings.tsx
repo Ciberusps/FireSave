@@ -53,21 +53,21 @@ const SettingsPage = () => {
   return (
     <Layout contentStyles={{ height: "100vh", alignItems: "center" }}>
       <Container>
-        <h1>{t("Settings")}</h1>
+        <h1>{t("settings_page_title")}</h1>
 
         <MainSettingsBlock onSubmit={handleSubmit(onSubmit)}>
           <FormBlock>
             <DisplaysInput
-              label="Display for screenshots"
-              description="Select the display to take screenshots from"
+              label={t("settings_page_input_display_label")}
+              description={t("settings_page_input_display_description")}
               selectedDisplayId={watchSelectedDisplay?.id || -1}
               displays={displays}
               onChange={(newDisplay) => setValue("selectedDisplay", newDisplay)}
             />
 
             <ToggleInput
-              label="Autosaves"
-              description="Makes autosaves when game runned"
+              label={t("settings_page_input_autosaves_label")}
+              description={t("settings_page_input_autosaves_description")}
               {...register("isAutoSaveOn")}
             />
 
@@ -76,20 +76,22 @@ const SettingsPage = () => {
               min={1}
               max={60}
               name="autoSaveMinutes"
-              label="Autosaves interval"
-              description="Interval in minutes between autosaves"
+              label={t("settings_page_input_autosaves_interval_label")}
+              description={t(
+                "settings_page_input_autosaves_interval_description"
+              )}
             />
 
             <ToggleInput
-              label="Start in Tray"
-              description="Starts the app in tray"
+              label={t("settings_page_input_start_in_tray_label")}
+              description={t("settings_page_input_start_in_tray_description")}
               {...register("isStartingInTray")}
             />
           </FormBlock>
 
           <CtaButtons>
             <Button isSubmit style={{ width: "170px" }}>
-              Save
+              {t("save_button")}
             </Button>
           </CtaButtons>
         </MainSettingsBlock>
