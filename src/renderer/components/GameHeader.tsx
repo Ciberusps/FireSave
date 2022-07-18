@@ -1,9 +1,11 @@
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
+import Icon from "./Icon";
 import Text from "./Text";
 import Image from "./Image";
 import Stats from "./Stats";
 import Button from "./Button";
+import StatusBadge from "./StatusBadge";
 import GameContextMenu from "./GameContextMenu";
 
 import useContextMenu from "../utils/useContextMenu";
@@ -18,6 +20,7 @@ type TProps = {
 
 const GameHeader = (props: TProps) => {
   const { game } = props;
+  const theme = useTheme();
   const steamStoreInfo = useGamesStore((state) =>
     game.steamAppId ? state.steamGamesStoreInfo?.[game.steamAppId] : undefined
   );
@@ -62,7 +65,18 @@ const GameHeader = (props: TProps) => {
             />
 
             <Description>
-              <Name>{name}</Name>
+              <Name>
+                {name}
+                {game.isValid && (
+                  <StatusBadge
+                    background={theme.purple}
+                    tooltipText="Game works correctly"
+                    style={{ width: 18, height: 18, marginLeft: 8 }}
+                  >
+                    <Icon icon="check" size="extraSmall" />
+                  </StatusBadge>
+                )}
+              </Name>
               <Stats game={game} />
             </Description>
           </ImageAndDescription>
@@ -96,7 +110,7 @@ const Container = styled.div`
   padding: 0px 25px;
   top: 0px;
   backdrop-filter: blur(10px);
-  z-index: 99999;
+  z-index: 1;
   box-shadow: 0px 10px 6px -6px rgba(0, 0, 0, 0.75);
   border-bottom: 1px solid rgba(0, 0, 0, 0.75);
 `;
@@ -134,6 +148,8 @@ const Description = styled.div`
 `;
 
 const Name = styled(Text)`
+  display: flex;
+  align-items: center;
   font-size: 1.35rem;
   font-weight: bolder;
 `;

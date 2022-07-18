@@ -1,17 +1,17 @@
 import { useMemo } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { formatDistance } from "date-fns";
 
 import Icon from "./Icon";
 import Link from "./Link";
 import Stats from "./Stats";
 import Image from "./Image";
-import Tooltip from "./Tooltip";
+import StatusBadge from "./StatusBadge";
+import GameContextMenu from "./GameContextMenu";
 
 import useContextMenu from "../utils/useContextMenu";
 import { useGamesStore } from "../utils/stores";
 import { getGameImage } from "../utils/common";
-import GameContextMenu from "./GameContextMenu";
 
 type TProps = {
   game: TGame;
@@ -19,6 +19,7 @@ type TProps = {
 
 const GameCard = (props: TProps) => {
   const { game, ...restProps } = props;
+  const theme = useTheme();
   const {
     showContextMenu,
     setShowContextMenu,
@@ -57,27 +58,46 @@ const GameCard = (props: TProps) => {
         onContextMenu={onContextMenu}
         {...restProps}
       >
-        {game.isPlaingNow && <RunningIcon>running</RunningIcon>}
-
         <ImageContainer>
-          {!game.isGamePathValid &&
-            game.isAutoDetectionEnabled &&
-            game.autoDetectionMethod === "steam" && (
-              <Tooltip
-                text={`Install from steam or change "Detect type" on manual`}
-              >
-                <IsGamePathValidIcon>
+          <Statuses>
+            {!game.isGamePathValid &&
+              game.isAutoDetectionEnabled &&
+              game.autoDetectionMethod === "steam" && (
+                <StatusBadge
+                  background="linear-gradient(90deg, #399aed, #245ecf)"
+                  tooltipText={`Install from steam or change "Detect type" on manual`}
+                >
                   <Icon size="extraSmall" icon="download" color="white" />
-                </IsGamePathValidIcon>
-              </Tooltip>
-            )}
-          {!game.isSaveConfigValid && (
-            <Tooltip text="Save config setup required">
-              <IsSavesConfigValidIcon>
+                </StatusBadge>
+              )}
+
+            {!game.isSaveConfigValid && (
+              <StatusBadge
+                background="#e0bf00"
+                tooltipText="Save config setup required"
+              >
                 <Icon size="small" icon="save" color="black" />
-              </IsSavesConfigValidIcon>
-            </Tooltip>
-          )}
+              </StatusBadge>
+            )}
+
+            {game.isValid && (
+              <StatusBadge
+                background={theme.purple}
+                tooltipText="Game works correctly"
+              >
+                <Icon icon="check" size="small" />
+              </StatusBadge>
+            )}
+
+            {game.isPlaingNow && (
+              <StatusBadge
+                background="linear-gradient(#6fd61d, #38bf3c)"
+                tooltipText="Game is running"
+              >
+                <Icon icon="play" size="extraSmall" />
+              </StatusBadge>
+            )}
+          </Statuses>
 
           <Img
             width="100%"
@@ -111,6 +131,8 @@ const GameCard = (props: TProps) => {
     </GameContextMenu>
   );
 };
+
+export default GameCard;
 
 type TContainer = {
   isPlayingNow?: boolean;
@@ -193,28 +215,12 @@ const LastSave = styled.div`
   margin-top: 5px;
 `;
 
-const RunningIcon = styled.div`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-`;
-
-const IsGamePathValidIcon = styled.div`
+const Statuses = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 30px;
-  height: 30px;
-  border-radius: 30px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.75);
-  background: linear-gradient(90deg, #399aed, #245ecf);
+  margin: -2.5px;
 `;
-
-const IsSavesConfigValidIcon = styled(IsGamePathValidIcon)`
-  background: #e0bf00;
-`;
-
-export default GameCard;

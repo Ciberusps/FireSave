@@ -18,12 +18,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import CheckboxTree from "react-checkbox-tree";
 
+import Icon from "../../../components/Icon";
 import Form from "../../../components/Form";
 import Layout from "../../../components/Layout";
 import Button from "../../../components/Button";
 import FormBlock from "../../../components/FormBlock";
 import ListInput from "../../../components/ListInput";
 import ToggleInput from "../../../components/ToggleInput";
+import StatusBadge from "../../../components/StatusBadge";
 import SwitchInput from "../../../components/SwitchInput";
 import LoadingBlock from "../../../components/LoadingBlock";
 import FolderOrFilesInput from "../../../components/FolderOrFilesInput";
@@ -127,6 +129,7 @@ const GameSettingsPage = () => {
         ...game?.savesConfig?.[PLATFORM],
       },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -250,7 +253,19 @@ const GameSettingsPage = () => {
   return (
     <Layout contentStyles={{ alignItems: "center", paddingBottom: "400px" }}>
       <Container>
-        <Header>{isEditing ? game?.name : "Add game"}</Header>
+        <Header>
+          {isEditing ? game?.name : "Add game"}
+
+          {game?.isValid && (
+            <StatusBadge
+              background={theme.purple}
+              tooltipText="Game works correctly"
+              style={{ width: 40, height: 40, marginLeft: 15 }}
+            >
+              <Icon icon="check" size="large" />
+            </StatusBadge>
+          )}
+        </Header>
 
         <FormStyled onSubmit={handleSubmit(onSubmit)}>
           {/* TODO: detection type should be displayed if
@@ -432,6 +447,8 @@ const Container = styled.div`
 `;
 
 const Header = styled.h1`
+  display: flex;
+  align-items: center;
   margin-bottom: 20px;
 `;
 
