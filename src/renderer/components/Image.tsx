@@ -31,6 +31,9 @@ const Image = (props: TProps, ref: any) => {
         height={height}
         src={src || placeholderImg}
         alt={alt || ""}
+        onError={(e) => {
+          e.currentTarget.src = placeholderImg;
+        }}
         className={className}
       />
     </LazyLoad>
