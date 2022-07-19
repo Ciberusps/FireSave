@@ -99,10 +99,6 @@ const GlobalStyles = createGlobalStyle`
   ${toasterStyles}
   ${reactCheckboxStyles}
 
-  :root {
-    white-space: pre-line;
-  }
-
   body * {
     box-sizing: border-box;
   }
@@ -113,6 +109,7 @@ const GlobalStyles = createGlobalStyle`
     font-size: 16px;
     font-weight: normal;
     font-smooth: antialiased;
+    white-space: pre-line;
 
     background: ${({ theme }) => theme.background};
 

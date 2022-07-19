@@ -332,9 +332,7 @@ const Screenshot = styled(Image)`
   object-fit: contain;
 `;
 
-const AddToFavoritesIcon = styled(Icon)`
-  z-index: 1;
-`;
+const AddToFavoritesIcon = styled(Icon)``;
 
 const AddToFavorites = styled.button`
   display: flex;

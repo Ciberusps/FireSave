@@ -39,6 +39,10 @@
 - wait for github action release
 - got to github/releases page and release new version
 
+### How to add FAQ quide
+
+- all FAQs images should be hosted on github
+
 ## Troubleshooting
 
 If u found game that doesn't work or malfunction u can open new [issue](https://github.com/Ciberusps/FireSave/issues)
