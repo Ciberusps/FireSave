@@ -61,7 +61,7 @@ const configuration: webpack.Configuration = {
         type: "asset/resource",
       },
       {
-        test: /\.(css)$/i,
+        test: /\.(css|md)$/i,
         type: "asset/source",
       },
     ],
