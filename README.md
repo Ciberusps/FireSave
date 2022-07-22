@@ -2,9 +2,9 @@
 
 [![Crowdin](https://badges.crowdin.net/firesave/localized.svg)](https://crowdin.com/project/firesave)
 
-_[WARNING] in active development breaking changes might be in every version_
+**FireSave** is a **saves management** app that helps you **to make saves**, name them, tag, sort, filter, **and load of course**.
 
-FireSave is a saves management app that helps you to make saves, name them, tag, sort, filter, and load of course. All saves are synced between devices with the steam cloud(only steam version). Add cloud saves in games that don't support steam cloud saves, like Dark Souls 3
+UPD: steam release wont be in near future, steam rejected app "not-fit categories" 😐
 
 ![github_header_banner](https://user-images.githubusercontent.com/14001879/177992026-c1f2ff5d-7fa9-423d-99c8-edf64c35b9f1.png)
 
@@ -17,6 +17,9 @@ Many games have imperfect or simplified saves system - single save slot, save sl
 - AutoSaves
 - Quick saves(F5)
 - Screenshots
+- Windows/MacOS/Linux/SteamOS supported
+- Steam games auto-detection
+- [not sure] Steam deck should works
 
 ## Current limitations
 
@@ -47,7 +50,7 @@ Short-term:
 Mid-term:
 
 - [x] Auto detect installed games
-- [ ] Steam beta release
+- [ ] Steam beta release - steam rejected app "not-fit categories" 😐
 - [ ] Steam Cloud ~~Cloud sync Google Drive/Dropbox/Yandex Drive/whatever...~~
 - [ ] Localization
 
@@ -55,14 +58,14 @@ Long-term:
 
 - [ ] Saves library - opportunity to share saves with other users
 - [ ] In-game overlay
-- [ ] Steam deck support
-  - [ ] UI/UX adapt
+- [x] Steam deck support, should run on SteamOS, but UI not adapted
+- [ ] Steam deck UI/UX adapt
 
-TODO:
+Backlog:
 
-- [ ] MacOS/Linux support(for strange ppl (¬‿¬))
+- [x] MacOS/Linux support(for strange ppl (¬‿¬))
 - [ ] Import old saves
-- [ ] Saves folder change
+- [ ] Saves folder change(was only in steam version)
 
 ## Localization
 
@@ -106,4 +109,4 @@ If you have problem contact me via [issues](https://github.com/Ciberusps/FireSav
 
 ## Support
 
-You can boost up my motivation/development speed via [DonationAlerts](https://www.donationalerts.com/r/ciberusps)
+You can support me on patreon https://www.patreon.com/ciberus/membership
