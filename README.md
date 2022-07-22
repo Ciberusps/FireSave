@@ -4,7 +4,7 @@
 
 **FireSave** is a **saves management** app that helps you **to make saves**, name them, tag, sort, filter, **and load of course**.
 
-UPD: steam release wont be in near future, steam rejected app "not-fit categories" 😐
+UPD: steam release wont be in near future, steam rejected to publish app "not-fit categories" 😐
 
 ![github_header_banner](https://user-images.githubusercontent.com/14001879/177992026-c1f2ff5d-7fa9-423d-99c8-edf64c35b9f1.png)
 
