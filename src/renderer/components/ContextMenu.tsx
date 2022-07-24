@@ -72,7 +72,8 @@ const TooltipStyled = styled(Tooltip)`
 `;
 
 const Container = styled.div`
-  width: 170px;
+  width: auto;
+  min-width: 170px;
   padding: 0px;
 `;
 

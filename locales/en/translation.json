@@ -10,6 +10,21 @@
     "load": {
       "label": "Load",
       "tooltip": "Make backup and load this save point"
+    },
+    "reveal_in_file_explorer": {
+      "label": "Reveal in File Explorer"
+    },
+    "add_to_favorites": {
+      "label": "Add to favorites"
+    },
+    "remove_save": {
+      "label": "Remove save"
+    },
+    "open_saves_folder": {
+      "label": "Open saves folder"
+    },
+    "open_save_point_folder": {
+      "label": "Open save point folder"
     }
   },
 
@@ -175,7 +190,6 @@
   },
 
   "save_point_card": {
-    "add_to_favorites": "Add to favorites",
     "manual_save": "Manual save",
     "autosave": "Autosave",
     "no_tags": "No tags..."

@@ -13,7 +13,9 @@ import Icon from "./Icon";
 import Image from "./Image";
 import Button from "./Button";
 import DefaultConfirmModal from "./DefaultConfirmModal";
+import SavePointContextMenu from "./SavePointContextMenu";
 
+import useContextMenu from "../utils/useContextMenu";
 import useElectronApiRequest, {
   makeElectronApiRequest,
 } from "../utils/useElectronApiRequest";
@@ -51,6 +53,12 @@ const SavePointCard = (props: TProps) => {
   const [addToFavorite] = useElectronApiRequest(window.api.addToFavorite);
   const [savePointToDelete, setSavePointToDelete] = useState<TSavePoint>();
   const [savePointToLoad, setSavePointToLoad] = useState<TSavePoint>();
+  const {
+    showContextMenu,
+    setShowContextMenu,
+    getReferenceClientRect,
+    onContextMenu,
+  } = useContextMenu();
 
   const tagsInputOptions = useMemo(
     () => tags.map((t) => ({ value: t, label: t })),
@@ -154,134 +162,149 @@ const SavePointCard = (props: TProps) => {
   }, [game.id, savePoint.id, addToFavorite]);
 
   return (
-    <Container
-      className={className}
-      tabIndex={0}
-      isFavorite={savePoint.isFavorite}
+    <SavePointContextMenu
+      game={game}
+      savePoint={savePoint}
+      visible={showContextMenu}
+      getReferenceClientRect={getReferenceClientRect}
+      onRequestClose={(res) => {
+        if (res?.shouldRemove) {
+          setSavePointToDelete(savePoint);
+        }
+        setShowContextMenu(false);
+      }}
     >
-      <ScreenshotContainer>
-        <ScreenshotBackground
-          src={screenshotPath}
-          width={MAX_IMG_WIDTH}
-          height={DEFAULT_CARD_HEIGHT}
-        />
-        <Screenshot
-          src={screenshotPath}
-          width={MAX_IMG_WIDTH}
-          height={DEFAULT_CARD_HEIGHT}
-        />
-        <AddToFavorites
-          title={t("save_point_card.add_to_favorites")}
-          onClick={onAddToFavorite}
-        >
-          <AddToFavoritesIcon
-            icon={savePoint.isFavorite ? "starSolid" : "starSolid"}
-            size="small"
-            color={savePoint.isFavorite ? "#ca9849" : "grey"}
+      <Container
+        className={className}
+        tabIndex={0}
+        isFavorite={savePoint.isFavorite}
+        onContextMenu={onContextMenu}
+      >
+        <ScreenshotContainer>
+          <ScreenshotBackground
+            src={screenshotPath}
+            width={MAX_IMG_WIDTH}
+            height={DEFAULT_CARD_HEIGHT}
           />
-        </AddToFavorites>
-      </ScreenshotContainer>
-
-      <RightBlock>
-        <Info>
-          <Description>
-            <Name
-              type="text"
-              title={savePoint.id}
-              value={name}
-              onChange={onChangeName}
-            />
-            <Type>
-              {t(
-                savePoint?.type === "manual"
-                  ? "save_point_card.manual_save"
-                  : "save_point_card.autosave"
-              )}{" "}
-              {savePoint.saveNumberByType && " - " + savePoint.saveNumberByType}
-            </Type>
-          </Description>
-
-          <CreatableSelect
-            placeholder={t("save_point_card.no_tags")}
-            isMulti
-            isClearable
-            closeMenuOnSelect={false}
-            menuPortalTarget={document.body}
-            options={tagsInputOptions}
-            styles={tagsInputStyles}
-            value={savePoint.tags.map((t) => ({ value: t, label: t }))}
-            theme={(reactSelectTheme) => ({
-              ...reactSelectTheme,
-              colors: {
-                ...reactSelectTheme.colors,
-                primary: theme.purple,
-                primary75: transparentize(0.75, theme.purple),
-                primary50: transparentize(0.5, theme.purple),
-                primary25: transparentize(0.25, theme.purple),
-                neutral0: theme.white,
-                neutral5: transparentize(0.95, theme.purple),
-                neutral10: transparentize(0.5, theme.purple), // tags background
-                neutral20: transparentize(0.8, theme.purple),
-                neutral30: transparentize(0.7, theme.purple),
-                neutral40: transparentize(0.6, theme.purple),
-                neutral50: theme.dark,
-                neutral60: transparentize(0.4, theme.purple),
-                neutral70: transparentize(0.3, theme.purple),
-                neutral80: theme.white,
-                neutral90: transparentize(0.1, theme.purple),
-              },
-            })}
-            // @ts-ignore
-            onChange={onChangeTags}
+          <Screenshot
+            src={screenshotPath}
+            width={MAX_IMG_WIDTH}
+            height={DEFAULT_CARD_HEIGHT}
           />
-
-          <DateText>{formatedDate}</DateText>
-        </Info>
-
-        <CTAButtons>
-          <Button
-            title={t("button.load.tooltip")}
-            icon="upload"
-            onClick={() =>
-              game.isPlaingNow
-                ? setSavePointToLoad(savePoint)
-                : loadSavePoint(game.id, savePoint.id)
-            }
+          <AddToFavorites
+            title={t("button.add_to_favorites.label")}
+            onClick={onAddToFavorite}
           >
-            {t("button.load.label")}
-          </Button>
-          <Button
-            icon="close"
-            variant="secondary"
-            onClick={() => setSavePointToDelete(savePoint)}
-          />
-        </CTAButtons>
-      </RightBlock>
+            <AddToFavoritesIcon
+              icon={savePoint.isFavorite ? "starSolid" : "starSolid"}
+              size="small"
+              color={savePoint.isFavorite ? "#ca9849" : "grey"}
+            />
+          </AddToFavorites>
+        </ScreenshotContainer>
 
-      <DefaultConfirmModal
-        isOpen={!!savePointToDelete}
-        title={t("modal.remove_save_point.label")}
-        description={t("modal.remove_save_point.description")}
-        onRequestClose={(result) => {
-          if (result && savePointToDelete) {
-            removeSavePoint(game.id, savePoint.id);
-          }
-          setSavePointToDelete(undefined);
-        }}
-      />
+        <RightBlock>
+          <Info>
+            <Description>
+              <Name
+                type="text"
+                title={savePoint.id}
+                value={name}
+                onChange={onChangeName}
+              />
+              <Type>
+                {t(
+                  savePoint?.type === "manual"
+                    ? "save_point_card.manual_save"
+                    : "save_point_card.autosave"
+                )}{" "}
+                {savePoint.saveNumberByType &&
+                  " - " + savePoint.saveNumberByType}
+              </Type>
+            </Description>
 
-      <DefaultConfirmModal
-        isOpen={!!savePointToLoad}
-        title={t("modal.load_save_point.label")}
-        description={t("modal.load_save_point.description")}
-        onRequestClose={(result) => {
-          if (result && savePointToLoad) {
-            loadSavePoint(game.id, savePoint.id);
-          }
-          setSavePointToLoad(undefined);
-        }}
-      />
-    </Container>
+            <CreatableSelect
+              placeholder={t("save_point_card.no_tags")}
+              isMulti
+              isClearable
+              closeMenuOnSelect={false}
+              menuPortalTarget={document.body}
+              options={tagsInputOptions}
+              styles={tagsInputStyles}
+              value={savePoint.tags.map((t) => ({ value: t, label: t }))}
+              theme={(reactSelectTheme) => ({
+                ...reactSelectTheme,
+                colors: {
+                  ...reactSelectTheme.colors,
+                  primary: theme.purple,
+                  primary75: transparentize(0.75, theme.purple),
+                  primary50: transparentize(0.5, theme.purple),
+                  primary25: transparentize(0.25, theme.purple),
+                  neutral0: theme.white,
+                  neutral5: transparentize(0.95, theme.purple),
+                  neutral10: transparentize(0.5, theme.purple), // tags background
+                  neutral20: transparentize(0.8, theme.purple),
+                  neutral30: transparentize(0.7, theme.purple),
+                  neutral40: transparentize(0.6, theme.purple),
+                  neutral50: theme.dark,
+                  neutral60: transparentize(0.4, theme.purple),
+                  neutral70: transparentize(0.3, theme.purple),
+                  neutral80: theme.white,
+                  neutral90: transparentize(0.1, theme.purple),
+                },
+              })}
+              // @ts-ignore
+              onChange={onChangeTags}
+            />
+
+            <DateText>{formatedDate}</DateText>
+          </Info>
+
+          <CTAButtons>
+            <Button
+              title={t("button.load.tooltip")}
+              icon="upload"
+              onClick={() =>
+                game.isPlaingNow
+                  ? setSavePointToLoad(savePoint)
+                  : loadSavePoint(game.id, savePoint.id)
+              }
+            >
+              {t("button.load.label")}
+            </Button>
+            <Button
+              icon="close"
+              variant="secondary"
+              onClick={() => setSavePointToDelete(savePoint)}
+            />
+          </CTAButtons>
+        </RightBlock>
+
+        <DefaultConfirmModal
+          isOpen={!!savePointToDelete}
+          title={t("modal.remove_save_point.label")}
+          description={t("modal.remove_save_point.description")}
+          onRequestClose={(result) => {
+            if (result && savePointToDelete) {
+              removeSavePoint(game.id, savePoint.id);
+            }
+            setSavePointToDelete(undefined);
+          }}
+        />
+
+        <DefaultConfirmModal
+          isOpen={!!savePointToLoad}
+          title={t("modal.load_save_point.label")}
+          description={t("modal.load_save_point.description")}
+          onRequestClose={(result) => {
+            if (result && savePointToLoad) {
+              loadSavePoint(game.id, savePoint.id);
+            }
+            setSavePointToLoad(undefined);
+          }}
+        />
+      </Container>
+    </SavePointContextMenu>
   );
 };
 
