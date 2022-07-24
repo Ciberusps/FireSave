@@ -34,7 +34,7 @@
 
   "statuses": {
     "is_valid": "Spiel arbeitet richtig",
-    "is_running": "Spiel wird ausgeführt,
+    "is_running": "Spiel wird ausgeführt",
     "is_save_config_valid": "Konfiguration speichern erforderlich",
     "is_in_saves_library_but_not_installed": "Aus Steam installieren oder \"Typ erkennen\" auf manuell ändern"
   },
@@ -57,7 +57,7 @@
     "installed_games": "Installierte Spiele",
     "no_games_found": "Keine Spiele gefunden. Sie können neue hinzufügen.",
     "your_saves_library": "Ihre Speicherstand-Bibliothek",
-    "ready_games": "Spiele die bereit sidn",
+    "ready_games": "Spiele die bereit sind",
     "games": "Spiele",
     "add_game": "Spiel hinzufügen"
   },
