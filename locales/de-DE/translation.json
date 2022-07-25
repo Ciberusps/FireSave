@@ -1,5 +1,183 @@
 {
-  "Settings": "Settings",
-  "Games": "Games",
-  "Add game": "Add game"
+  "steam": "Steam",
+
+  "button": {
+    "settings": "Einstellungen",
+    "save": {
+      "label": "Speichern"
+    },
+    "run": "Ausführen",
+    "load": {
+      "label": "Laden",
+      "tooltip": "Sicherung erstellen und Speicherstand laden"
+    }
+  },
+
+  "modal": {
+    "default_confirm": {
+      "yes": "Ja",
+      "no": "Nein"
+    },
+    "remove_save_point": {
+      "label": "Speicherstand entfernen",
+      "description": "Sind Sie sicher dass Sie den Speicherstand entfernen möchten?"
+    },
+    "load_save_point": {
+      "label": "Speicherstand laden",
+      "description": "Das Spiel wird derzeit ausgeführt\nDas Laden könnte das Spiel abstürzen lassen\nSind Sie sicher, dass Sie den Speicherstand laden wollen?"
+    }
+  },
+
+  "dates": {
+    "last_save_n_ago": "letzte Sicherung {{n}} her"
+  },
+
+  "statuses": {
+    "is_valid": "Spiel arbeitet richtig",
+    "is_running": "Spiel wird ausgeführt",
+    "is_save_config_valid": "Konfiguration speichern erforderlich",
+    "is_in_saves_library_but_not_installed": "Aus Steam installieren oder \"Typ erkennen\" auf manuell ändern"
+  },
+
+  "menu": {
+    "search_issues": "Probleme suchen",
+    "about_app": "&Über",
+    "minimize_to_tray": "In Tray &minimieren",
+    "reload": "&Neu laden",
+    "exit": "B&eenden",
+    "toggle_full_screen": "Vollbild umschalten",
+    "bring_all_to_front": "In den Vordergrund",
+    "view": "&Ansicht",
+    "file": "&Datei",
+    "validate_games": "Liste mit Spielen &neu laden",
+    "help": "&Hilfe"
+  },
+
+  "home_page": {
+    "installed_games": "Installierte Spiele",
+    "no_games_found": "Keine Spiele gefunden. Sie können neue hinzufügen.",
+    "your_saves_library": "Ihre Speicherstand-Bibliothek",
+    "ready_games": "Spiele die bereit sind",
+    "games": "Spiele",
+    "add_game": "Spiel hinzufügen"
+  },
+
+  "settings_page": {
+    "title": "Einstellungen",
+    "display": {
+      "label": "Bildschirm für Bildschirmausdrucke",
+      "description": "Bildschirm auswählen, von dem Bildschirmausdrucke erstellt werden"
+    },
+    "autosaves": {
+      "label": "Automatische Speicherstände",
+      "description": "Wenn Spiel ausgeführt wurde, automatisch Speicherstände erstellen"
+    },
+    "autosaves_interval": {
+      "label": "Intervall für automatisches Speichern",
+      "description": "Zeitabstand zwischen den automatischen Speicherungen"
+    },
+    "start_in_tray": {
+      "label": "In Tray starten",
+      "description": "Startet die App im Tray"
+    }
+  },
+
+  "game_settings_page": {
+    "page_title": "Spiel hinzufügen",
+    "block_title_settings": "Spieleinstellungen",
+    "block_title_save_config": "Konfiguration speichern",
+    "choose_save_folder_warning": "Zuerst Ordner für Speicherstände auswählen",
+
+    "path_to_game": {
+      "label": "Pfad oder ausführbare Datei (.exe)",
+      "description": "Pfad oder ausführbare Datei (.exe)"
+    },
+
+    "auto_detect": {
+      "label": "Spiel auatomatisch ermittelt?",
+      "description": "Ist die automatische Ermittlung der Spiele aktiviert"
+    },
+
+    "auto_detect_method": {
+      "label": "Automatische Erkennung mit",
+      "description": "Das Spiel wird automatisch mithilfe des ausgewählten Game Stores erkannt"
+    },
+
+    "saves_config_type": {
+      "label": "Typ",
+      "options": {
+        "simple": "Einfach",
+        "advanced": "Erweitert"
+      },
+      "description_simple": "Einfach - Einfach einzurichten, nur Ordner erforderlich, könnte aber mehr Speicherplatz benötigen",
+      "description_advanced": "Erweitert - Für Hardcore-Gamer 💪😎💪 die unnötige Dateien ausschließen und Speicherplatz sparen möchten"
+    },
+
+    "saves_config_folder": {
+      "label": "Speicherordner",
+      "description": "Pfad zum Speicherordner"
+    },
+
+    "include_all": {
+      "label": "Alle Dateien einschließen",
+      "description_on": "Schließt standardmäßig alle Dateien ein und verwendet die Ausschlussliste für Ausnahmen",
+      "description_off": "Nur ausgewählte Dateien einschließen und damit von der Ausschlussliste ausschließen"
+    },
+
+    "files_preview": {
+      "all_label": "Dateien",
+      "result_label": "Ergebnis - Dateien die gespeichert werden"
+    },
+
+    "errors": {
+      "no_association_with_steam": "Keine Verbindung mit Steam Store AppID",
+      "game_not_found": "Spiel nicht gefunden. Bitte App neu starten.",
+      "game_not_associated": "Spiel mit keinen Store verbunden. Bitte automatische Ermittlung deaktivieren."
+    }
+  },
+
+  "game_saves_page": {
+    "online_games_warning": "Sieht aus wie ein Online-Spiel. Manipulationen mit Speicherständen kann zu einem Sperre/Schattensperre führen. Um dies zu vermeiden, vor dem Laden von der Online-Sitzung abmelden.",
+    "favorites_list_label": "Favoriten",
+    "saves_history_list_label": "Zeitleiste"
+  },
+
+  "include_exclude_actions_component": {
+    "in": "in",
+    "or_use_pattern": "oder Muster verwenden",
+    "everywhere": "überall",
+    "and_all_folders_below": "und alle Ordner darunter",
+    "empty_warning_include_all_on": "Einzuschließende Dateien oder Ordner auswählen",
+    "empty_warning_include_all_off": "Aus-/Einzuschließende Dateien order Ordner auswählen",
+    "include_file_or_folder": "Einschließen",
+    "exclude_file_or_folder": "Ausschließen",
+    "include": {
+      "label": "Einschlussliste",
+      "disabled_reason": "Nur erforderlich wenn 'Alle Dateien einschließen' ausgeschalten ist"
+    },
+    "exclude": {
+      "label": "Ausschlussliste"
+    }
+  },
+
+  "list_input_component": {
+    "remove_all": "Alle entfernen"
+  },
+
+  "stats_component": {
+    "saves_count": "{{count}} Speicherstände",
+    "autosaves_count": "{{count}} automatische Speicherstände",
+    "manual_saves_count": "{{count}} manuelle Speicherstände"
+  },
+
+  "game_card_component": {
+    "no_saves": "Keine Speicherstände vorhanden"
+  },
+
+  "save_point_card": {
+    "add_to_favorites": "Zu Favoriten hinzufügen",
+    "manual_save": "Manueller Speicherstand",
+    "autosave": "Automatischer Speicherstand",
+    "no_tags": "Keine Tags..."
+  }
 }
