@@ -27,10 +27,11 @@ Many games have imperfect or simplified saves system - single save slot, save sl
 - Quick save shortcut dont work for games in a fullscreen mode(only window/borderless window)
 - Impossible to change saves folder location
 
-## How it works
+## FAQ
 
-FireSave copy paste save file to "store folder"(default "C://GamesSaves") and save some data about it in `config.json` file.
-Possibility of its application strongly depends on how in-game save system works.
+- [How it works](./docs/how_it_works.md)
+- [How to add "custom" game](./docs/how_to_add_custom_game.md)
+- [Can I use FireSave in games with online](./docs/games_with_online.md)
 
 ## Supported games
 

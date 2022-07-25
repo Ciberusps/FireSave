@@ -1,3 +1,5 @@
+# How to add custom game
+
 ### 1. Add game
 
 <img src="https://user-images.githubusercontent.com/14001879/180634508-801fe3cd-a359-4891-81b1-3f3209d39d41.png" width="500" />
