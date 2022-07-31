@@ -25,6 +25,13 @@ const gamesStore = new ElectronStore<TGamesStore>({
     savePoints: {},
     tags: DEFAULT_TAGS_LIST,
   },
+  beforeEachMigration: (_, context) => {
+    console.info(
+      `[games-store] run migration from ${context.fromVersion} to ${
+        context.toVersion
+      } migrations to run ${context.versions.toString()}`
+    );
+  },
   migrations: {
     "0.3.23": (store) => {
       const games = store.store.games;

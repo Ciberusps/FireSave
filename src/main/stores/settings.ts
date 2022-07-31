@@ -6,6 +6,13 @@ const settingsStore = new ElectronStore<TSettingsStore>({
   // TODO: should be app folder, not %appdata%
   cwd: persistentStore.store.savesFolder,
   name: "settings",
+  beforeEachMigration: (_, context) => {
+    console.info(
+      `[settings-store] run migration from ${context.fromVersion} to ${
+        context.toVersion
+      } migrations to run ${context.versions.toString()}`
+    );
+  },
   defaults: {
     mainWindow: {
       x: 0,

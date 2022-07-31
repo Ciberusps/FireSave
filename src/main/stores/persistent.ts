@@ -12,6 +12,13 @@ const persistentStore = new ElectronStore<TPersistentStore>({
     gamesStorePath: undefined,
     savesFolder: FileSystem.normalizeUpath(DEFAULT_STORES_PATH),
   },
+  beforeEachMigration: (_, context) => {
+    console.info(
+      `[persistent-store] run migration from ${context.fromVersion} to ${
+        context.toVersion
+      } migrations to run ${context.versions.toString()}`
+    );
+  },
   migrations: {
     "0.6.1": (store) => {
       console.info("[persistentStore.ts/migrations/0.6.1] run migration");

@@ -9,9 +9,11 @@
 import path from "path";
 import fs from "fs";
 import { app, ipcMain, nativeTheme, protocol } from "electron";
-import log from "electron-log";
 import isDev from "electron-is-dev";
 import * as backend from "i18next-electron-fs-backend";
+
+import Logger from "./utils/logger";
+Logger.init();
 
 import i18n, { setupI18n } from "./utils/i18n";
 import Games from "./utils/games";
@@ -28,8 +30,6 @@ import {
   RESOURCES_PATH,
   ASSETS_PATH,
   APP_VERSION,
-  DEFAULT_STORES_PATH,
-  DEFAULT_LOG_FILE_PATH,
 } from "./utils/config";
 import "./handlers";
 import {
@@ -45,8 +45,6 @@ class Main {
   private menuBuilder: MenuBuilder | undefined = undefined;
 
   constructor() {
-    this.initLogging();
-
     if (process.env.NODE_ENV === "production") {
       const sourceMapSupport = require("source-map-support");
       sourceMapSupport.install();
@@ -61,21 +59,6 @@ class Main {
 
     app.on("ready", this.onReady.bind(this));
     app.on("activate", this.activate.bind(this));
-  }
-
-  initLogging() {
-    // clean up logs in dev mode
-    isDev && fs.writeFileSync(DEFAULT_LOG_FILE_PATH, "", "utf8");
-
-    console.log = log.log;
-    console.error = log.error;
-    console.info = log.info;
-    log.transports.file.resolvePath = () => DEFAULT_LOG_FILE_PATH;
-
-    Stores.Settings.set(
-      "runtimeValues.DEFAULT_STORES_PATH",
-      DEFAULT_STORES_PATH
-    );
   }
 
   onWillQuit() {
