@@ -224,10 +224,8 @@ const GameSettingsPage = () => {
 
   const onSubmit = (data: TGameForm) => {
     try {
-      if (!game) throw new Error(t("errors.game_not_found"));
-
       if (isEditing) {
-        if (data.isAutoDetectionEnabled && !isStoresAssociationsExists) {
+        if (data.isAutoDetectionEnabled && !isStoresAssociationsExists || !game) {
           throw new Error(t("errors.game_not_associated"));
         }
         editGame(game.id, {
