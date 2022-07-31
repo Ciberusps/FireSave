@@ -21,6 +21,7 @@ import Stores from "./stores";
 import Capture from "./utils/capture";
 import Scheduler from "./utils/scheduler";
 import Shortcuts from "./utils/shortcuts";
+import AppUpdater from "./utils/updater";
 import MainWindow from "./windows/mainWindow";
 import SteamworksSDK from "./utils/steamworksSDK";
 import MenuBuilder from "./windows/mainWindow/menu";
@@ -200,11 +201,8 @@ class Main {
 
     Shortcuts.registerSaveKey(Stores.Settings.store.saveShortcut);
 
-    // Remove this if your app does not use auto updates
-    // eslint-disable-next-line
-    // new AppUpdater();
+    new AppUpdater();
   }
 }
 
-// eslint-disable-next-line
 new Main();
