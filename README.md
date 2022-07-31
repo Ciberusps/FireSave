@@ -8,18 +8,47 @@ UPD: steam release wont be in near future, steam rejected to publish app "not fi
 
 ![github_header_banner](https://user-images.githubusercontent.com/14001879/177992026-c1f2ff5d-7fa9-423d-99c8-edf64c35b9f1.png)
 
-## Motivation
-
-Many games have imperfect or simplified saves system - single save slot, save slots overwriting, no manual saves, terrible autosaves system and so on. FireSave is attempt to fix such problems in as much games as possible and provide a convenient way to manage your saves.
-
 ## Features
 
 - AutoSaves
 - Quick saves(F5)
-- Screenshots
-- Windows/MacOS/Linux/SteamOS supported
+- Automatical screenshots
+- Windows/MacOS/Linux/SteamOS support
 - Steam games auto-detection
 - [not sure] Steam deck should works
+
+## For whom
+
+### For gamers
+
+- beat the boss with another build without playing the whole game from the beginning
+- make another choice and see what will happen. You can return at any time or even continue all storylines concurrently without saves from one line being overwritten
+
+### For game developers and QA
+
+Create saves for different test cases. Forget saves copy-pasting, creating monster scripts for save states emulation/recreation, or wasting your time on unnecessary tooling. Just make saves and load it to test the behavior you expected. You can add your game in FireSave even if it's not yet on Steam.
+
+### For content creators - streamers/video bloggers
+
+Speed up your video production - recording gameplay footage becomes much easier with FireSave
+
+- return to any point of your walkthrough and record required moments as you want without playing the whole game from the beginning
+- no more wasting hours on rewriting broken footage
+- free up time for more important things such as analysis and reflection of the gaming experience gained
+- make game content on youtube or twitch
+
+### For speedrunners
+
+Create saves for segments you want to train and switch between them fast.
+
+### For retro-gamers and old games
+
+- play old games and don't suffer from making manual backups
+- add cloud saves in games like Dark Souls 3, Mafia, Dead Space, Fable, Gothic, Mass Effect, Overlord, Prince of Persia, Tomb Raider, and thousands of others
+
+### For Steam Deck users [coming soon]
+
+Want to continue playing your games without cloud saves on the Steam Deck - easily make a save on the desktop and then load it on the Steam Deck
 
 ## Current limitations
 
@@ -35,38 +64,24 @@ Many games have imperfect or simplified saves system - single save slot, save sl
 
 ## Supported games
 
-Any game that use saves files like Elden Ring, Dark Souls 1-3, Hollow Knight...
+Any game that use save files like Elden Ring, Dark Souls 1-3, Hollow Knight...
 
 ## Plans
 
-Short-term:
-
 - [x] More games support(Hollow Knight?)
+- [ ] Saves folder change(was only in steam version)
+- [ ] Cloud sync Google Drive ~~Steam Cloud~~
 - [ ] QOL features for saves
   - [x] name editing
   - [x] tags
   - [ ] sorts & filters
   - [ ] search
-
-Mid-term:
-
-- [x] Auto detect installed games
-- [ ] Steam beta release - steam rejected app "not-fit categories" 😐
-- [ ] Steam Cloud ~~Cloud sync Google Drive/Dropbox/Yandex Drive/whatever...~~
 - [ ] Localization
-
-Long-term:
-
+- [x] Steam deck support
+- [ ] Steam deck UI/UX adapt
+- [ ] Import saves
 - [ ] Saves library - opportunity to share saves with other users
 - [ ] In-game overlay
-- [x] Steam deck support, should run on SteamOS, but UI not adapted
-- [ ] Steam deck UI/UX adapt
-
-Backlog:
-
-- [x] MacOS/Linux support(for strange ppl (¬‿¬))
-- [ ] Import old saves
-- [ ] Saves folder change(was only in steam version)
 
 ## Localization
 
@@ -97,6 +112,10 @@ Proofreading -
 ![ru proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=ru&style=flat&query=%24.progress.8.data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-15265004-526302.json)
 ![uk proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=uk&style=flat&query=%24.progress.9.data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-15265004-526302.json)
 ![zh-CN proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=zh-CN&style=flat&query=%24.progress.10.data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-15265004-526302.json)
+
+## Motivation
+
+Many games have imperfect or simplified saves system - single save slot, save slots overwriting, no manual saves, terrible autosaves system and so on. FireSave is attempt to fix such problems in as much games as possible and provide a convenient way to manage your saves.
 
 ## How to Contribute
 
