@@ -26,6 +26,7 @@ const commonHandlers: TCommonHandlers = {
   getGamesStore: async () => Stores.Games.store,
   changeSettings: async (_, newSettings) => {
     try {
+      Stores.Settings.set("language", newSettings.language);
       Stores.Settings.set("isAutoSaveOn", newSettings.isAutoSaveOn);
       Stores.Settings.set("autoSaveMinutes", newSettings.autoSaveMinutes);
       Stores.Settings.set("selectedDisplay", newSettings.selectedDisplay);

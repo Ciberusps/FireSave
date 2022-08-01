@@ -20,6 +20,7 @@ export const LANGUAGES_WHITELIST: TSteamLanguage[] = [
   "ukrainian",
 ];
 
+// TODO: de -> de-DE
 export const LANGUAGES_CODES_WHITELIST: TSteamLanguageCode[] = (
   Object.keys(STEAM_LANGUGE_TO_CODES_MAP) as TSteamLanguage[]
 )

@@ -101,10 +101,19 @@ class Main {
 
   async initI18n() {
     i18n.on("initialized", async () => {
-      await this.updateLanguageFromSteam();
-      i18n.off("initialized");
+      await this.updateLanguage();
+      Stores.Settings.onDidChange("language", this.updateLanguage.bind(this));
+      await i18n.off("initialized");
     });
     setupI18n();
+  }
+
+  async updateLanguage() {
+    // await this.updateLanguageFromSteam();
+    const language = Stores.Settings.store.language;
+    console.log("UPDATE LANGUAGE", language);
+    await i18n.changeLanguage(language);
+    this.menuBuilder?.buildMenu();
   }
 
   async updateLanguageFromSteam() {
@@ -127,7 +136,7 @@ class Main {
   }
 
   async onReady() {
-    this.initSteamworks();
+    // this.initSteamworks();
     this.initI18n();
 
     Stores.Settings.set("version", APP_VERSION);

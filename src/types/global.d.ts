@@ -22,6 +22,8 @@ declare global {
     isMaximized: boolean;
   };
 
+  type TLanguage = TSteamLanguageCode;
+
   type TSettingsStore = {
     isAutoSaveOn: boolean;
     autoSaveMinutes: number;
@@ -30,7 +32,7 @@ declare global {
     mainWindow: TWindowSettings;
     selectedDisplay: Electron.Display | undefined;
     isStartingInTray: boolean;
-    language: TSteamLanguageCode;
+    language: TLanguage;
 
     runtimeValues: {
       IS_MAIN_LOADING: boolean;

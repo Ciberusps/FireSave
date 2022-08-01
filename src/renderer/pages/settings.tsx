@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -10,14 +10,20 @@ import Layout from "../components/Layout";
 import FormBlock from "../components/FormBlock";
 import ToggleInput from "../components/ToggleInput";
 import NumberInput from "../components/NumberInput";
-import DisplaysInput from "renderer/components/DisplaysInput";
+import DisplaysInput from "../components/DisplaysInput";
 
 import { useSettingsStore } from "../utils/stores";
-import useElectronApiRequest from "renderer/utils/useElectronApiRequest";
+import useElectronApiRequest from "../utils/useElectronApiRequest";
+import SelectInput, { TSelectInputOption } from "../components/SelectInput";
+import { LANGUAGES_CODES_WHITELIST } from "../../common/languagesWhiteList";
 
 type TSettingsForm = Pick<
   TSettingsStore,
-  "selectedDisplay" | "isAutoSaveOn" | "autoSaveMinutes" | "isStartingInTray"
+  | "selectedDisplay"
+  | "isAutoSaveOn"
+  | "autoSaveMinutes"
+  | "isStartingInTray"
+  | "language"
 >;
 
 const SettingsPage = () => {
@@ -32,6 +38,7 @@ const SettingsPage = () => {
   const { control, register, handleSubmit, setValue, watch } =
     useForm<TSettingsForm>({
       defaultValues: {
+        language: settingsStore.language,
         selectedDisplay: settingsStore.selectedDisplay,
         isAutoSaveOn: settingsStore.isAutoSaveOn,
         autoSaveMinutes: settingsStore.autoSaveMinutes,
@@ -39,6 +46,14 @@ const SettingsPage = () => {
       },
     });
   const watchSelectedDisplay = watch("selectedDisplay");
+
+  const languagesOptions: TSelectInputOption[] = useMemo(() => {
+    return LANGUAGES_CODES_WHITELIST.map((l) => ({
+      label: l,
+      value: l,
+      isDisabled: false,
+    }));
+  }, []);
 
   const onSubmit = (data: TSettingsForm) => {
     changeSettings(data);
@@ -51,7 +66,12 @@ const SettingsPage = () => {
   if (!settingsStore) return null;
 
   return (
-    <Layout contentStyles={{ height: "100vh", alignItems: "center" }}>
+    <Layout
+      contentStyles={{
+        height: "100%",
+        alignItems: "center",
+      }}
+    >
       <Container>
         <h1>{t("settings_page.title")}</h1>
 
@@ -85,6 +105,14 @@ const SettingsPage = () => {
               description={t("settings_page.start_in_tray.description")}
               {...register("isStartingInTray")}
             />
+
+            <SelectInput
+              control={control}
+              name="language"
+              label={t("settings_page.language.label")}
+              description={t("settings_page.language.description")}
+              options={languagesOptions}
+            />
           </FormBlock>
 
           <CtaButtons>
@@ -113,6 +141,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 960px;
   padding: 0px 30px;
+  padding-bottom: 400px;
 `;
 
 const About = styled.div`
