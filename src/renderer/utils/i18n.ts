@@ -12,7 +12,7 @@ const setupI18n = (resourcesPath: string, lng: string) => {
     .init({
       backend: {
         loadPath: path.join(resourcesPath, "/locales/{{lng}}/{{ns}}.json"),
-        ipcRenderer: window.api.i18nextElectronBackend,
+        contextBridgeApiKey: "api",
       },
       ns: "translation",
       lng,

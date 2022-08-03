@@ -26,4 +26,5 @@ export const LANGUAGES_CODES_WHITELIST: TSteamLanguageCode[] = (
   .filter((l) => LANGUAGES_WHITELIST.includes(l))
   .map((l) => STEAM_LANGUGE_TO_CODES_MAP[l]);
 
-export type TSupportedLanguageCodes = keyof typeof LANGUAGES_CODES_WHITELIST;
+export type TSupportedLanguageCodes =
+  typeof STEAM_LANGUGE_TO_CODES_MAP[keyof typeof STEAM_LANGUGE_TO_CODES_MAP];

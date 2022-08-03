@@ -1,3 +1,4 @@
+import { TSupportedLanguageCodes } from "common/languagesWhiteList";
 import { TSteamLanguageCode } from "../common/steamLangCodesMap";
 import { TLeaf } from "../main/utils/globTree";
 
@@ -22,6 +23,8 @@ declare global {
     isMaximized: boolean;
   };
 
+  type TLanguage = TSupportedLanguageCodes;
+
   type TSettingsStore = {
     isAutoSaveOn: boolean;
     autoSaveMinutes: number;
@@ -30,7 +33,7 @@ declare global {
     mainWindow: TWindowSettings;
     selectedDisplay: Electron.Display | undefined;
     isStartingInTray: boolean;
-    language: TSteamLanguageCode;
+    language: TLanguage;
 
     runtimeValues: {
       IS_MAIN_LOADING: boolean;

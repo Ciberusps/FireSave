@@ -11,7 +11,7 @@ export const STEAM_LANGUGE_TO_CODES_MAP = {
   english: "en",
   finnish: "fi",
   french: "fr-FR",
-  german: "de",
+  german: "de-DE",
   greek: "el",
   hungarian: "hu",
   italian: "it-IT",

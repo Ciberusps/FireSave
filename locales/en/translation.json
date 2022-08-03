@@ -94,6 +94,10 @@
     "start_in_tray": {
       "label": "Start in Tray",
       "description": "Starts the app in tray"
+    },
+    "language": {
+      "label": "Language",
+      "description": "Choose your preferred language"
     }
   },
 
