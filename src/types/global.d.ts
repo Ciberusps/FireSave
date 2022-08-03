@@ -1,3 +1,4 @@
+import { TSupportedLanguageCodes } from "common/languagesWhiteList";
 import { TSteamLanguageCode } from "../common/steamLangCodesMap";
 import { TLeaf } from "../main/utils/globTree";
 
@@ -22,7 +23,7 @@ declare global {
     isMaximized: boolean;
   };
 
-  type TLanguage = TSteamLanguageCode;
+  type TLanguage = TSupportedLanguageCodes;
 
   type TSettingsStore = {
     isAutoSaveOn: boolean;
