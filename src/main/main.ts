@@ -110,9 +110,9 @@ class Main {
 
   async updateLanguage() {
     // await this.updateLanguageFromSteam();
-    const language = Stores.Settings.store.language;
-    console.log("UPDATE LANGUAGE", language);
-    await i18n.changeLanguage(language);
+    const lng = Stores.Settings.store.language;
+    console.info(`[main.ts/updateLanguage()] try to updated language ${lng}`);
+    await i18n.changeLanguage(lng);
     this.menuBuilder?.buildMenu();
   }
 

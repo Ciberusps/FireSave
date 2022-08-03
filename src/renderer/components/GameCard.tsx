@@ -96,7 +96,7 @@ const GameCard = (props: TProps) => {
             {game.isPlaingNow && (
               <StatusBadge
                 background="linear-gradient(#6fd61d, #38bf3c)"
-                tooltipText={t("statusses.is_running")}
+                tooltipText={t("statuses.is_running")}
               >
                 <Icon icon="play" size="small" />
               </StatusBadge>

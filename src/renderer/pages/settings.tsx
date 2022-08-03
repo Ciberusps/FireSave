@@ -16,6 +16,7 @@ import { useSettingsStore } from "../utils/stores";
 import useElectronApiRequest from "../utils/useElectronApiRequest";
 import SelectInput, { TSelectInputOption } from "../components/SelectInput";
 import { LANGUAGES_CODES_WHITELIST } from "../../common/languagesWhiteList";
+import { LANGUAGE_CODE_TO_NAME_MAP } from "common/languageCodeToName";
 
 type TSettingsForm = Pick<
   TSettingsStore,
@@ -49,7 +50,7 @@ const SettingsPage = () => {
 
   const languagesOptions: TSelectInputOption[] = useMemo(() => {
     return LANGUAGES_CODES_WHITELIST.map((l) => ({
-      label: l,
+      label: LANGUAGE_CODE_TO_NAME_MAP[l] || l,
       value: l,
       isDisabled: false,
     }));

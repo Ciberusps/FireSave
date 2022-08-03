@@ -23,6 +23,7 @@ const AppContainer = () => {
   const isMainLoading = useSettingsStore(
     (state) => state.runtimeValues.IS_MAIN_LOADING
   );
+  const language = useSettingsStore((state) => state.language);
   const [isLoadingApp, setIsLoadingApp] = useState(true);
 
   const loadApp = useCallback(async () => {
@@ -44,6 +45,12 @@ const AppContainer = () => {
   useEffect(() => {
     loadApp();
   }, [loadApp]);
+
+  useEffect(() => {
+    if (language && i18n.isInitialized) {
+      i18n.changeLanguage(language);
+    }
+  }, [language]);
 
   return isLoadingApp || isMainLoading ? (
     <Router>

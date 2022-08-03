@@ -1,17 +1,10 @@
-import styled, { useTheme } from "styled-components";
-import { Controller, Control, FieldValues, FieldPath } from "react-hook-form";
-import Select, { StylesConfig } from "react-select";
-
-import Button from "./Button";
-import Tooltip from "./Tooltip";
-import InputWrapper from "./InputWrapper";
-import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
+import Select, { StylesConfig } from "react-select";
+import { useTheme } from "styled-components";
 import { transparentize } from "polished";
+import { Controller, Control, FieldValues, FieldPath } from "react-hook-form";
 
-type TTransform = {
-  input: (value: TFolderOrFilesRaw) => string;
-};
+import InputWrapper from "./InputWrapper";
 
 export type TSelectInputOption = {
   value: string;
@@ -35,15 +28,12 @@ const SelectInput = <T extends FieldValues>(props: TProps<T>) => {
 
   const inputStyles: StylesConfig = useMemo(
     () => ({
-      valueContainer: (base) => ({ ...base, paddingLeft: 0, margin: -2 }),
+      valueContainer: (base) => ({ ...base }),
       control: (base) => ({
         ...base,
         width: "250px",
         borderColor: transparentize(0.2, theme.purple),
         background: "transparent",
-        // borderTopColor: "transparent",
-        // borderLeftColor: "transparent",
-        // borderRightColor: "transparent",
       }),
       indicatorSeparator: (base) => ({
         ...base,
@@ -74,7 +64,6 @@ const SelectInput = <T extends FieldValues>(props: TProps<T>) => {
         name={name}
         control={control}
         render={({ field }) => {
-          console.log(field);
           return (
             <Select
               menuPortalTarget={document.body}
@@ -102,6 +91,7 @@ const SelectInput = <T extends FieldValues>(props: TProps<T>) => {
                   neutral90: transparentize(0.1, theme.purple),
                 },
               })}
+              // @ts-ignore
               onChange={(newVal) => field.onChange(newVal.value)}
             />
           );
