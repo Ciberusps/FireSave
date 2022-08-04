@@ -330,7 +330,6 @@ const ScreenshotContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  width: 400px;
   height: 100%;
   max-width: 35%;
   border-top-left-radius: ${CARD_BORDER_RADIUS}px;
@@ -350,8 +349,8 @@ const ScreenshotBackground = styled(Image)`
 `;
 
 const Screenshot = styled(Image)`
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
 `;
 
