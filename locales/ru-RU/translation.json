@@ -1,175 +1,179 @@
 {
   "steam": "Steam",
   "button": {
-    "settings": "Settings",
+    "settings": "Настройки",
     "save": {
-      "label": "Save"
+      "label": "Сохранить"
     },
-    "run": "Run",
+    "run": "Запустить",
     "load": {
-      "label": "Load",
-      "tooltip": "Make backup and load this save point"
+      "label": "Загрузка",
+      "tooltip": "Создать резервную копию и загрузить это сохранение"
     },
     "reveal_in_file_explorer": {
-      "label": "Reveal in File Explorer"
+      "label": "Показать в проводнике файлов"
     },
     "add_to_favorites": {
-      "label": "Add to favorites"
+      "label": "Добавить в избранное"
     },
     "remove_save": {
-      "label": "Remove save"
+      "label": "Удалить сохранение"
     },
     "open_saves_folder": {
-      "label": "Open saves folder"
+      "label": "Открыть папку с сохранениями"
     },
     "open_save_point_folder": {
-      "label": "Open save point folder"
+      "label": "Открыть папку точек сохранений"
     }
   },
   "modal": {
     "default_confirm": {
-      "yes": "Yes",
-      "no": "Cancel"
+      "yes": "Да",
+      "no": "Отмена"
     },
     "remove_save_point": {
-      "label": "Remove save",
-      "description": "Are you sure you want to delete this save?"
+      "label": "Удалить сохранение",
+      "description": "Вы уверены, что хотите удалить это сохранение?"
     },
     "load_save_point": {
-      "label": "Load save",
-      "description": "Game is currently running\nLoading might cause game to crash\nAre you sure you want to load this save?"
+      "label": "Загрузить сохранение",
+      "description": "В данный момент игра запущена\nЗагрузка может привести к сбою игры\nВы уверены, что хотите загрузить это сохранение?"
     }
   },
   "dates": {
-    "last_save_n_ago": "last save {{n}} ago"
+    "last_save_n_ago": "последнее сохранение {{n}}"
   },
   "statuses": {
-    "is_valid": "Game works correctly",
-    "is_running": "Game is running",
-    "is_save_config_valid": "Save config setup required",
-    "is_in_saves_library_but_not_installed": "Install from steam or change \"Detect type\" on manual"
+    "is_valid": "Игра работает корректно",
+    "is_running": "Игра запущена",
+    "is_save_config_valid": "Требуется сохранить настройки конфигурации",
+    "is_in_saves_library_but_not_installed": "Установите из Steam или измените \"Определить тип\" в ручном режиме"
   },
   "menu": {
-    "search_issues": "Search Issues",
-    "about_app": "&About",
-    "minimize_to_tray": "&Minimize to tray",
-    "reload": "&Reload",
-    "exit": "&Exit",
-    "toggle_full_screen": "Toggle Full Screen",
-    "bring_all_to_front": "Bring All to Front",
-    "view": "&View",
-    "file": "&File",
-    "validate_games": "&Reload games list",
-    "help": "&Help"
+    "search_issues": "Поиск проблем",
+    "about_app": "&О нас",
+    "minimize_to_tray": "&Свернуть в трей",
+    "reload": "&Перезагрузить",
+    "exit": "&Выход",
+    "toggle_full_screen": "Полноэкранный режим",
+    "bring_all_to_front": "Вывести на передний план",
+    "view": "&Просмотр",
+    "file": "&Файл",
+    "validate_games": "&Перезагрузить список игр",
+    "help": "&Помощь"
   },
   "home_page": {
-    "installed_games": "Installed games",
-    "no_games_found": "No games found, you can add new one",
-    "your_saves_library": "Your Saves Library",
-    "ready_games": "Ready games",
-    "games": "Games",
-    "add_game": "Add game"
+    "installed_games": "Установленные игры",
+    "no_games_found": "Игры не найдены, вы можете добавить новую",
+    "your_saves_library": "Ваша библиотека сохранений",
+    "ready_games": "Готовые игры",
+    "games": "Игры",
+    "add_game": "Добавить игру"
   },
   "settings_page": {
-    "title": "Settings",
+    "title": "Настройки",
     "display": {
-      "label": "Display for screenshots",
-      "description": "Select the display to take screenshots from"
+      "label": "Показать скриншоты",
+      "description": "Выберите дисплей для снятия скриншотов"
     },
     "autosaves": {
-      "label": "Autosaves",
-      "description": "Makes autosaves when game runned"
+      "label": "Автосохранение",
+      "description": "Выполняет автосохранение при запуске игры"
     },
     "autosaves_interval": {
-      "label": "Autosaves interval",
-      "description": "Interval in minutes between autosaves"
+      "label": "Интервал автосохранения",
+      "description": "Интервал в минутах между автосохранениями"
     },
     "start_in_tray": {
-      "label": "Start in Tray",
-      "description": "Starts the app in tray"
+      "label": "Запуск в трее",
+      "description": "Запускает приложение в трее"
+    },
+    "language": {
+      "label": "Язык",
+      "description": "Выберите предпочитаемый вами язык"
     }
   },
   "game_settings_page": {
     "page_title": "Добавить игру",
     "block_title_settings": "Настройки игры",
     "block_title_save_config": "Сохранить настройки",
-    "choose_save_folder_warning": "Choose saves folder first",
+    "choose_save_folder_warning": "Сначала выберите папку сохранения",
     "path_to_game": {
-      "label": "Path or exe file",
-      "description": "Path or exe file"
+      "label": "Путь или исполняемый файл",
+      "description": "Путь или исполняемый файл"
     },
     "auto_detect": {
-      "label": "Auto-detect game?",
-      "description": "Is game auto-detection enabled"
+      "label": "Определять игры автоматически?",
+      "description": "Автоопределение игр включено"
     },
     "auto_detect_method": {
-      "label": "Auto-detect using",
-      "description": "Game will be auto-detected using selected games store"
+      "label": "Автоопределение с помощью",
+      "description": "Игра будет автоматически обнаружена с помощью выбранного магазина игр"
     },
     "saves_config_type": {
-      "label": "Type",
+      "label": "Тип",
       "options": {
-        "simple": "Simple",
-        "advanced": "Advanced"
+        "simple": "Простой",
+        "advanced": "Расширенный"
       },
-      "description_simple": "Simple - easy to setup, only folder required but can be heavier in size",
-      "description_advanced": "Advanced - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space"
+      "description_simple": "Простой - легко настраивается, требуется только папка, но может быть больше по размеру",
+      "description_advanced": "Расширенный - для заядлых геймеров 💪😎💪, которые хотят исключить ненужные файлы и сэкономить немного места"
     },
     "saves_config_folder": {
-      "label": "Saves folder",
-      "description": "Path to saves folder"
+      "label": "Папка с сохранениями",
+      "description": "Путь к папке сохранений"
     },
     "include_all": {
-      "label": "Include all files",
-      "description_on": "Include all files by default and use exclude list for exclusions",
-      "description_off": "Include files only selected files exclude files from exclude list"
+      "label": "Включить все файлы",
+      "description_on": "Включить все файлы по умолчанию и использовать список исключения для исключений",
+      "description_off": "Включать только выбранные файлы, исключать из списка исключений"
     },
     "files_preview": {
-      "all_label": "Files",
-      "result_label": "Result - files that will be saved"
+      "all_label": "Файлы",
+      "result_label": "Результат - файлы, которые будут сохранены"
     },
     "errors": {
-      "no_association_with_steam": "No association with steam store appId",
-      "game_not_found": "Game not found, try reopen app",
-      "game_not_associated": "Game not associated with any store please disable auto-detect game"
+      "no_association_with_steam": "Нет связи с идентификатором Steam",
+      "game_not_found": "Игра не найдена, попробуйте снова открыть приложение",
+      "game_not_associated": "Игра не связана ни с одним магазином, пожалуйста, отключите автоматическое определение игры"
     }
   },
   "game_saves_page": {
-    "online_games_warning": "Looks like its online game, manipulation with saves can lead to ban/shadow ban, to avoid it LOG OUT from online session before loading",
-    "favorites_list_label": "Favorites",
-    "saves_history_list_label": "Timeline"
+    "online_games_warning": "Это похоже на онлайн-игру, манипуляции с сохранениями могут привести к бану, чтобы избежать этого, выйдите из онлайн-сессии перед загрузкой",
+    "favorites_list_label": "Избранное",
+    "saves_history_list_label": "Временная шкала"
   },
   "include_exclude_actions_component": {
-    "in": "in",
-    "or_use_pattern": "or use pattern",
-    "everywhere": "everywhere",
-    "and_all_folders_below": "and all folders below",
-    "empty_warning_include_all_on": "Select files or folders to include",
-    "empty_warning_include_all_off": "Select files or folders to exclude or include",
-    "include_file_or_folder": "Include",
-    "exclude_file_or_folder": "Exclude",
+    "in": "в",
+    "or_use_pattern": "или используйте шаблон",
+    "everywhere": "везде",
+    "and_all_folders_below": "и все папки ниже",
+    "empty_warning_include_all_on": "Выберите файлы или папки для включения",
+    "empty_warning_include_all_off": "Выберите файлы или папки для исключения или включения",
+    "include_file_or_folder": "Включить",
+    "exclude_file_or_folder": "Исключить",
     "include": {
-      "label": "Include list",
-      "disabled_reason": "Necessary only if 'Include all files' turned off"
+      "label": "Включить список",
+      "disabled_reason": "Необходимо только в том случае, если функция 'Включить все файлы' отключена"
     },
     "exclude": {
-      "label": "Exclude list"
+      "label": "Список исключений"
     }
   },
   "list_input_component": {
-    "remove_all": "remove all"
+    "remove_all": "удалить все"
   },
   "stats_component": {
-    "saves_count": "{{count}} saves",
-    "autosaves_count": "{{count}} autosaves",
-    "manual_saves_count": "{{count}} manual saves"
+    "saves_count": "{{count}} сохранений",
+    "autosaves_count": "{{count}} автосохранений",
+    "manual_saves_count": "{{count}} ручных сохранений"
   },
   "game_card_component": {
-    "no_saves": "no saves yet"
+    "no_saves": "пока нет сохранений"
   },
   "save_point_card": {
-    "manual_save": "Manual save",
-    "autosave": "Autosave",
-    "no_tags": "No tags..."
+    "manual_save": "Сохранить вручную",
+    "autosave": "Автосохранение",
+    "no_tags": "Никаких меток..."
   }
 }
