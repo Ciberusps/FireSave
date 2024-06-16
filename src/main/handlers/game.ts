@@ -36,6 +36,7 @@ const GamesHandlers: TGamesHandlers = {
       }
 
       const name = payload.gamePath.files?.[0] || "Unknown";
+      const savePointsFolderName = name.replace(".exe", "");
 
       const newGame: TGame = {
         id,
@@ -47,8 +48,7 @@ const GamesHandlers: TGamesHandlers = {
         isSaveConfigValid: false,
         isSettupedAtLeastOnce: true,
         isPlaingNow: false,
-        // name but probably installDir better, mb for steamgames prefix "steam__" can be done or for others "nonsteam__"
-        savePointsFolderName: name.replace(".exe", ""),
+        savePointsFolderName,
         savesStats: { total: 0, auto: 0, manual: 0 },
         imageUrl: undefined,
         gamePath: { [PLATFORM]: payload.gamePath },

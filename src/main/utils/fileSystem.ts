@@ -49,6 +49,8 @@ const normalizePathForCurrentOS = (pathString: string): string => {
   return path.normalize(pathString);
 };
 
+const renameFolder = fs.promises.rename;
+
 const FileSystem = {
   writeFileSync,
   copyFolder,
@@ -63,6 +65,7 @@ const FileSystem = {
   join,
   joinUpath,
   normalizePathForCurrentOS,
+  renameFolder,
 };
 
 export default FileSystem;
