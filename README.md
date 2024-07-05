@@ -1,5 +1,8 @@
 # FireSave
 
+> [!WARNING]  
+> Looking for maintainer, contact me if you want to devlop this app - [email](mailto:ciberus.ps+github@gmail.com)
+
 [![Crowdin](https://badges.crowdin.net/firesave/localized.svg)](https://crowdin.com/project/firesave)
 
 **FireSave** is a **saves management** app that helps you **to make saves**, name them, tag, sort, filter, **and load of course**.
