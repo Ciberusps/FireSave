@@ -56,7 +56,7 @@ const convertSteamAppToGame = (
     isSettupedAtLeastOnce: false,
     isPlaingNow: false,
     // name but probably installDir better, mb for steamgames prefix "steam__" can be done or for others "nonsteam__"
-    savePointsFolderName: steamApp.manifest.name,
+    savePointsFolderName: steamApp.manifest.installdir,
     savesStats: { total: 0, auto: 0, manual: 0 },
     imageUrl: storeInfo?.header_image,
     gamePath: {

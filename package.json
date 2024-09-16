@@ -1,6 +1,6 @@
 {
   "name": "FireSave",
-  "version": "0.7.4",
+  "version": "0.8.0",
   "description": "Saves manager",
   "main": "./src/main/main.ts",
   "scripts": {
@@ -136,6 +136,7 @@
     "i18next-fs-backend": "^1.1.4",
     "lodash.debounce": "^4.0.8",
     "lodash.groupby": "^4.6.0",
+    "make-synchronous": "^0.1.1",
     "nanoid": "^3.2.0",
     "node-wmi": "^0.0.5",
     "parse-filepath": "^1.0.2",

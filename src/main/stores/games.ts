@@ -1,8 +1,10 @@
 import ElectronStore from "electron-store";
+import makeSynchronous from "make-synchronous";
 
 import persistentStore from "./persistent";
 import FileSystem from "../utils/fileSystem";
 import { PLATFORM } from "../utils/config";
+import { findSteam, ISteamApp } from "@ciberus/find-steam-app";
 
 const DEFAULT_TAGS_LIST = [
   "auto",
@@ -123,6 +125,58 @@ const gamesStore = new ElectronStore<TGamesStore>({
       });
 
       store.set("games", games);
+    },
+    "0.8.0": (store) => {
+      let games = store.store.games;
+
+      const steamInfo = makeSynchronous(findSteam)();
+      const steamApps: ISteamApp[] = [];
+      for (const lib of steamInfo.libraries) {
+        for (const steamApp of lib.apps) {
+          steamApps.push(steamApp);
+        }
+      }
+
+      console.log("KDSFLKD", steamApps.length, steamApps);
+
+      Object.entries(games).forEach(async ([, game]) => {
+        if (
+          game.isAutoDetectionEnabled &&
+          game.autoDetectionMethod === "steam"
+        ) {
+          console.log("KDSFLKD 1 ", game.id, game.name);
+          const steamAppInfo = steamApps.find(
+            (s) => s.appId === game.steamAppId
+          );
+          const newSavePointsFolderName = steamAppInfo?.manifest.installdir;
+          console.log(
+            "KDSFLKD 2 ",
+            game.id,
+            game.name,
+            newSavePointsFolderName
+          );
+
+          if (newSavePointsFolderName) {
+            const savesFolderPath = FileSystem.joinUpath(
+              persistentStore.store.savesFolder,
+              `${game.savePointsFolderName}__${game.id}`
+            );
+            const newSavesFolderPath = FileSystem.joinUpath(
+              persistentStore.store.savesFolder,
+              `${newSavePointsFolderName}__${game.id}`
+            );
+
+            game.savePointsFolderName = newSavePointsFolderName;
+
+            try {
+              FileSystem.renameFolder(savesFolderPath, newSavesFolderPath);
+            } catch (err) {}
+          }
+        }
+      });
+
+      console.log("New GAMES EPTA", games);
+      gamesStore.set("games", games);
     },
   },
 });
