@@ -51,7 +51,7 @@
   },
   "menu": {
     "search_issues": "Wyszukaj problemy",
-    "about_app": "&Informacje",
+    "about_app": "&O programie",
     "minimize_to_tray": "&Minimalizuj do zasobnika",
     "reload": "&Przeładuj",
     "exit": "&Wyjdź",
@@ -87,6 +87,10 @@
     "start_in_tray": {
       "label": "Uruchom zminimalizowane",
       "description": "Uruchamia aplikację w zasobniku"
+    },
+    "language": {
+      "label": "Język",
+      "description": "Wybierz preferowany język interfejsu"
     }
   },
   "game_settings_page": {
@@ -161,7 +165,7 @@
   },
   "stats_component": {
     "saves_count": "{{count}} zapisów",
-    "autosaves_count": "{{count}} automatycznych zapisów",
+    "autosaves_count": "{{count}} autozapisów",
     "manual_saves_count": "{{count}} ręcznych zapisów"
   },
   "game_card_component": {

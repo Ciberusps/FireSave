@@ -46,7 +46,7 @@
   "statuses": {
     "is_valid": "El juego funciona correctamente",
     "is_running": "El juego está siendo ejecutado",
-    "is_save_config_valid": "Save config setup required",
+    "is_save_config_valid": "Es requerida haber configurado la configuración de guardado",
     "is_in_saves_library_but_not_installed": "Instalar de steam o cambiar \"Detectar tipo\" en el manual"
   },
   "menu": {
@@ -73,8 +73,8 @@
   "settings_page": {
     "title": "Ajustes",
     "display": {
-      "label": "Display for screenshots",
-      "description": "Select the display to take screenshots from"
+      "label": "Mostrar para capturas de pantalla",
+      "description": "Selecciona la pantalla a la que tomar capturas de pantalla"
     },
     "autosaves": {
       "label": "Autoguardados",
@@ -87,6 +87,10 @@
     "start_in_tray": {
       "label": "Iniciar en la bandeja",
       "description": "Inicia la aplicación en la bandeja"
+    },
+    "language": {
+      "label": "Idioma",
+      "description": "Elige tu idioma preferido"
     }
   },
   "game_settings_page": {
@@ -103,8 +107,8 @@
       "description": "La autodetección de juegos está activada"
     },
     "auto_detect_method": {
-      "label": "Auto-detect using",
-      "description": "Game will be auto-detected using selected games store"
+      "label": "Uso de la autodetección",
+      "description": "El juego será autodetectado usando los juegos seleccionados de la tienda"
     },
     "saves_config_type": {
       "label": "Tipo",
@@ -112,8 +116,8 @@
         "simple": "Simple",
         "advanced": "Avanzado"
       },
-      "description_simple": "Simple - easy to setup, only folder required but can be heavier in size",
-      "description_advanced": "Advanced - for hardcore gamers 💪😎💪 who wants to exclude unnecessary files and save up some space"
+      "description_simple": "Simple - fácil de configurar, solo la carpeta es requerida pero puede ser más pesada en tamaño",
+      "description_advanced": "Avanzado - para jugadores hardcore 💪😎💪 que quieren excluir archivos innecesarios y ahorrar algo de espacio"
     },
     "saves_config_folder": {
       "label": "Carpeta de guardados",
@@ -121,21 +125,21 @@
     },
     "include_all": {
       "label": "Incluir todos los archivos",
-      "description_on": "Include all files by default and use exclude list for exclusions",
-      "description_off": "Include files only selected files exclude files from exclude list"
+      "description_on": "Incluye todos los archivos por defecto y usa la lista de exclusión para las exclusiones",
+      "description_off": "Incluye archivos solo los seleccionados excluye archivos de la lista de exclusión"
     },
     "files_preview": {
       "all_label": "Archivos",
-      "result_label": "Result - files that will be saved"
+      "result_label": "Resultado - archivos que serán guardados"
     },
     "errors": {
-      "no_association_with_steam": "No association with steam store appId",
-      "game_not_found": "Game not found, try reopen app",
-      "game_not_associated": "Game not associated with any store please disable auto-detect game"
+      "no_association_with_steam": "No hay asociación con la tienda de steam appld",
+      "game_not_found": "Juego no encontrado, prueba reabriendo la aplicación",
+      "game_not_associated": "Juego no asociado con ninguna tienda, por favor desactiva la autodetección de juegos"
     }
   },
   "game_saves_page": {
-    "online_games_warning": "Looks like its online game, manipulation with saves can lead to ban/shadow ban, to avoid it LOG OUT from online session before loading",
+    "online_games_warning": "Parece que es un juego en línea, la manipulación con los guardados puede conllevar a banear/bloquear sombras, para evitarlo CIERRA SESIÓN de la sesión en línea antes de cargar",
     "favorites_list_label": "Favoritos",
     "saves_history_list_label": "Línea de tiempo"
   },
@@ -150,10 +154,10 @@
     "exclude_file_or_folder": "Excluir",
     "include": {
       "label": "Lista de incluidos",
-      "disabled_reason": "Necessary only if 'Include all files' turned off"
+      "disabled_reason": "Necesario solo si \"Incluir todos los archivos\" está desactivado"
     },
     "exclude": {
-      "label": "Lista de excluidos"
+      "label": "Lista de exclusión"
     }
   },
   "list_input_component": {
